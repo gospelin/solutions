@@ -8,7 +8,6 @@
     <title>Login - Premium Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
             /* Modern accessible color palette */
@@ -19,35 +18,25 @@
             --secondary-hover: #4F46E5;
             --accent: #10B981;
             --accent-hover: #059669;
-
-            /* Neutral colors with proper contrast */
             --background: #FFFFFF;
             --surface: #F8FAFC;
             --surface-hover: #F1F5F9;
             --border: #E2E8F0;
             --border-focus: #CBD5E1;
-
-            /* Dark theme colors */
             --dark-background: #0F172A;
             --dark-surface: #1E293B;
             --dark-surface-hover: #334155;
             --dark-border: #475569;
             --dark-border-focus: #64748B;
-
-            /* Text colors with WCAG AA compliance */
             --text-primary: #0F172A;
             --text-secondary: #475569;
             --text-muted: #64748B;
             --text-inverse: #FFFFFF;
             --text-inverse-secondary: #CBD5E1;
-
-            /* Status colors */
             --success: #10B981;
             --error: #EF4444;
             --warning: #F59E0B;
             --info: #3B82F6;
-
-            /* Shadows */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -69,7 +58,6 @@
             color: var(--text-primary);
         }
 
-        /* Subtle animated background */
         body::before {
             content: '';
             position: fixed;
@@ -97,7 +85,6 @@
             }
         }
 
-        /* Minimal floating particles */
         .particles {
             position: fixed;
             top: 0;
@@ -636,20 +623,16 @@
             background: #F0FDF4;
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .auth-container {
                 grid-template-columns: 1fr;
                 max-width: 500px;
             }
 
-            .content-section {
-                padding: 40px;
-                text-align: center;
-            }
-
+            .content-section,
             .login-section {
                 padding: 40px;
+                text-align: center;
             }
         }
 
@@ -690,7 +673,6 @@
             }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -708,7 +690,6 @@
             background: var(--text-muted);
         }
 
-        /* Focus styles for accessibility */
         *:focus {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
@@ -736,22 +717,27 @@
             <div class="login-section">
                 <div class="logo-section">
                     <div class="logo">P</div>
-                    <!--<h1 class="welcome-text">Welcome Back</h1>-->
+                    <h1 class="welcome-text">Welcome Back</h1>
                     <p class="subtitle">Sign in to your account</p>
                 </div>
-
                 @if ($errors->any())
-                <div class="error-message" id="errorMessage" style="display: block; opacity: 1;">
+                <div class="error-message" id="errorMessage" style="display: block;">
                     {{ $errors->first() }}
                 </div>
-                @endif
-
-                @if (session('status'))
-                <div class="success-message" id="successMessage" style="display: block; opacity: 1;">
-                    {{ session('status') }}
+                @else
+                <div class="error-message" id="errorMessage">
+                    Invalid credentials. Please try again.
                 </div>
                 @endif
-
+                @if (session('status'))
+                <div class="success-message" id="successMessage" style="display: block;">
+                    {{ session('status') }}
+                </div>
+                @else
+                <div class="success-message" id="successMessage">
+                    Login successful! Redirecting...
+                </div>
+                @endif
                 <form id="loginForm" method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group">
@@ -898,6 +884,38 @@
                 loginButton.classList.add('loading');
                 buttonText.textContent = 'Signing In...';
                 loginButton.disabled = true;
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+            });
+
+            document.getElementById('googleLogin').addEventListener('click', () => {
+                gsap.to('#googleLogin', {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1
+                });
+                console.log('Google sign-in clicked');
+            });
+
+            document.getElementById('facebookLogin').addEventListener('click', () => {
+                gsap.to('#facebookLogin', {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1
+                });
+                console.log('Facebook sign-in clicked');
+            });
+
+            document.getElementById('twitterLogin').addEventListener('click', () => {
+                gsap.to('#twitterLogin', {
+                    scale: 0.95,
+                    duration: 0.1,
+                    yoyo: true,
+                    repeat: 1
+                });
+                console.log('Twitter sign-in clicked');
             });
 
             document.querySelectorAll('.form-input').forEach(input => {
@@ -908,6 +926,16 @@
                 });
             });
 
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            gsap.set(['.content-section > *', '.form-group', '.login-btn', '.social-login', '.register-link'], {
+                opacity: 0,
+                y: 30
+            });
+            gsap.set('.logo', {
+                opacity: 0,
+                scale: 0.8,
+                rotationY: 180
+            });
             const tl = gsap.timeline({
                 delay: 0.2
             });
@@ -1064,6 +1092,16 @@
             }
             mediaQuery.addListener(handleScreenChange);
             handleScreenChange(mediaQuery);
+
+            const isLowEndDevice = navigator.hardwareConcurrency < 4;
+            if (isLowEndDevice) {
+                gsap.globalTimeline.timeScale(1.5);
+                document.querySelectorAll('.particle').forEach((particle, index) => {
+                    if (index > 20) particle.remove();
+                });
+            }
+
+            console.log('Premium login page initialized successfully!');
         });
     </script>
 </body>
