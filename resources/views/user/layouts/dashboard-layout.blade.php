@@ -4,22 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>User Dashboard | Mr Solution</title>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Page Title -->
+    <title>@yield('title', 'Mr Solution Dashboard - Manage Your Tech Solutions | 2025')</title>
+    <!-- Meta Tags -->
+    <meta name="description" content="Manage your AI-powered tech solutions with Mr Solution's advanced dashboard. Real-time analytics, project tracking, and more.">
+    <meta name="keywords" content="dashboard, AI analytics, project management, Mr Solution, tech solutions">
+    <meta name="author" content="Mr Solution">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('images/mrsolution.jpeg') }}" type="image/x-icon">
+
+    <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Additional Stacks for Custom Styles -->
-    @stack('styles')
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Custom Dashboard Styles -->
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    @endpush
 </head>
 
-<body>
+<body class="dashboard-page">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Theme Toggle Tray -->
+    <div class="theme-toggle-container" id="themeToggleContainer">
+        <button class="theme-toggle-button" id="themeToggleButton" aria-label="Toggle theme">
+            <svg class="theme-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="sun" d="M12 3V4M12 20V21M3 12H4M20 12H21M5.636 5.636L6.343 6.343M17.657 17.657L18.364 18.364M5.636 18.364L6.343 17.657M17.657 6.343L18.364 5.636M12 6C9.243 6 7 8.243 7 11C7 13.757 9.243 16 12 16C14.757 16 17 13.757 17 11C17 8.243 14.757 6 12 6Z" stroke="currentColor" stroke-width="2" />
+                <path class="moon" d="M12 3C7.029 3 3 7.029 3 12C3 16.971 7.029 21 12 21C14.285 21 16.346 20.174 17.899 18.899C17.404 18.965 16.902 19 16.4 19C12.283 19 9 15.717 9 11.6C9 7.483 12.283 4.2 16.4 4.2C16.902 4.2 17.404 4.235 17.899 4.301C16.346 3.126 14.285 2.3 12 2.3V3Z" fill="currentColor" />
+            </svg>
+        </button>
+        <div class="theme-tray" id="themeTray">
+            <button class="theme-option" data-theme="light">Light</button>
+            <button class="theme-option" data-theme="dark">Dark</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout -->
     <div class="dashboard-container">
         <!-- Mobile Header -->
         <div class="mobile-header d-lg-none" x-data="{ open: false }">
@@ -46,6 +79,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
+                        <!-- Profile Edit Link for Breeze -->
                         <li>
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 <i class="fas fa-user me-2"></i> Profile
@@ -54,6 +88,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
+                        <!-- Logout Form -->
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -96,7 +131,10 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i> Logout</button></form>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i> Logout</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -115,128 +153,53 @@
             <nav class="nav flex-column">
                 <div class="sidebar-section">
                     <div class="sidebar-heading">DASHBOARD</div>
-                    <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a class="nav-link" href="updates.html"><i class="bi bi-bell-fill"></i> Updates</a>
-                    <a class="nav-link" href="apps.html"><i class="bi bi-google-play"></i> Free Apps</a>
-                    <a class="nav-link" href="contact.html"><i class="bi bi-headset"></i> Contact Us</a>
-                    <a class="nav-link" href="purchase.html"><i class="bi bi-shield-lock"></i> Purchase Key</a>
-                    <a class="nav-link" href="crypter.html"><i class="bi bi-code-slash"></i> Code Crypter</a>
+                    <a class="nav-link active" href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a class="nav-link" href="/updates"><i class="bi bi-bell-fill"></i> Updates</a>
+                    <a class="nav-link" href="/apps"><i class="bi bi-google-play"></i> Free Apps</a>
+                    <a class="nav-link" href="/contact"><i class="bi bi-headset"></i> Contact Us</a>
+                    <a class="nav-link" href="/purchase"><i class="bi bi-shield-lock"></i> Purchase Key</a>
+                    <a class="nav-link" href="/crypter"><i class="bi bi-code-slash"></i> Code Crypter</a>
                     <a class="nav-link" href="https://selar.co/showlove/mrsolution" target="_blank"><i class="bi bi-gift"></i> Donate Here</a>
-                    <a class="nav-link" href="auth.html" id="premium-link"><i class="bi bi-person-check-fill"></i> Premium Member</a>
+                    <a class="nav-link" href="/auth" id="premium-link"><i class="bi bi-person-check-fill"></i> Premium Member</a>
                 </div>
             </nav>
-            <div class="sidebar-footer">
-                <p>your for swift is using card.</p>
-                <button class="btn btn-omit">omit Now</button>
-            </div>
-        </div>
-
-        <!-- Floating Icons -->
-        <div class="floating-icons">
-            <a href="https://t.me/Mr_Solution404" target="_blank" class="button telegram-btn">
-                <i class="fab fa-telegram-plane"></i>
-                <span>Telegram Channel</span>
-            </a>
-            <a href="https://chat.whatsapp.com/LZowbxiPlCiEu8d0AVDO1h" target="_blank" class="button whatsapp-btn">
-                <i class="fab fa-whatsapp"></i>
-                <span>WhatsApp Group</span>
-            </a>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-            @yield('content')
-        </div>
-
-        <!-- Loading Spinner -->
-        <div class="loading-overlay" id="loading-overlay">
-            <div class="spinner"></div>
-        </div>
-
-        <!-- Popup -->
-        <div class="popup" id="popup">
-            <div class="popup-header" id="popup-header"></div>
-            <div class="popup-message" id="popup-message"></div>
-            <div class="popup-countdown" id="popup-countdown"></div>
-            <button class="popup-button" id="popup-button">OK</button>
-        </div>
-
-        <!-- Activate Premium Overlay -->
-        <div id="activate-premium-overlay" class="loading-overlay">
-            <div class="spinner"></div>
+            <!-- Content Area -->
+            <main class="content">
+                @yield('content')
+            </main>
         </div>
     </div>
 
-    <!-- JivoChat Container -->
-    <div id="jivo-iframe-container" style="opacity: 0; visibility: hidden; width: 0px; height: 0px; overflow: hidden;">
-        <iframe src="" role="presentation" allow="autoplay" title="Jivochat" name="jivo_container" id="jivo_container" frameborder="no"></iframe>
+    <!-- Live Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-button" id="chatButton" aria-label="Open live chat">💬</button>
+        <div class="chat-box" id="chatBox" role="dialog" aria-labelledby="chatHeader" aria-hidden="true">
+            <div class="chat-header">
+                <h4 id="chatHeader">Live Support</h4>
+                <button class="chat-close" id="chatClose" aria-label="Close chat">×</button>
+            </div>
+            <div class="chat-messages">
+                <p>Welcome! How can we assist you today?</p>
+            </div>
+            <form id="chatForm" class="chat-form">
+                <input type="text" id="chatInput" placeholder="Type your message..." required aria-label="Chat message">
+                <button type="submit" class="btn-primary">Send</button>
+            </form>
+        </div>
     </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery.nicescroll@3.7.6/dist/jquery.nicescroll.min.js"></script>
-    <script src="//code.jivosite.com/widget/RH6UW97ddX" async></script>
-    <!--<script src="{{ asset('js/app.js') }}"></script>-->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar Toggle
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebar');
-            const closeBtn = document.getElementById('close-btn');
-
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('active');
-                document.body.classList.toggle('sidebar-active');
-            });
-
-            closeBtn.addEventListener('click', function() {
-                sidebar.classList.remove('active');
-                document.body.classList.remove('sidebar-active');
-            });
-
-            document.addEventListener('click', function(event) {
-                if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
-                    sidebar.classList.remove('active');
-                    document.body.classList.remove('sidebar-active');
-                }
-            });
-
-            // Bootstrap Dropdown Initialization
-            const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
-            dropdownElementList.forEach(dropdownToggleEl => {
-                new bootstrap.Dropdown(dropdownToggleEl);
-            });
-
-            // Sidebar Link Click with Loader
-            document.querySelectorAll('.sidebar a').forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const targetUrl = this.href;
-                    if (targetUrl.includes('t.me') || targetUrl.includes('chat.whatsapp.com')) {
-                        window.open(targetUrl, '_blank');
-                        return;
-                    }
-                    if (!targetUrl || targetUrl === '#') return;
-                    showLoader();
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 2000);
-                });
-            });
-
-            // Loader Functions
-            function showLoader() {
-                const loader = document.getElementById('activate-premium-overlay');
-                if (loader) loader.style.display = 'flex';
-            }
-
-            function hideLoader() {
-                const loader = document.getElementById('activate-premium-overlay');
-                if (loader) loader.style.display = 'none';
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    @stack('scripts')
 </body>
 
 </html>

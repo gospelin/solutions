@@ -28,11 +28,8 @@
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Google Fonts: Playfair Display and Quicksand -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display, Quicksand, Inter, Space Grotesk, JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -140,7 +137,7 @@
     </script>
 </head>
 
-<body>
+<body class="public-page">
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
@@ -167,15 +164,11 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="mobile-menu" id="mobileMenu">
-                <div class="hamburger"></div>
-                <div class="hamburger"></div>
-                <div class="hamburger"></div>
-            </div>
             <div class="logo">
                 <img src="{{ asset('images/mrsolution.jpeg') }}" alt="Mr Solution Logo" class="logo-img" id="logo-img">
                 <span class="logo-text" data-i18n="nav.logo">Mr Solution</span>
             </div>
+
             <ul class="nav-links">
                 <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
                 <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
@@ -191,6 +184,11 @@
                 @endif
                 @endguest
             </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+            </div>
             <select id="languageSwitcher" class="language-switcher" aria-label="Select language">
                 <option value="en">English</option>
                 <option value="es">Español</option>
@@ -274,12 +272,12 @@
             <div class="modal-icon" id="modalIcon"></div>
             <h3 class="modal-title" id="modalTitle"></h3>
             <p class="modal-description" id="modalDescription"></p>
-            <a href="#contact" class="btn-primary" data-i18n="modal.cta">Send Email</a>
+            <a href="#contact" class="btn-primary modal-cta" data-i18n="modal.cta">Get Started</a>
         </div>
     </div>
 
     <!-- Live Chat Widget -->
-    <div class="chat-widget" id="chatWidget">
+    <!--<div class="chat-widget" id="chatWidget">
         <button class="chat-button" id="chatButton" aria-label="Open live chat">💬</button>
         <div class="chat-box" id="chatBox" role="dialog" aria-labelledby="chatHeader" aria-hidden="true">
             <div class="chat-header">
@@ -294,11 +292,14 @@
                 <button type="submit" class="btn-primary" data-i18n="chat.submit">Send</button>
             </form>
         </div>
-    </div>
+    </div>-->
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @push('styles')
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    @endpush
     @stack('scripts')
 </body>
 

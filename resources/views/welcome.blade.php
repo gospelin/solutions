@@ -13,10 +13,10 @@
     <div class="hero-content">
         <h1 class="hero-title" id="heroTitle" data-i18n="hero.title">Revolutionary Tech Solutions</h1>
         <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero.subtitle">Empowering businesses with AI-driven innovation and cutting-edge technology that transforms possibilities into reality</p>
-        <div class="hero-buttons">
+        <!--<div class="hero-buttons">
             <a href="#services" class="btn-primary" data-i18n="hero.explore">Explore Solutions</a>
             <a href="#contact" class="btn-secondary" data-i18n="hero.start">Start Your Journey</a>
-        </div>
+        </div>-->
     </div>
 </section>
 
@@ -47,23 +47,21 @@
     <div class="services-container">
         <h2 class="section-title" data-i18n="services.title">Our Premium Services</h2>
         <div class="services-grid">
-            <div class="services-grid tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
-                @foreach ([
-                ['service' => 'ai', 'icon' => '🚀', 'title' => 'services.ai.title', 'desc' => 'services.ai.description'],
-                ['service' => 'cloud', 'icon' => '⚡', 'title' => 'services.cloud.title', 'desc' => 'services.cloud.description'],
-                ['service' => 'cybersecurity', 'icon' => '🛡️', 'title' => 'services.cybersecurity.title', 'desc' => 'services.cybersecurity.description'],
-                ['service' => 'custom', 'icon' => '🔧', 'title' => 'services.custom.title', 'desc' => 'services.custom.description'],
-                ['service' => 'bi', 'icon' => '📊', 'title' => 'services.bi.title', 'desc' => 'services.bi.description'],
-                ['service' => 'digital', 'icon' => '🌐', 'title' => 'services.digital.title', 'desc' => 'services.digital.description'],
-                ] as $service)
-                <div class="service-card tw-relative tw-glass tw-rounded-xl tw-p-6 tw-border tw-border-gray-700 tw-transition-all duration-300 tw-hover:shadow-2xl tw-hover:-translate-y-2" data-service="{{ $service['service'] }}">
-                    <div class="service-icon tw-text-5xl tw-mb-4">{{ $service['icon'] }}</div>
-                    <h3 class="service-title tw-text-xl tw-font-display tw-text-light tw-mb-3" data-i18n="{{ $service['title'] }}">Title</h3>
-                    <p class="service-description tw-text-gray-400 tw-mb-4" data-i18n="{{ $service['desc'] }}">Description</p>
-                    <a href="#contact" class="tw-text-primary tw-font-semibold tw-text-sm new-trans" data-i18n="services.learnMore">Learn More</a>
-                </div>
-                @endforeach
+            @foreach ([
+            ['service' => 'ai', 'icon' => '🚀', 'title' => 'services.ai.title', 'desc' => 'services.ai.description'],
+            ['service' => 'cloud', 'icon' => '⚡', 'title' => 'services.cloud.title', 'desc' => 'services.cloud.description'],
+            ['service' => 'cybersecurity', 'icon' => '🛡️', 'title' => 'services.cybersecurity.title', 'desc' => 'services.cybersecurity.description'],
+            ['service' => 'custom', 'icon' => '🔧', 'title' => 'services.custom.title', 'desc' => 'services.custom.description'],
+            ['service' => 'bi', 'icon' => '📊', 'title' => 'services.bi.title', 'desc' => 'services.bi.description'],
+            ['service' => 'digital', 'icon' => '🌐', 'title' => 'services.digital.title', 'desc' => 'services.digital.description'],
+            ] as $service)
+            <div class="service-card" data-service="{{ $service['service'] }}">
+                <div class="service-icon">{{ $service['icon'] }}</div>
+                <h3 class="service-title" data-i18n="{{ $service['title'] }}">Title</h3>
+                <p class="service-description" data-i18n="{{ $service['desc'] }}">Description</p>
+                <a href="#contact" class="service-link" data-i18n="services.learnMore">Learn More</a>
             </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -109,21 +107,21 @@
 
 <!-- FAQ Section -->
 <section class="faq" id="faq">
-    <div class="faq-container tw-max-w-7xl tw-mx-auto tw-px-6 tw-py-16">
-        <h2 class="section-title tw-text-center tw-font-display tw-text-4xl tw-mb-12" data-i18n="faq.title">Frequently Asked Questions</h2>
-        <div class="faq-grid tw-space-y-4">
+    <div class="faq-container">
+        <h2 class="section-title" data-i18n="faq.title">Frequently Asked Questions</h2>
+        <div class="faq-grid">
             @foreach ([
             ['q' => 'faq.q1', 'a' => 'faq.a1'],
             ['q' => 'faq.q2', 'a' => 'faq.a2'],
             ['q' => 'faq.q3', 'a' => 'faq.a3'],
             ['q' => 'faq.q4', 'a' => 'faq.a4'],
             ] as $faq)
-            <div class="faq-item tw-bg-gray-800 tw-rounded-lg tw-border tw-border-gray-700 tw-overflow-hidden">
-                <button class="faq-question tw-w-full tw-px-6 tw-py-4 tw-text-left tw-font-display tw-text-lg tw-text-light tw-flex tw-justify-between tw-items-center tw-cursor-pointer tw-transition-all duration-300 tw-hover:bg-gray-700" aria-expanded="false" data-i18n="{{ $faq['q'] }}">
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false" data-i18n="{{ $faq['q'] }}">
                     <span class="faq-text">Question</span>
-                    <span class="faq-toggle tw-text-xl">+</span>
+                    <span class="faq-toggle">+</span>
                 </button>
-                <div class="faq-answer tw-px-6 tw-py-4 tw-text-gray-400">
+                <div class="faq-answer">
                     <p data-i18n="{{ $faq['a'] }}">Answer</p>
                 </div>
             </div>

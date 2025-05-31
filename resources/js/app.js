@@ -1,11 +1,13 @@
+import './register.js';
+import './login.js'
 import './main.js';
-import './bootstrap';
+import './bootstrap.js';
 import Alpine from 'alpinejs';
 import $ from 'jquery';
 import { gsap } from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
-import TextPlugin from 'gsap/TextPlugin';
 import i18next from 'i18next';
+import { ScrollTrigger, TextPlugin } from 'gsap/all';
+
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, TextPlugin);

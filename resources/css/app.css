@@ -1,5 +1,102 @@
-@import './styles.css';
+/*@import './login.css';
 @import './dashboard.css';
+@import './styles.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;*/
+
+/* Import scoped styles */
+@import "./register.css";
+@import "./login.css";
+@import "./dashboard.css";
+@import "./styles.css";
+
+
+/* Tailwind directives only here */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Consolidated :root variables */
+:root {
+    /* From login.css */
+    --login-primary: #3b82f6;
+    --login-primary-hover: #2563eb;
+    --login-primary-light: #eff6ff;
+    --login-secondary: #6366f1;
+    --login-secondary-hover: #4f46e5;
+    --login-accent: #10b981;
+    --login-accent-hover: #059669;
+    --login-background: #ffffff;
+    --login-surface: #f8fafc;
+    --login-surface-hover: #f1f5f9;
+    --login-border: #e2e8f0;
+    --login-border-focus: #cbd5e1;
+    --login-dark-background: #0f172a;
+    --login-dark-surface: #1e293b;
+    --login-dark-surface-hover: #334155;
+    --login-dark-border: #475569;
+    --login-dark-border-focus: #64748b;
+    --login-text-primary: #0f172a;
+    --login-text-secondary: #475569;
+    --login-text-muted: #64748b;
+    --login-text-inverse: #ffffff;
+    --login-text-inverse-secondary: #cbd5e1;
+    --login-success: #10b981;
+    --login-error: #ef4444;
+    --login-warning: #f59e0b;
+    --login-info: #3b82f6;
+    --login-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --login-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --login-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --login-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* From dashboard.css and styles.css */
+    --dash-primary: #6c5ce7;
+    --dash-secondary: #a29bfe;
+    --dash-accent: #fd79a8;
+    --dash-electric: #00cec9;
+    --dash-dark: #0a0a0a;
+    --dash-light: #ffffff;
+    --dash-surface: #1a1a1a;
+    --dash-muted: #74afff;
+    --dash-glass: rgba(255, 255, 255, 0.05);
+    --dash-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --dash-gradient-secondary: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #f093fb 100%
+    );
+    --dash-gradient-accent: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #764ba2 50%,
+        #f093fb 100%
+    );
+    --dash-gradient-electric: linear-gradient(135deg, #667eea 0%, #00cec9 100%);
+    --dash-sidebar-width: 280px;
+
+    /* Fonts */
+    --font-primary: "Inter", sans-serif;
+    --font-display: "Space Grotesk", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Global reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@layer utilities {
+    .bg-clip-text {
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+}
+
+
