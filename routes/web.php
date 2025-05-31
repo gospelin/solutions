@@ -13,11 +13,22 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Route::middleware('auth')->group(function () {
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-//});
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/free-apps', [UserDashboardController::class, 'freeApps'])->name('free-apps');
+    Route::get('/premium-features', [UserDashboardController::class, 'premiumFeatures'])->name('premium-features');
+    Route::get('/community', [UserDashboardController::class, 'community'])->name('community');
+    Route::get('/support', [UserDashboardController::class, 'support'])->name('support');
+    //Route::get('/profile', [UserDashboardController::class, 'profile'])->name('profile');
+    Route::get('/settings', [UserDashboardController::class, 'settings'])->name('settings');
+    Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
+});
 
 //Route::middleware(['auth'])->group(function () {
 //    Route::get('/user/dashboard', function () {
