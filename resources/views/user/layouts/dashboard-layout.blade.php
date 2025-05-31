@@ -1174,6 +1174,7 @@
                     <li><a href="#settings"><i class="bi bi-gear nav-icon"></i> Settings</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
+                            @csrf
                             <button type="submit"><i class="bi bi-box-arrow-right nav-icon"></i> Logout</button>
                         </form>
                     </li>
@@ -1206,7 +1207,7 @@
                         <div class="user-trigger">
                             <div class="user-avatar">U</div>
                             <div class="user-info">
-                                <h4>User</h4>
+                                <h4>{{ Auth::user()->name }}</h4>
                                 <p>Free Tier</p>
                             </div>
                             <i class="bi bi-chevron-down dropdown-icon"></i>
@@ -1222,7 +1223,8 @@
                                 <i class="bi bi-lock"></i> Subscription
                             </a>
                             <div class="dropdown-divider"></div>
-                            <form method="POST" action="/logout">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
                                 <button type="submit" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i> Logout
                                 </button>
