@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mr Solution - @yield('title', 'User Dashboard') - Premium Tech Solutions | 2025</title>
     <meta name="description" content="@yield('description', 'User-friendly dashboard for accessing free and premium tools: coding, hacking, sniffing, OS, bots, and more.')">
     <meta name="keywords" content="user dashboard, hacking tools, sniffing tools, coding tools, bots, Mr Solution">
@@ -84,7 +84,8 @@
 
         html {
             scroll-behavior: smooth;
-            font-size: clamp(14px, 4vw, 16px);
+            font-size: clamp(14px, 3.5vw, 16px);
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -119,12 +120,30 @@
             background: var(--dark-bg);
         }
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .sidebar {
-            width: clamp(180px, 20vw, 280px);
+            width: clamp(200px, 70vw, 280px);
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-right: 1px solid var(--glass-border);
-            padding: var(--space-xl);
+            padding: var(--space-lg);
             position: fixed;
             top: 0;
             bottom: 0;
@@ -146,20 +165,20 @@
             display: flex;
             align-items: center;
             gap: var(--space-md);
-            margin-bottom: var(--space-2xl);
-            padding-bottom: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-md);
             border-bottom: 1px solid var(--glass-border);
         }
 
         .logo {
-            width: clamp(32px, 10vw, 48px);
-            height: clamp(32px, 10vw, 48px);
+            width: clamp(36px, 10vw, 48px);
+            height: clamp(36px, 10vw, 48px);
             background: var(--gradient-primary);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: clamp(1rem, 4vw, 1.5rem);
             font-weight: 700;
             color: var(--white);
         }
@@ -170,13 +189,13 @@
 
         .brand-text h1 {
             font-family: var(--font-display);
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: clamp(1rem, 4vw, 1.5rem);
             font-weight: 700;
             margin-bottom: 0.25rem;
         }
 
         .brand-text p {
-            font-size: clamp(0.625rem, 2vw, 0.875rem);
+            font-size: clamp(0.625rem, 2.5vw, 0.875rem);
             color: var(--gray-400);
         }
 
@@ -185,13 +204,13 @@
         }
 
         .nav-section-title {
-            font-size: clamp(0.625rem, 2vw, 0.75rem);
+            font-size: clamp(0.625rem, 2.5vw, 0.75rem);
             font-weight: 600;
             color: var(--gray-500);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin-bottom: var(--space-md);
-            padding-left: var(--space-md);
+            padding-left: var(--space-sm);
         }
 
         .nav-section-title::before {
@@ -226,8 +245,8 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: var(--space-md);
-            padding: var(--space-md) var(--space-lg);
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
             border-radius: var(--radius-lg);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             background: none;
@@ -235,6 +254,7 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
+            font-size: clamp(0.875rem, 3vw, 1rem);
         }
 
         .nav-list li a:hover,
@@ -263,7 +283,7 @@
         .nav-badge {
             background: var(--error);
             color: var(--white);
-            font-size: 0.625rem;
+            font-size: clamp(0.5rem, 2vw, 0.625rem);
             font-weight: 600;
             padding: 0.125rem 0.375rem;
             border-radius: 10px;
@@ -272,7 +292,7 @@
 
         .main-content {
             flex: 1;
-            margin-left: clamp(180px, 20vw, 280px);
+            margin-left: clamp(200px, 70vw, 280px);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -282,7 +302,7 @@
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
-            padding: var(--space-lg) var(--space-xl);
+            padding: var(--space-md) var(--space-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -290,12 +310,13 @@
             top: 0;
             z-index: 999;
             flex-wrap: wrap;
+            gap: var(--space-sm);
         }
 
         .nav-left {
             display: flex;
             align-items: center;
-            gap: var(--space-lg);
+            gap: var(--space-sm);
             flex: 1;
         }
 
@@ -304,20 +325,26 @@
             background: none;
             border: none;
             color: var(--white);
-            font-size: 1.25rem;
+            font-size: clamp(1.25rem, 4vw, 1.5rem);
             cursor: pointer;
             padding: var(--space-sm);
             border-radius: var(--radius-md);
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
+            position: relative;
+            z-index: 1001;
         }
 
         .menu-toggle:hover {
             background: var(--glass-bg);
         }
 
+        .menu-toggle.active i::before {
+            content: '\F2EA'; /* Bootstrap Icons 'x' */
+        }
+
         .search-container {
             position: relative;
-            max-width: 400px;
+            max-width: clamp(200px, 50vw, 400px);
             width: 100%;
         }
 
@@ -326,9 +353,9 @@
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
-            padding: var(--space-md) var(--space-xl) var(--space-md) 3rem;
+            padding: var(--space-sm) var(--space-md) var(--space-sm) 2.5rem;
             color: var(--white);
-            font-size: 0.875rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             transition: all 0.2s ease;
         }
 
@@ -341,23 +368,24 @@
 
         .search-icon {
             position: absolute;
-            left: var(--space-md);
+            left: var(--space-sm);
             top: 50%;
             transform: translateY(-50%);
             color: var(--gray-400);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: var(--space-lg);
+            gap: var(--space-sm);
             flex-wrap: wrap;
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: var(--space-sm);
         }
 
         .action-btn {
@@ -365,7 +393,7 @@
             background: none;
             border: none;
             color: var(--gray-300);
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 3vw, 1.25rem);
             cursor: pointer;
             padding: var(--space-sm);
             border-radius: var(--radius-md);
@@ -383,7 +411,7 @@
             right: -2px;
             background: var(--error);
             color: var(--white);
-            font-size: 0.625rem;
+            font-size: clamp(0.5rem, 2vw, 0.625rem);
             font-weight: 600;
             padding: 0.125rem 0.375rem;
             border-radius: 10px;
@@ -398,11 +426,11 @@
         .user-trigger {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: var(--space-sm);
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
-            padding: var(--space-sm) var(--space-md);
+            padding: var(--space-sm);
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -413,30 +441,31 @@
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: clamp(28px, 8vw, 32px);
+            height: clamp(28px, 8vw, 32px);
             background: var(--gradient-primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
         }
 
         .user-info h4 {
-            font-size: 0.875rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             font-weight: 600;
             margin-bottom: 0.125rem;
         }
 
         .user-info p {
-            font-size: 0.75rem;
+            font-size: clamp(0.625rem, 2vw, 0.75rem);
             color: var(--gray-400);
         }
 
         .dropdown-icon {
             color: var(--gray-400);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             transition: transform 0.2s ease;
         }
 
@@ -451,8 +480,8 @@
             background: var(--dark-surface);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: var(--space-md);
-            min-width: 200px;
+            padding: var(--space-sm);
+            min-width: clamp(160px, 50vw, 200px);
             box-shadow: var(--shadow-2xl);
             opacity: 0;
             visibility: hidden;
@@ -470,8 +499,8 @@
         .dropdown-item {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
-            padding: var(--space-md);
+            gap: var(--space-sm);
+            padding: var(--space-sm);
             border-radius: var(--radius-md);
             color: var(--gray-300);
             text-decoration: none;
@@ -483,6 +512,7 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
         }
 
         .dropdown-item:hover {
@@ -493,19 +523,19 @@
         .dropdown-divider {
             height: 1px;
             background: var(--glass-border);
-            margin: var(--space-md) 0;
+            margin: var(--space-sm) 0;
         }
 
         .theme-toggle {
             position: fixed;
-            top: var(--space-xl);
-            right: var(--space-xl);
+            top: var(--space-lg);
+            right: var(--space-lg);
             z-index: 1001;
         }
 
         .theme-btn {
-            width: clamp(40px, 10vw, 48px);
-            height: clamp(40px, 10vw, 48px);
+            width: clamp(36px, 10vw, 48px);
+            height: clamp(36px, 10vw, 48px);
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -527,21 +557,21 @@
 
         .chat-widget {
             position: fixed;
-            bottom: var(--space-xl);
-            right: var(--space-xl);
+            bottom: var(--space-lg);
+            right: var(--space-lg);
             z-index: 1001;
         }
 
         .chat-button {
-            width: clamp(48px, 12vw, 64px);
-            height: clamp(48px, 12vw, 64px);
+            width: clamp(48px, 12vw, 56px);
+            height: clamp(48px, 12vw, 56px);
             background: var(--gradient-primary);
             border: none;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.25rem, 4vw, 1.5rem);
+            font-size: clamp(1rem, 3vw, 1.25rem);
             color: var(--white);
             cursor: pointer;
             box-shadow: var(--shadow-xl);
@@ -555,10 +585,10 @@
 
         .chat-box {
             position: absolute;
-            bottom: 80px;
+            bottom: calc(100% + var(--space-sm));
             right: 0;
-            width: clamp(280px, 80vw, 360px);
-            height: clamp(360px, 60vh, 480px);
+            width: clamp(240px, 90vw, 320px);
+            height: clamp(320px, 50vh, 400px);
             background: var(--dark-surface);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
@@ -574,7 +604,7 @@
 
         .chat-header {
             background: var(--gradient-primary);
-            padding: var(--space-lg);
+            padding: var(--space-md);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -583,13 +613,14 @@
         .chat-header h4 {
             font-family: var(--font-display);
             font-weight: 600;
+            font-size: clamp(0.875rem, 2.5vw, 1rem);
         }
 
         .chat-close {
             background: none;
             border: none;
             color: var(--white);
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 3vw, 1.25rem);
             cursor: pointer;
             width: 24px;
             height: 24px;
@@ -606,16 +637,17 @@
 
         .chat-messages {
             flex: 1;
-            padding: var(--space-lg);
+            padding: var(--space-md);
             overflow-y: auto;
         }
 
         .message {
-            margin-bottom: var(--space-md);
+            margin-bottom: var(--space-sm);
             padding: var(--space-sm) var(--space-md);
             border-radius: var(--radius-md);
             background: var(--glass-bg);
             color: var(--white);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
         }
 
         .message.user {
@@ -630,7 +662,7 @@
         }
 
         .chat-input-container {
-            padding: var(--space-lg);
+            padding: var(--space-md);
             border-top: 1px solid var(--glass-border);
         }
 
@@ -639,9 +671,10 @@
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: var(--space-md);
+            padding: var(--space-sm);
             color: var(--white);
             font-family: var(--font-primary);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
         }
 
         .chat-input::placeholder {
@@ -734,9 +767,11 @@
             color: var(--gray-500);
         }
 
+        /* Media Queries for Responsiveness */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: clamp(200px, 70vw, 280px);
             }
 
             .sidebar.active {
@@ -757,50 +792,87 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: var(--space-md);
+                padding: var(--space-md);
+            }
+
+            .nav-left {
+                width: 100%;
+                justify-content: space-between;
             }
 
             .nav-right {
                 width: 100%;
-                justify-content: flex-end;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .sidebar {
-                width: clamp(160px, 50vw, 240px);
-            }
-
-            .sidebar-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .logo {
-                margin-bottom: var(--space-md);
-            }
-
-            .nav-section-title {
-                padding-left: 0;
-            }
-
-            .nav-list li a,
-            .nav-list li button {
-                padding: var(--space-md) var(--space-lg);
+                justify-content: space-between;
             }
 
             .search-container {
                 max-width: 100%;
             }
+
+            .user-trigger {
+                padding: var(--space-xs) var(--space-sm);
+            }
+
+            .user-info p {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar {
+                width: clamp(180px, 60vw, 240px);
+                padding: var(--space-md);
+            }
+
+            .sidebar-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+
+            .logo {
+                margin-bottom: var(--space-sm);
+            }
+
+            .nav-section-title {
+                padding-left: 0;
+                font-size: clamp(0.625rem, 2.5vw, 0.75rem);
+            }
+
+            .nav-list li a,
+            .nav-list li button {
+                padding: var(--space-sm) var(--space-md);
+                font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+            }
+
+            .search-input {
+                padding: var(--space-sm) var(--space-md) var(--space-sm) 2rem;
+            }
+
+            .theme-toggle {
+                top: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .chat-widget {
+                bottom: var(--space-md);
+                right: var(--space-md);
+            }
+
+            .chat-box {
+                width: clamp(200px, 85vw, 280px);
+                height: clamp(280px, 45vh, 360px);
+            }
         }
 
         @media (max-width: 480px) {
             .sidebar {
-                width: clamp(140px, 45vw, 200px);
+                width: clamp(160px, 55vw, 220px);
             }
 
             .logo {
-                width: clamp(28px, 8vw, 40px);
-                height: clamp(28px, 8vw, 40px);
+                width: clamp(32px, 8vw, 40px);
+                height: clamp(32px, 8vw, 40px);
                 font-size: clamp(0.875rem, 3vw, 1.25rem);
             }
 
@@ -813,33 +885,33 @@
             }
 
             .nav-section-title {
-                font-size: clamp(0.5rem, 2vw, 0.75rem);
-                padding-left: var(--space-sm);
+                font-size: clamp(0.5rem, 2vw, 0.625rem);
             }
 
             .nav-list li a,
             .nav-list li button {
-                padding: var(--space-md) var(--space-md);
+                padding: var(--space-sm);
+                font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             }
 
-            .search-container {
-                max-width: 100%;
+            .user-dropdown {
+                min-width: clamp(140px, 45vw, 180px);
             }
         }
 
         @media (max-width: 360px) {
             .sidebar {
-                width: clamp(120px, 40vw, 180px);
+                width: clamp(140px, 50vw, 200px);
             }
 
             .logo {
-                width: clamp(24px, 8vw, 32px);
-                height: clamp(24px, 8vw, 32px);
+                width: clamp(28px, 8vw, 36px);
+                height: clamp(28px, 8vw, 36px);
                 font-size: clamp(0.75rem, 3vw, 1rem);
             }
 
             .brand-text h1 {
-                font-size: clamp(0.75rem, 2vw, 1rem);
+                font-size: clamp(0.75rem, 2.5vw, 1rem);
             }
 
             .brand-text p {
@@ -847,26 +919,27 @@
             }
 
             .nav-section-title {
-                font-size: clamp(0.5rem, 2vw, 0.75rem);
-                padding-left: var(--space-sm);
-            }
-
-            .nav-section-title::before {
-                width: 2px;
-                height: 12px;
+                font-size: clamp(0.5rem, 2vw, 0.625rem);
             }
 
             .nav-list li a,
             .nav-list li button {
-                padding: var(--space-md) var(--space-sm);
-            }
-
-            .search-container {
-                max-width: 100%;
+                padding: var(--space-xs) var(--space-sm);
+                font-size: clamp(0.625rem, 2vw, 0.75rem);
             }
 
             .search-input {
-                padding: var(--space-md) var(--space-lg) var(--space-md) 2rem;
+                padding: var(--space-xs) var(--space-sm) var(--space-xs) 2rem;
+                font-size: clamp(0.625rem, 2vw, 0.75rem);
+            }
+
+            .search-icon {
+                font-size: clamp(0.625rem, 2vw, 0.75rem);
+            }
+
+            .chat-box {
+                width: clamp(180px, 80vw, 260px);
+                height: clamp(260px, 40vh, 320px);
             }
         }
     </style>
@@ -874,6 +947,7 @@
 
 <body>
     <div class="dashboard-container">
+        <div class="overlay" id="overlay"></div>
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">M</div>
@@ -995,29 +1069,62 @@
         document.addEventListener('DOMContentLoaded', () => {
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-            });
-
+            const overlay = document.getElementById('overlay');
             const userMenu = document.getElementById('userMenu');
-            userMenu.addEventListener('click', () => {
-                userMenu.classList.toggle('active');
-            });
-
             const themeToggle = document.getElementById('themeToggle');
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('light');
-                themeToggle.innerHTML = document.body.classList.contains('light') ?
-                    '<i class="bi bi-sun"></i>' :
-                    '<i class="bi bi-moon-stars"></i>';
-            });
-
             const chatToggle = document.getElementById('chatToggle');
             const chatBox = document.getElementById('chatBox');
             const chatClose = document.getElementById('chatClose');
             const chatInput = document.getElementById('chatInput');
             const chatMessages = document.getElementById('chatMessages');
 
+            // Toggle Sidebar
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            menuToggle.addEventListener('click', toggleSidebar);
+
+            // Close Sidebar on Overlay Click
+            overlay.addEventListener('click', () => {
+                if (sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                }
+            });
+
+            // Close Sidebar on Menu Item Click
+            document.querySelectorAll('.nav-list li a, .nav-list li button').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024 && sidebar.classList.contains('active')) {
+                        toggleSidebar();
+                    }
+                });
+            });
+
+            // Toggle User Menu
+            userMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenu.classList.toggle('active');
+            });
+
+            // Close User Menu on Outside Click
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target) && userMenu.classList.contains('active')) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            // Toggle Theme
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light');
+                themeToggle.innerHTML = document.body.classList.contains('light')
+                    ? '<i class="bi bi-sun"></i>'
+                    : '<i class="bi bi-moon-stars"></i>';
+            });
+
+            // Toggle Chat
             chatToggle.addEventListener('click', () => {
                 chatBox.classList.toggle('active');
             });
@@ -1026,6 +1133,7 @@
                 chatBox.classList.remove('active');
             });
 
+            // Chat Input Handling
             chatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && chatInput.value.trim()) {
                     const message = document.createElement('div');
@@ -1043,6 +1151,18 @@
                     }, 1000);
 
                     chatInput.value = '';
+                }
+            });
+
+            // Prevent Sidebar from Closing on Internal Clicks
+            sidebar.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Close Sidebar on Resize if Open
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024 && sidebar.classList.contains('active')) {
+                    toggleSidebar();
                 }
             });
         });
