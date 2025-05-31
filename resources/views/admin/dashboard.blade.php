@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr Solution User Dashboard - Premium Tech Solutions | 2025</title>
-    <meta name="description" content="User-friendly dashboard for accessing free and premium tools: coding, hacking, sniffing, OS, bots, and more.">
-    <meta name="keywords" content="user dashboard, hacking tools, sniffing tools, coding tools, bots, Mr Solution">
+    <title>Mr Solution Dashboard - Premium Tech Solutions | 2025</title>
+    <meta name="description" content="Experience the world's most advanced dashboard for AI-powered tech solutions. Real-time analytics, seamless project management, and premium user experience.">
+    <meta name="keywords" content="premium dashboard, AI analytics, tech solutions, Mr Solution, modern interface">
     <meta name="author" content="Mr Solution">
 
     <!-- Fonts -->
@@ -84,7 +84,7 @@
 
         html {
             scroll-behavior: smooth;
-            font-size: clamp(14px, 4vw, 16px);
+            font-size: 16px;
         }
 
         body {
@@ -113,6 +113,46 @@
             background: var(--primary-dark);
         }
 
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--glass-border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         .dashboard-container {
             display: flex;
             min-height: 100vh;
@@ -120,7 +160,7 @@
         }
 
         .sidebar {
-            width: clamp(180px, 20vw, 280px);
+            width: 280px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-right: 1px solid var(--glass-border);
@@ -138,9 +178,10 @@
             transform: translateX(-100%);
         }
 
-        .sidebar.active {
+        .sidebar.visible {
             transform: translateX(0);
         }
+
 
         .sidebar-header {
             display: flex;
@@ -152,16 +193,21 @@
         }
 
         .logo {
-            width: clamp(32px, 10vw, 48px);
-            height: clamp(32px, 10vw, 48px);
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--white);
+        }
+
+        .logo img {
+            max-width: 100%;
+            border-radius: var(--radius-lg);
         }
 
         .brand-text {
@@ -170,13 +216,13 @@
 
         .brand-text h1 {
             font-family: var(--font-display);
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
         }
 
         .brand-text p {
-            font-size: clamp(0.625rem, 2vw, 0.875rem);
+            font-size: 0.875rem;
             color: var(--gray-400);
         }
 
@@ -185,7 +231,7 @@
         }
 
         .nav-section-title {
-            font-size: clamp(0.625rem, 2vw, 0.75rem);
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--gray-500);
             text-transform: uppercase;
@@ -219,40 +265,264 @@
             margin: 0;
         }
 
-        .nav-list li a,
-        .nav-list li button {
+        .nav-list li {
+            margin: 0;
+        }
+
+        .nav-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-list li a {
             color: var(--gray-300);
             text-decoration: none;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
+            display: block;
             padding: var(--space-md) var(--space-lg);
             border-radius: var(--radius-lg);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
         }
 
-        .nav-list li a:hover,
-        .nav-list li button:hover {
+        .nav-list li a:hover {
             background: var(--glass-bg);
             color: var(--white);
             transform: translateX(4px);
         }
 
-        .nav-list li a.active,
-        .nav-list li button.active {
+        .nav-list li a.active {
             background: var(--gradient-primary);
             color: var(--white);
             box-shadow: var(--shadow-lg);
         }
 
-        .nav-list li a .nav-icon,
-        .nav-list li button .nav-icon {
+        .nav-list li a.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-list li a .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-list li a .nav-badge {
+            background: var(--accent);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+
+        .nav-list li a.premium-link {
+            background: var(--gradient-accent) !important;
+            color: var(--white) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-list li a.premium-link::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .nav-menu .nav-item {
+            position: relative;
+        }
+
+        .nav-menu .nav-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-menu .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-lg);
+            color: var(--gray-300);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-menu .nav-item a:hover {
+            color: var(--white);
+            background: var(--glass-bg);
+            transform: translateX(4px);
+        }
+
+        .nav-menu .nav-item a.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-menu .nav-item a.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-menu .nav-item a .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-menu .nav-item a .nav-badge {
+            background: var(--accent);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+
+        .nav-menu .nav-item a.premium-link {
+            background: var(--gradient-accent) !important;
+            color: var(--white) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-menu .nav-item a.premium-link::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+        }
+
+        .nav-menu .nav-item a.premium-link:hover {
+            background: var(--gradient-accent);
+            color: var(--white);
+        }
+
+        .nav-menu .nav-item a.premium-link:hover::before {
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .nav-menu .nav-item a.premium-link.active {
+            background: var(--gradient-accent);
+            color: var(--white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-menu .nav-item a.premium-link.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-menu .nav-item a.premium-link .nav-icon {
+            color: var(--white);
+        }
+
+        .nav-menu .nav-item a.premium-link .nav-badge {
+            background: var(--white);
+            color: var(--dark-bg);
+        }
+
+        .nav-menu .nav-item a.premium-link .nav-badge:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .nav-item {
+            margin-bottom: var(--space-xs);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-lg);
+            color: var(--gray-300);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            color: var(--white);
+            background: var(--glass-bg);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+        }
+
+        .nav-icon {
             width: 20px;
             height: 20px;
             display: flex;
@@ -261,18 +531,47 @@
         }
 
         .nav-badge {
-            background: var(--error);
+            background: var(--accent);
             color: var(--white);
-            font-size: 0.625rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            padding: 0.125rem 0.375rem;
-            border-radius: 10px;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
             margin-left: auto;
+        }
+
+        .premium-link {
+            background: var(--gradient-accent) !important;
+            color: var(--white) !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-link::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
         }
 
         .main-content {
             flex: 1;
-            margin-left: clamp(180px, 20vw, 280px);
+            margin-left: 280px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -289,14 +588,12 @@
             position: sticky;
             top: 0;
             z-index: 999;
-            flex-wrap: wrap;
         }
 
         .nav-left {
             display: flex;
             align-items: center;
             gap: var(--space-lg);
-            flex: 1;
         }
 
         .menu-toggle {
@@ -351,7 +648,6 @@
             display: flex;
             align-items: center;
             gap: var(--space-lg);
-            flex-wrap: wrap;
         }
 
         .nav-actions {
@@ -478,11 +774,6 @@
             font-weight: 500;
             transition: all 0.2s ease;
             margin-bottom: var(--space-xs);
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
         }
 
         .dropdown-item:hover {
@@ -508,7 +799,7 @@
 
         .page-title {
             font-family: var(--font-display);
-            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: var(--space-sm);
             background: var(--gradient-primary);
@@ -519,12 +810,12 @@
 
         .page-subtitle {
             color: var(--gray-400);
-            font-size: clamp(0.875rem, 3vw, 1rem);
+            font-size: 1rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 40vw, 280px), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--space-xl);
             margin-bottom: var(--space-2xl);
         }
@@ -556,20 +847,55 @@
             background: var(--gradient-primary);
         }
 
+        .stat-card.secondary::before {
+            background: var(--gradient-secondary);
+        }
+
+        .stat-card.accent::before {
+            background: var(--gradient-accent);
+        }
+
+        .stat-card.success::before {
+            background: var(--gradient-success);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
         .stat-icon {
-            width: clamp(40px, 10vw, 60px);
-            height: clamp(40px, 10vw, 60px);
+            width: 60px;
+            height: 60px;
             background: var(--glass-bg);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-size: 1.5rem;
             color: var(--primary);
         }
 
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.up {
+            color: var(--success);
+        }
+
+        .stat-trend.down {
+            color: var(--error);
+        }
+
         .stat-value {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: var(--space-sm);
             background: var(--gradient-primary);
@@ -585,7 +911,7 @@
 
         .chart-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 45vw, 300px), 1fr));
+            grid-template-columns: 2fr 1fr;
             gap: var(--space-xl);
             margin-bottom: var(--space-2xl);
         }
@@ -605,29 +931,34 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: var(--space-xl);
-            flex-wrap: wrap;
         }
 
         .chart-title {
             font-family: var(--font-display);
-            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
+        .chart-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
         .chart-btn {
-            color: var(--primary);
-            text-decoration: none;
+            background: none;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radiusArizona);
+            padding: var(--space-sm) var(--space-md);
+            color: var(--gray-400);
             font-size: 0.875rem;
-            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .chart-btn:hover {
-            color: var(--primary-light);
-        }
-
-        .activity-feed {
-            max-height: 300px;
-            overflow-y: auto;
+        .chart-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
         }
 
         .activity-item {
@@ -643,42 +974,42 @@
         }
 
         .activity-icon {
-            width: clamp(30px, 8vw, 40px);
-            height: clamp(30px, 8vw, 40px);
+            width: 40px;
+            height: 40px;
             background: var(--glass-bg);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.875rem, 2vw, 1rem);
+            font-size: 1rem;
             color: var(--primary);
         }
 
         .activity-content h5 {
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
+            font-size: 0.875rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
         .activity-content p {
-            font-size: clamp(0.625rem, 2vw, 0.75rem);
+            font-size: 0.75rem;
             color: var(--gray-400);
         }
 
         .activity-time {
-            font-size: clamp(0.625rem, 2vw, 0.75rem);
+            font-size: 0.75rem;
             color: var(--gray-500);
             margin-left: auto;
         }
 
-        .tool-grid {
+        .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 30vw, 200px), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: var(--space-lg);
             margin-bottom: var(--space-2xl);
         }
 
-        .tool-card {
+        .action-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -691,39 +1022,34 @@
             color: inherit;
         }
 
-        .tool-card:hover {
+        .action-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
+            color: inherit;
         }
 
-        .tool-card-icon {
-            width: clamp(36px, 10vw, 48px);
-            height: clamp(36px, 10vw, 48px);
+        .action-card-icon {
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-size: 1.25rem;
             color: var(--white);
             margin: 0 auto var(--space-md);
         }
 
-        .tool-card h4 {
+        .action-card h4 {
             font-weight: 600;
             margin-bottom: var(--space-sm);
         }
 
-        .tool-card p {
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
+        .action-card p {
+            font-size: 0.875rem;
             color: var(--gray-400);
-        }
-
-        .premium-lock {
-            color: var(--error);
-            font-size: 0.75rem;
-            margin-top: var(--space-sm);
         }
 
         .theme-toggle {
@@ -734,8 +1060,8 @@
         }
 
         .theme-btn {
-            width: clamp(40px, 10vw, 48px);
-            height: clamp(40px, 10vw, 48px);
+            width: 48px;
+            height: 48px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -763,15 +1089,15 @@
         }
 
         .chat-button {
-            width: clamp(48px, 12vw, 64px);
-            height: clamp(48px, 12vw, 64px);
+            width: 64px;
+            height: 64px;
             background: var(--gradient-primary);
             border: none;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.25rem, 4vw, 1.5rem);
+            font-size: 1.5rem;
             color: var(--white);
             cursor: pointer;
             box-shadow: var(--shadow-xl);
@@ -787,8 +1113,8 @@
             position: absolute;
             bottom: 80px;
             right: 0;
-            width: clamp(280px, 80vw, 360px);
-            height: clamp(360px, 60vh, 480px);
+            width: 360px;
+            height: 480px;
             background: var(--dark-surface);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
@@ -885,6 +1211,106 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--dark-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--white);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-300);
+            margin-bottom: var(--space-xs);
+        }
+
+        .form-input {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            color: var(--white);
+            font-family: var(--font-primary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-submit {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-submit:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
         body.light {
             --dark-bg: #ffffff;
             --dark-surface: #f8fafc;
@@ -902,13 +1328,11 @@
             background: var(--dark-surface);
         }
 
-        body.light .nav-list li a,
-        body.light .nav-list li button {
+        body.light .nav-link {
             color: var(--gray-500);
         }
 
-        body.light .nav-list li a.active,
-        body.light .nav-list li button.active {
+        body.light .nav-link.active {
             color: var(--white);
         }
 
@@ -964,6 +1388,10 @@
             color: var(--white);
         }
 
+        body.light .content-header {
+            margin-bottom: var(--space-2xl);
+        }
+
         body.light .page-title {
             background: none;
             -webkit-text-fill-color: var(--primary);
@@ -997,8 +1425,17 @@
         }
 
         body.light .user-info h4,
-        body.light .user-info {
+        body.light .user-info p {
             color: var(--gray-500);
+        }
+
+        body.light .page-title {
+            background: none;
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        body.light .page-subtitle {
+            color: var(--gray-400);
         }
 
         @media (max-width: 1024px) {
@@ -1028,25 +1465,14 @@
                 grid-template-columns: 1fr;
             }
 
-            .tool-grid {
+            .quick-actions {
                 grid-template-columns: 1fr;
-            }
-
-            .top-nav {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: var(--space-md);
-            }
-
-            .nav-right {
-                width: 100%;
-                justify-content: flex-end;
             }
         }
 
         @media (max-width: 640px) {
             .sidebar {
-                width: clamp(160px, 50vw, 240px);
+                width: 240px;
             }
 
             .sidebar-header {
@@ -1062,8 +1488,7 @@
                 padding-left: 0;
             }
 
-            .nav-list li a,
-            .nav-list li button {
+            .nav-link {
                 padding: var(--space-md) var(--space-lg);
             }
 
@@ -1074,80 +1499,64 @@
 
         @media (max-width: 480px) {
             .sidebar {
-                width: clamp(140px, 45vw, 200px);
+                width: 200px;
+            }
+
+            .sidebar-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
             .logo {
-                width: clamp(28px, 8vw, 40px);
-                height: clamp(28px, 8vw, 40px);
-                font-size: clamp(0.875rem, 3vw, 1.25rem);
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
             }
 
             .brand-text h1 {
-                font-size: clamp(0.875rem, 3vw, 1.25rem);
+                font-size: 1.25rem;
             }
 
             .brand-text p {
-                font-size: clamp(0.5rem, 2vw, 0.75rem);
+                font-size: 0.75rem;
             }
 
-            .nav-section-title {
-                font-size: clamp(0.5rem, 2vw, 0.75rem);
-                padding-left: var(--space-sm);
-            }
-
-            .nav-list li a,
-            .nav-list li button {
+            .nav-link {
                 padding: var(--space-md) var(--space-md);
             }
         }
 
         @media (max-width: 360px) {
             .sidebar {
-                width: clamp(120px, 40vw, 180px);
+                width: 180px;
             }
 
             .logo {
-                width: clamp(24px, 8vw, 32px);
-                height: clamp(24px, 8vw, 32px);
-                font-size: clamp(0.75rem, 3vw, 1rem);
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
             }
 
             .brand-text h1 {
-                font-size: clamp(0.75rem, 2vw, 1rem);
+                font-size: 1rem;
             }
 
             .brand-text p {
-                font-size: clamp(0.5rem, 2vw, 0.625rem);
+                font-size: 0.625rem;
             }
 
-            .nav-section-title {
-                font-size: clamp(0.5rem, 2vw, 0.75rem);
-                padding-left: var(--space-sm);
-            }
-
-            .nav-section-title::before {
-                width: 2px;
-                height: 12px;
-            }
-
-            .nav-list li a,
-            .nav-list li button {
+            .nav-link {
                 padding: var(--space-md) var(--space-sm);
-            }
-
-            .search-container {
-                max-width: 100%;
-            }
-
-            .search-input {
-                padding: var(--space-md) var(--space-lg) var(--space-md) 2rem;
             }
         }
     </style>
 </head>
 
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
     <div class="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
@@ -1159,25 +1568,43 @@
             </div>
             <nav class="nav-section">
                 <div class="nav-section-title">Main</div>
-                <ul class="nav-list">
-                    <li><a href="#home" class="active"><i class="bi bi-grid nav-icon"></i> Home</a></li>
-                    <li><a href="#free-apps"><i class="bi bi-code-slash nav-icon"></i> Free Apps</a></li>
-                    <li><a href="#premium-features"><i class="bi bi-lock nav-icon"></i> Premium Features <span class="nav-badge">Pro</span></a></li>
-                    <li><a href="#community"><i class="bi bi-people nav-icon"></i> Community</a></li>
-                    <li><a href="#support"><i class="bi bi-question-circle nav-icon"></i> Support <span class="nav-badge">New</span></a></li>
-                </ul>
+                <div class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="bi bi-grid nav-icon"></i> Dashboard
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-bar-chart nav-icon"></i> Analytics
+                        <span class="nav-badge">New</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-kanban nav-icon"></i> Projects
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link premium-link">
+                        <i class="bi bi-gem nav-icon"></i> Premium Features
+                    </a>
+                </div>
             </nav>
             <nav class="nav-section">
-                <div class="nav-section-title">Account</div>
-                <ul class="nav-list">
-                    <li><a href="#profile"><i class="bi bi-person nav-icon"></i> Profile</a></li>
-                    <li><a href="#settings"><i class="bi bi-gear nav-icon"></i> Settings</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            <button type="submit"><i class="bi bi-box-arrow-right nav-icon"></i> Logout</button>
-                        </form>
-                    </li>
-                </ul>
+                <div class="nav-section-title">Settings</div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="bi bi-gear nav-icon"></i> Settings
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-link">
+                            <i class="bi bi-box-arrow-right nav-icon"></i> Logout
+                        </button>
+                    </form>
+                </div>
             </nav>
         </aside>
 
@@ -1189,7 +1616,7 @@
                     </button>
                     <div class="search-container">
                         <i class="bi bi-search search-icon"></i>
-                        <input type="text" class="search-input" placeholder="Search tools, tutorials, or community...">
+                        <input type="text" class="search-input" placeholder="Search projects, analytics, or users...">
                     </div>
                 </div>
                 <div class="nav-right">
@@ -1198,31 +1625,31 @@
                             <i class="bi bi-bell"></i>
                             <span class="badge">3</span>
                         </button>
-                        <button class="action-btn" title="Favorites">
-                            <i class="bi bi-star"></i>
+                        <button class="action-btn" title="Messages">
+                            <i class="bi bi-chat-dots"></i>
+                            <span class="badge">5</span>
                         </button>
                     </div>
                     <div class="user-menu" id="userMenu">
                         <div class="user-trigger">
-                            <div class="user-avatar">U</div>
+                            <div class="user-avatar">AD</div>
                             <div class="user-info">
-                                <h4>User</h4>
-                                <p>Free Tier</p>
+                                <h4>{{ Auth::user()->name }}</h4>
+                                <p>{{ Auth::user()->role }}</p>
                             </div>
                             <i class="bi bi-chevron-down dropdown-icon"></i>
                         </div>
                         <div class="user-dropdown">
-                            <a href="#profile" class="dropdown-item">
+                            <a href="#" class="dropdown-item">
                                 <i class="bi bi-person"></i> Profile
                             </a>
-                            <a href="#settings" class="dropdown-item">
+                            <a href="#" class="dropdown-item">
                                 <i class="bi bi-gear"></i> Settings
                             </a>
-                            <a href="#subscription" class="dropdown-item">
-                                <i class="bi bi-lock"></i> Subscription
-                            </a>
                             <div class="dropdown-divider"></div>
-                            <form method="POST" action="/logout">
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
                                 <button type="submit" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i> Logout
                                 </button>
@@ -1234,102 +1661,114 @@
 
             <section class="content">
                 <div class="content-header">
-                    <h2 class="page-title">Welcome to Your Hacking Hub</h2>
-                    <p class="page-subtitle">Access free and premium tools to code, hack, sniff, and dominate.</p>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Welcome back, {{ Auth::user()->name }}! Here's your AI-powered tech solutions overview.</p>
                 </div>
 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon"><i class="bi bi-code-slash"></i></div>
+                            <div class="stat-icon"><i class="bi bi-people"></i></div>
+                            <div class="stat-trend up">
+                                <i class="bi bi-arrow-up"></i> +12.5%
+                            </div>
                         </div>
-                        <div class="stat-value">8</div>
-                        <div class="stat-label">Tools Used</div>
+                        <div class="stat-value">1,245</div>
+                        <div class="stat-label">Active Users</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card secondary">
                         <div class="stat-header">
-                            <div class="stat-icon"><i class="bi bi-star"></i></div>
+                            <div class="stat-icon"><i class="bi bi-bar-chart"></i></div>
+                            <div class="stat-trend down">
+                                <i class="bi bi-arrow-down"></i> -3.2%
+                            </div>
                         </div>
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Favorites</div>
+                        <div class="stat-value">$45,320</div>
+                        <div class="stat-label">Revenue</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card accent">
                         <div class="stat-header">
-                            <div class="stat-icon"><i class="bi bi-trophy"></i></div>
+                            <div class="stat-icon"><i class="bi bi-kanban"></i></div>
+                            <div class="stat-trend up">
+                                <i class="bi bi-arrow-up"></i> +8.7%
+                            </div>
                         </div>
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">Community Rank</div>
+                        <div class="stat-value">342</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+                            <div class="stat-trend up">
+                                <i class="bi bi-arrow-up"></i> +15.9%
+                            </div>
+                        </div>
+                        <div class="stat-value">89%</div>
+                        <div class="stat-label">Completion Rate</div>
                     </div>
                 </div>
 
                 <div class="chart-section">
                     <div class="chart-card">
                         <div class="chart-header">
-                            <h3 class="chart-title">Tool Usage</h3>
+                            <h3 class="chart-title">Revenue Overview</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn active">Weekly</button>
+                                <button class="chart-btn">Monthly</button>
+                                <button class="chart-btn">Yearly</button>
+                            </div>
                         </div>
-                        <canvas id="toolUsageChart"></canvas>
+                        <canvas id="revenueChart"></canvas>
                     </div>
                     <div class="chart-card">
                         <div class="chart-header">
-                            <h3 class="chart-title">Recent Activity</h3>
-                            <a href="#activity" class="chart-btn">View All</a>
+                            <h3 class="chart-title">Activity Feed</h3>
+                            <a href="#" class="chart-btn">View All</a>
                         </div>
                         <div class="activity-feed">
                             <div class="activity-item">
-                                <div class="activity-icon"><i class="bi bi-code-slash"></i></div>
+                                <div class="activity-icon"><i class="bi bi-person-plus"></i></div>
                                 <div class="activity-content">
-                                    <h5>Tool Launched</h5>
-                                    <p>You ran the Packet Sniffer tool.</p>
-                                </div>
-                                <div class="activity-time">30m ago</div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon"><i class="bi bi-people"></i></div>
-                                <div class="activity-content">
-                                    <h5>Community Post</h5>
-                                    <p>You posted in the Hacking Forum.</p>
+                                    <h5>New User Registered</h5>
+                                    <p>Jane Smith joined the platform.</p>
                                 </div>
                                 <div class="activity-time">2h ago</div>
                             </div>
                             <div class="activity-item">
-                                <div class="activity-icon"><i class="bi bi-lock"></i></div>
+                                <div class="activity-icon"><i class="bi bi-kanban"></i></div>
                                 <div class="activity-content">
-                                    <h5>Premium Unlocked</h5>
-                                    <p>You accessed the SQL Injector tool.</p>
+                                    <h5>Project Completed</h5>
+                                    <p>AI Analytics v2.0 finished.</p>
                                 </div>
-                                <div class="activity-time">5h ago</div>
+                                <div class="activity-time">4h ago</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="bi bi-bell"></i></div>
+                                <div class="activity-content">
+                                    <h5>System Alert</h5>
+                                    <p>Server maintenance scheduled.</p>
+                                </div>
+                                <div class="activity-time">6h ago</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="tool-grid">
-                    <a href="#code-editor" class="tool-card">
-                        <div class="tool-card-icon"><i class="bi bi-code-slash"></i></div>
-                        <h4>Code Editor</h4>
-                        <p>Launch a free coding IDE.</p>
+                <div class="quick-actions">
+                    <a href="#" class="action-card" id="newProjectCard">
+                        <div class="action-card-icon"><i class="bi bi-plus-circle"></i></div>
+                        <h4>New Project</h4>
+                        <p>Start a new AI-powered project.</p>
                     </a>
-                    <a href="#password-cracker" class="tool-card">
-                        <div class="tool-card-icon"><i class="bi bi-shield-lock"></i></div>
-                        <h4>Password Cracker</h4>
-                        <p>Free tool to test passwords.</p>
+                    <a href="#" class="action-card">
+                        <div class="action-card-icon"><i class="bi bi-bar-chart"></i></div>
+                        <h4>View Analytics</h4>
+                        <p>Dive into real-time data insights.</p>
                     </a>
-                    <a href="#packet-sniffer" class="tool-card">
-                        <div class="tool-card-icon"><i class="bi bi-wifi"></i></div>
-                        <h4>Packet Sniffer</h4>
-                        <p>Premium sniffing tool.</p>
-                        <p class="premium-lock">Premium Required</p>
-                    </a>
-                    <a href="#bot-builder" class="tool-card">
-                        <div class="tool-card-icon"><i class="bi bi-robot"></i></div>
-                        <h4>Bot Builder</h4>
-                        <p>Create custom bots.</p>
-                    </a>
-                    <a href="#hacking-os" class="tool-card">
-                        <div class="tool-card-icon"><i class="bi bi-terminal"></i></div>
-                        <h4>Hacking OS</h4>
-                        <p>Premium OS environment.</p>
-                        <p class="premium-lock">Premium Required</p>
+                    <a href="#" class="action-card">
+                        <div class="action-card-icon"><i class="bi bi-chat-dots"></i></div>
+                        <h4>Contact Support</h4>
+                        <p>Get help from our premium team.</p>
                     </a>
                 </div>
             </section>
@@ -1347,23 +1786,56 @@
             </button>
             <div class="chat-box" id="chatBox">
                 <div class="chat-header">
-                    <h4>Support Chat</h4>
+                    <h4>AI Assistant</h4>
                     <button class="chat-close" id="chatClose">
                         <i class="bi bi-x"></i>
                     </button>
                 </div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="message">Need help with a tool? Ask away!</div>
+                    <div class="message">Hello! How can I assist you today?</div>
                 </div>
                 <div class="chat-input-container">
                     <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="newProjectModal">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose"><i class="bi bi-x"></i></button>
+                <h3 class="modal-title">Create New Project</h3>
+                <form class="modal-form" id="newProjectForm">
+                    <div class="form-group">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" id="projectName" class="form-input" placeholder="Enter project name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" class="form-input" placeholder="Describe your project" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="form-submit">Create Project</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const hideLoadingScreen = () => {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            };
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(hideLoadingScreen, 100);
+            } else {
+                window.addEventListener('load', hideLoadingScreen);
+            }
+
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             menuToggle.addEventListener('click', () => {
@@ -1408,7 +1880,7 @@
                     setTimeout(() => {
                         const response = document.createElement('div');
                         response.className = 'message ai';
-                        response.textContent = 'Our team will help you unleash chaos soon!';
+                        response.textContent = 'Got your message! Our support team ';
                         chatMessages.appendChild(response);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 1000);
@@ -1417,15 +1889,40 @@
                 }
             });
 
-            const toolUsageChart = new Chart(document.getElementById('toolUsageChart'), {
-                type: 'bar',
+            const newProjectModal = document.getElementById('newProjectModal');
+            const modalClose = document.getElementById('modalClose');
+            const newProjectForm = document.getElementById('newProjectForm');
+            const newProjectCard = document.getElementById('newProjectCard');
+
+            newProjectCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                newProjectModal.classList.add('active');
+            });
+
+            modalClose.addEventListener('click', () => {
+                newProjectModal.classList.remove('active');
+            });
+
+            newProjectForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const projectName = document.getElementById('projectName').value;
+                const projectDescription = document.getElementById('projectDescription').value;
+                console.log(`New Project: ${projectName} - ${projectDescription}`);
+                newProjectModal.classList.remove('active');
+                newProjectForm.reset();
+            });
+
+            const revenueChart = new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
                 data: {
-                    labels: ['Coding', 'Hacking', 'Sniffing', 'Bots', 'OS'],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                     datasets: [{
-                        label: 'Usage Count',
-                        data: [20, 15, 10, 8, 5],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#6366f1', '#0ea5e9'],
-                        borderRadius: 8
+                        label: 'Revenue',
+                        data: [12000, 19000, 15000, 22000, 18000, 25000],
+                        borderColor: 'rgb(99, 102, 241)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        fill: true,
+                        tension: 0.4
                     }]
                 },
                 options: {
@@ -1440,28 +1937,39 @@
                             beginAtZero: true,
                             ticks: {
                                 color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
                             }
                         },
                         x: {
                             ticks: {
                                 color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                display: false
                             }
                         }
                     }
                 }
             });
 
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
+            const chartButtons = document.querySelectorAll('.chart-btn');
+            chartButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    chartButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const period = btn.textContent.toLowerCase();
+                    let newData;
+                    if (period === 'weekly') {
+                        newData = [12000, 19000, 15000, 22000, 18000, 25000];
+                    } else if (period === 'monthly') {
+                        newData = [50000, 65000, 45000, 70000, 60000, 80000];
+                    } else {
+                        newData = [200000, 250000, 180000, 300000, 220000, 350000];
                     }
+                    revenueChart.data.datasets[0].data = newData;
+                    revenueChart.update();
                 });
             });
         });
