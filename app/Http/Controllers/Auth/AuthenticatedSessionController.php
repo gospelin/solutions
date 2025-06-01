@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('user.dashboard');
+        return redirect()->route('dashboard');
     }
 
     public function destroy(Request $request): RedirectResponse

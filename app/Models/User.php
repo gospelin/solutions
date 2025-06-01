@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // Keep this if you still need the custom role column
+        'status',
     ];
 
     /**
@@ -47,10 +47,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    // Optional: Rename custom role check to avoid conflict
-    public function hasCustomRole($role)
-    {
-        return $this->role === $role;
-    }
+    
 }
