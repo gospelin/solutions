@@ -13,10 +13,10 @@
     <div class="hero-content">
         <h1 class="hero-title" id="heroTitle" data-i18n="hero.title">Revolutionary Tech Solutions</h1>
         <p class="hero-subtitle" id="heroSubtitle" data-i18n="hero.subtitle">Empowering businesses with AI-driven innovation and cutting-edge technology that transforms possibilities into reality</p>
-        <!--<div class="hero-buttons">
+        <div class="hero-buttons">
             <a href="#services" class="btn-primary" data-i18n="hero.explore">Explore Solutions</a>
             <a href="#contact" class="btn-secondary" data-i18n="hero.start">Start Your Journey</a>
-        </div>-->
+        </div>
     </div>
 </section>
 

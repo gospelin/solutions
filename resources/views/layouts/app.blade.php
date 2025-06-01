@@ -166,34 +166,35 @@
         <div class="nav-container">
             <div class="logo">
                 <img src="{{ asset('images/mrsolution.jpeg') }}" alt="Mr Solution Logo" class="logo-img" id="logo-img">
-                <span class="logo-text" data-i18n="nav.logo">Mr Solution</span>
+                <!--<span class="logo-text" data-i18n="nav.logo">Mr Solution</span>-->
             </div>
-
-            <ul class="nav-links">
-                <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
-                <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
-                <li><a href="#services" class="nav-link" data-i18n="nav.services">Services</a></li>
-                <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
-                <li><a href="#premium" class="cta-button" data-i18n="nav.premium">Get Premium</a></li>
-                @guest
-                @if (Route::has('login'))
-                <li><a class="nav-link" href="{{ route('login') }}" data-i18n="nav.login">Login</a></li>
-                @endif
-                @if (Route::has('register'))
-                <li><a class="nav-link" href="{{ route('register') }}" data-i18n="nav.register">Register</a></li>
-                @endif
-                @endguest
-            </ul>
-            <div class="mobile-menu" id="mobileMenu">
-                <div class="hamburger"></div>
-                <div class="hamburger"></div>
-                <div class="hamburger"></div>
+            <div class="nav-right">
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="nav-link" data-i18n="nav.home">Home</a></li>
+                    <li><a href="#about" class="nav-link" data-i18n="nav.about">About</a></li>
+                    <li><a href="#services" class="nav-link" data-i18n="nav.services">Services</a></li>
+                    <li><a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+                    <li><a href="#premium" class="cta-button" data-i18n="nav.premium">Get Premium</a></li>
+                    @guest
+                    @if (Route::has('login'))
+                    <li><a class="nav-link" href="{{ route('login') }}" data-i18n="nav.login">Login</a></li>
+                    @endif
+                    @if (Route::has('register'))
+                    <li><a class="nav-link" href="{{ route('register') }}" data-i18n="nav.register">Register</a></li>
+                    @endif
+                    @endguest
+                </ul>
+                <select id="languageSwitcher" class="language-switcher" aria-label="Select language">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                </select>
+                <div class="mobile-menu" id="mobileMenu">
+                    <div class="hamburger"></div>
+                    <div class="hamburger"></div>
+                    <div class="hamburger"></div>
+                </div>
             </div>
-            <select id="languageSwitcher" class="language-switcher" aria-label="Select language">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="fr">Français</option>
-            </select>
         </div>
     </nav>
 
@@ -275,24 +276,6 @@
             <a href="#contact" class="btn-primary modal-cta" data-i18n="modal.cta">Get Started</a>
         </div>
     </div>
-
-    <!-- Live Chat Widget -->
-    <!--<div class="chat-widget" id="chatWidget">
-        <button class="chat-button" id="chatButton" aria-label="Open live chat">💬</button>
-        <div class="chat-box" id="chatBox" role="dialog" aria-labelledby="chatHeader" aria-hidden="true">
-            <div class="chat-header">
-                <h4 id="chatHeader" data-i18n="chat.title">Live Support</h4>
-                <button type="button" class="cta-button" id="chatClose" aria-label="Close chat">×</button>
-            </div>
-            <div class="chat-messages">
-                <p data-i18n="chat.welcome">Welcome! How can we assist you today?</p>
-            </div>
-            <form id="chatForm" class="chat-form">
-                <input type="text" id="chatInput" data-i18n-placeholder="chat.input" placeholder="Type your message..." required aria-label="Chat message">
-                <button type="submit" class="btn-primary" data-i18n="chat.submit">Send</button>
-            </form>
-        </div>
-    </div>-->
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
