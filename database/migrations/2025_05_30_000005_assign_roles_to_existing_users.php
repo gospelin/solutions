@@ -18,10 +18,10 @@ class AssignRolesToExistingUsers extends Migration
 
         // Create or update admin user
         $admin = User::firstOrCreate(
-            ['email' => 'admin@solutions.com.ng'],
+            ['email' => 'admin@mrsolution.com.ng'],
             [
-                'name' => 'Admin User',
-                'password' => bcrypt('solutions@123'), // Change this
+                'name' => 'Admin',
+                'password' => bcrypt('admin@123'), // Change this
             ]
         );
         $admin->assignRole('admin');

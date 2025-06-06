@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mr Solution - @yield('title', 'User Dashboard') - Premium Tech Solutions | 2025</title>
-    <meta name="description" content="@yield('description', 'User-friendly dashboard for accessing free and premium tools: coding, hacking, sniffing, OS, bots, and more.')">
+    <meta name="description"
+        content="@yield('description', 'User-friendly dashboard for accessing free and premium tools: coding, hacking, sniffing, OS, bots, and more.')">
     <meta name="keywords" content="user dashboard, hacking tools, sniffing tools, coding tools, bots, Mr Solution">
     <meta name="author" content="Mr Solution">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -339,7 +343,8 @@
         }
 
         .menu-toggle.active i::before {
-            content: '\F2EA'; /* Bootstrap Icons 'x' */
+            content: '\F2EA';
+            /* Bootstrap Icons 'x' */
         }
 
         .search-container {
@@ -959,18 +964,37 @@
             <nav class="nav-section">
                 <div class="nav-section-title">Main</div>
                 <ul class="nav-list">
-                    <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="bi bi-grid nav-icon"></i> Home</a></li>
-                    <li><a href="{{ route('free-apps') }}" class="{{ request()->routeIs('free-apps') ? 'active' : '' }}"><i class="bi bi-code-slash nav-icon"></i> Free Apps</a></li>
-                    <li><a href="{{ route('premium-features') }}" class="{{ request()->routeIs('premium-features') ? 'active' : '' }}"><i class="bi bi-lock nav-icon"></i> Premium Features <span class="nav-badge">Pro</span></a></li>
-                    <li><a href="{{ route('community') }}" class="{{ request()->routeIs('community') ? 'active' : '' }}"><i class="bi bi-people nav-icon"></i> Community</a></li>
-                    <li><a href="{{ route('support') }}" class="{{ request()->routeIs('support') ? 'active' : '' }}"><i class="bi bi-question-circle nav-icon"></i> Support <span class="nav-badge">New</span></a></li>
+                    <li><a href="{{ route('user.dashboard') }}"
+                            class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i
+                                class="bi bi-grid nav-icon"></i> Home</a></li>
+                    <li><a href="{{ route('free-apps') }}"
+                            class="{{ request()->routeIs('free-apps') ? 'active' : '' }}"><i
+                                class="bi bi-code-slash nav-icon"></i> Free Apps</a></li>
+                    <li><a href="{{ route('premium-features') }}"
+                            class="{{ request()->routeIs('premium-features') ? 'active' : '' }}"><i
+                                class="bi bi-lock nav-icon"></i> Premium Features <span class="nav-badge">Pro</span></a>
+                    </li>
+                    <li><a href="{{ route('community') }}"
+                            class="{{ request()->routeIs('community') ? 'active' : '' }}"><i
+                                class="bi bi-people nav-icon"></i> Community</a></li>
+                    <li><a href="{{ route('support') }}" class="{{ request()->routeIs('support') ? 'active' : '' }}"><i
+                                class="bi bi-question-circle nav-icon"></i> Support</a></li>
+                    <li>
+                        <a href="#" class="{{ request()->routeIs('market') ? 'active' : '' }}">
+                            <i class="bi bi-cart nav-icon"></i>Marketplace <span class="nav-badge">New</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <nav class="nav-section">
                 <div class="nav-section-title">Account</div>
                 <ul class="nav-list">
-                    <li><a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}"><i class="bi bi-person nav-icon"></i> Profile</a></li>
-                    <li><a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}"><i class="bi bi-gear nav-icon"></i> Settings</a></li>
+                    <li><a href="{{ route('profile.edit') }}"
+                            class="{{ request()->routeIs('user.profile.edit') ? 'active' : '' }}"><i
+                                class="bi bi-person nav-icon"></i> Profile</a></li>
+                    <li><a href="{{ route('user.settings') }}"
+                            class="{{ request()->routeIs('user.settings') ? 'active' : '' }}"><i
+                                class="bi bi-gear nav-icon"></i> Settings</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -1012,13 +1036,16 @@
                             <i class="bi bi-chevron-down dropdown-icon"></i>
                         </div>
                         <div class="user-dropdown">
-                            <a href="{{ route('profile.edit') }}" class="dropdown-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+                            <a href="{{ route('profile.edit') }}"
+                                class="dropdown-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
                                 <i class="bi bi-person"></i> Profile
                             </a>
-                            <a href="{{ route('settings') }}" class="dropdown-item {{ request()->routeIs('settings') ? 'active' : '' }}">
+                            <a href="{{ route('user.settings') }}"
+                                class="dropdown-item {{ request()->routeIs('user.settings') ? 'active' : '' }}">
                                 <i class="bi bi-gear"></i> Settings
                             </a>
-                            <a href="{{ route('subscription') }}" class="dropdown-item {{ request()->routeIs('subscription') ? 'active' : '' }}">
+                            <a href="{{ route('subscription') }}"
+                                class="dropdown-item {{ request()->routeIs('subscription') ? 'active' : '' }}">
                                 <i class="bi bi-lock"></i> Subscription
                             </a>
                             <div class="dropdown-divider"></div>

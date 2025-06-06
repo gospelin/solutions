@@ -1,19 +1,19 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Admin Profile')
+@section('title', 'Create Admin')
 
-@section('description', 'Edit your admin profile information.')
+@section('description', 'Create a new admin account for the platform.')
 
 @section('content')
     <section class="content">
         <div class="content-header">
-            <h1 class="page-title">Admin Profile</h1>
-            <p class="page-subtitle">Update your personal information.</p>
+            <h1 class="page-title">Create Admin</h1>
+            <p class="page-subtitle">Add a new administrator to manage the platform.</p>
         </div>
 
-        @if (session('success'))
+        @if (session('message'))
             <div class="chart-card" style="background: var(--success); color: var(--white); margin-bottom: var(--space-lg);">
-                <p>{{ session('success') }}</p>
+                <p>{{ session('message') }}</p>
             </div>
         @endif
         @if (session('error'))
@@ -24,15 +24,13 @@
 
         <div class="chart-card">
             <div class="chart-header">
-                <h3 class="chart-title">Profile Information</h3>
+                <h3 class="chart-title">Admin Creation Form</h3>
             </div>
-            <form class="modal-form" method="POST" action="{{ route('admin.profile.update') }}">
+            <form action="{{ route('admin.store') }}" method="POST" class="modal-form">
                 @csrf
-                @method('PATCH')
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" name="name" class="form-input"
-                        value="{{ old('name', Auth::user()->name) }}" required>
+                    <input type="text" name="name" id="name" class="form-input" value="{{ old('name') }}" required>
                     @error('name')
                         <span class="error-text"
                             style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
@@ -40,17 +38,15 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-input"
-                        value="{{ old('email', Auth::user()->email) }}" required>
+                    <input type="email" name="email" id="email" class="form-input" value="{{ old('email') }}" required>
                     @error('email')
                         <span class="error-text"
                             style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="password">New Password</label>
-                    <input type="password" id="password" name="password" class="form-input"
-                        placeholder="Leave blank to keep current password">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" class="form-input" required>
                     @error('password')
                         <span class="error-text"
                             style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
@@ -58,10 +54,10 @@
                 </div>
                 <div class="form-group">
                     <label for="password_confirmation">Confirm Password</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-input"
-                        placeholder="Confirm new password">
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-input"
+                        required>
                 </div>
-                <button type="submit" class="form-submit">Update Profile</button>
+                <button type="submit" class="form-submit">Create Admin</button>
             </form>
         </div>
     </section>

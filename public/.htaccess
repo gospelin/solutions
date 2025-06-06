@@ -18,8 +18,19 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Allow static assets, robots.txt, and sitemap.xml
+    RewriteCond %{REQUEST_URI} ^/(css/|js/|images/|pdf/|storage/|robots\.txt|sitemap\.xml) [NC]
+    RewriteRule ^ - [L]
+
     # Send Requests To Front Controller...
+    #RewriteBase /solutions/public/
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Protect sensitive files
+#<FilesMatch "^(.env|error_log)$">
+#    Order allow,deny
+#    Deny from all
+#</FilesMatch>

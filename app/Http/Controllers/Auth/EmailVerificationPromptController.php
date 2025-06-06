@@ -3,19 +3,26 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class EmailVerificationPromptController extends Controller
 {
-    /**
-     * Display the email verification prompt.
-     */
-    public function __invoke(Request $request): RedirectResponse|View
+    public function __invoke(Request $request): View
     {
-        return $request->user()->hasVerifiedEmail()
-                    ? redirect()->intended(route('dashboard', absolute: false))
-                    : view('auth.verify-email');
+        try {
+            if (Auth::check() && Auth::user()->hasRole('admin')) {
+                return view('admin.dashboard'); // Redirect admins to dashboard
+            }
+            return view('auth.verify-email');
+        } catch (\Exception $e) {
+            Log::error('Failed to display email verification prompt', [
+                'error' => $e->getMessage(),
+                'ip' => $request->ip(),
+            ]);
+            return view('auth.verify-email')->with('error', 'An error occurred. Please try again.');
+        }
     }
 }

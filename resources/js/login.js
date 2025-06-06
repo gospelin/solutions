@@ -4,7 +4,6 @@ import { ScrollTrigger, TextPlugin } from 'gsap/all';
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure DOM is fully loaded
     if (!document.querySelector('.content-section')) {
         console.warn('Content section not found. Skipping animations.');
         return;
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const successMessage = document.getElementById('successMessage');
 
-    // Null checks for critical elements
     if (!loginForm || !emailInput || !passwordInput || !loginButton) {
         console.error('Critical form elements missing. Aborting login script.');
         return;
@@ -114,11 +112,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (loginForm) {
         loginForm.addEventListener('submit', function (e) {
+            if (!e.isTrusted) {
+                e.preventDefault();
+                return;
+            }
             loginButton.classList.add('loading');
             buttonText.textContent = 'Signing In...';
             loginButton.disabled = true;
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
+
+            setTimeout(() => {
+                if (loginButton.classList.contains('loading')) {
+                    loginButton.classList.remove('loading');
+                    buttonText.textContent = 'Sign In';
+                    loginButton.disabled = false;
+                    errorMessage.textContent = 'Login failed. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            }, 10000);
         });
     }
 
@@ -145,10 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.form-input').forEach(input => {
         input.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                loginForm.dispatchEvent(new Event('submit'));
+            if (e.key === 'Enter' && e.isTrusted) {
+                loginForm.dispatchEvent(new Event('submit', { cancelable: true }));
             }
         });
+    });
+
+    emailInput.addEventListener('change', (e) => {
+        if (!e.isTrusted) {
+            e.preventDefault();
+        }
+    });
+    passwordInput.addEventListener('change', (e) => {
+        if (!e.isTrusted) {
+            e.preventDefault();
+        }
     });
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -168,53 +191,53 @@ document.addEventListener('DOMContentLoaded', () => {
         opacity: 1,
         scale: 1,
         duration: 0.8,
-        ease: "back.out(1.2)"
+        ease: 'back.out(1.2)'
     })
         .to('.logo', {
             opacity: 1,
             scale: 1,
             rotationY: 0,
             duration: 0.8,
-            ease: "back.out(1.7)"
+            ease: 'back.out(1.7)'
         }, '-=0.4')
         .to('.content-section > *', {
             opacity: 1,
             y: 0,
             duration: 0.6,
             stagger: 0.1,
-            ease: "power3.out"
+            ease: 'power3.out'
         }, '-=0.6')
         .to(['.welcome-text', '.subtitle'], {
             opacity: 1,
             y: 0,
             duration: 0.6,
-            ease: "power3.out"
+            ease: 'power3.out'
         }, '-=0.4')
         .to('.form-group', {
             opacity: 1,
             y: 0,
             duration: 0.5,
             stagger: 0.1,
-            ease: "power3.out"
+            ease: 'power3.out'
         }, '-=0.3')
         .to(['.remember-me', '.forgot-password'], {
             opacity: 1,
             y: 0,
             duration: 0.5,
-            ease: "power3.out"
+            ease: 'power3.out'
         }, '-=0.2')
         .to('.login-btn', {
             opacity: 1,
             y: 0,
             duration: 0.6,
-            ease: "back.out(1.7)"
+            ease: 'back.out(1.7)'
         }, '-=0.2')
         .to(['.divider', '.social-login', '.register-link'], {
             opacity: 1,
             y: 0,
             duration: 0.5,
             stagger: 0.1,
-            ease: "power3.out"
+            ease: 'power3.out'
         }, '-=0.3');
 
     const interactiveElements = document.querySelectorAll('.form-input, .login-btn, .social-btn, .cta-btn');
@@ -223,14 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.to(element, {
                 scale: 1.02,
                 duration: 0.3,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
         element.addEventListener('mouseleave', () => {
             gsap.to(element, {
                 scale: 1,
                 duration: 0.3,
-                ease: "power2.out"
+                ease: 'power2.out'
             });
         });
     });
@@ -240,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: 2,
         repeat: -1,
         yoyo: true,
-        ease: "power2.inOut"
+        ease: 'power2.inOut'
     });
 
     function animateParticles() {
@@ -254,11 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.to(particle, {
                 y: -100,
                 x: `+=${Math.random() * 200 - 100}`,
-                opacity: 1,
+                opacity: 0.1,
                 duration: Math.random() * 10 + 10,
                 repeat: -1,
                 delay: Math.random() * 5,
-                ease: "none",
+                ease: 'none',
                 onComplete: () => {
                     gsap.set(particle, {
                         y: window.innerHeight + 10,
@@ -273,13 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input, button, a').forEach(element => {
         element.addEventListener('focus', () => {
             gsap.to(element, {
-                boxShadow: "0 0 20px rgba(79, 172, 254, 0.3)",
+                boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)',
                 duration: 0.3
             });
         });
         element.addEventListener('blur', () => {
             gsap.to(element, {
-                boxShadow: "none",
+                boxShadow: 'none',
                 duration: 0.3
             });
         });
@@ -300,16 +323,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.matches) {
             gsap.set('.auth-container', {
                 scale: 1,
-                transformOrigin: "center center"
+                transformOrigin: 'center center'
             });
         } else {
             gsap.set('.auth-container', {
                 scale: 1,
-                transformOrigin: "center center"
+                transformOrigin: 'center center'
             });
         }
     }
-    mediaQuery.addListener(handleScreenChange);
+    mediaQuery.addEventListener('change', handleScreenChange);
     handleScreenChange(mediaQuery);
 
     const isLowEndDevice = navigator.hardwareConcurrency < 4;

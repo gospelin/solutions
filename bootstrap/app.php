@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
     $middleware->web(append: [
         // Add any custom global middleware here
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ]);
 
     $middleware->alias([
@@ -22,6 +25,9 @@ return Application::configure(basePath: dirname(__DIR__))
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'check.status' => \App\Http\Middleware\CheckUserStatus::class,
+        'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ]);
 
     $middleware->priority([

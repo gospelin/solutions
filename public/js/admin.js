@@ -80,14 +80,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Form Submission Feedback
-    document.querySelectorAll('.modal-form').forEach(form => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            console.log('Form submitted:', Object.fromEntries(formData));
-            alert('Settings saved successfully!'); // Replace with actual AJAX call
-            form.reset();
+    // Form Submission for Profile (allow default PHP submission)
+    const profileForm = document.querySelector('form[action*="/admin/profile"]');
+    if (profileForm) {
+        profileForm.addEventListener('submit', (e) => {
+            console.log('Profile form submitting via default HTTP request');
+            const submitButton = profileForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true; // Prevent multiple submissions
         });
-    });
+    }
+
+    // Other .modal-form submissions (temporary placeholder, update as needed)
+    //document.querySelectorAll('.modal-form:not([action*="/admin/profile"])').forEach(form => {
+    //    form.addEventListener('submit', (e) => {
+    //        e.preventDefault();
+    //        const formData = new FormData(form);
+    //        console.log('Other form submitted:', Object.fromEntries(formData));
+    //        alert('Settings saved successfully!');
+    //        form.reset();
+    //    });
+    //});
 });

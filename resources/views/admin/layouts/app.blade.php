@@ -8,6 +8,7 @@
     <meta name="description" content="@yield('description', 'Admin dashboard for managing users, tools, and system settings with AI-powered insights.')">
     <meta name="keywords" content="admin dashboard, AI analytics, user management, tool moderation, Mr Solution">
     <meta name="author" content="Mr Solution">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
