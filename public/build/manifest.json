@@ -1,0 +1,68 @@
+{
+  "_TextPlugin-CelLn1jq.js": {
+    "file": "assets/TextPlugin-CelLn1jq.js",
+    "name": "TextPlugin"
+  },
+  "_i18next-Bhc83OLH.js": {
+    "file": "assets/i18next-Bhc83OLH.js",
+    "name": "i18next"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CV6aOF8r.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/dashboard.css": {
+    "file": "assets/dashboard-P0-ZfQ9g.css",
+    "src": "resources/css/dashboard.css",
+    "isEntry": true
+  },
+  "resources/css/login.css": {
+    "file": "assets/login-DROGm2Zh.css",
+    "src": "resources/css/login.css",
+    "isEntry": true
+  },
+  "resources/css/styles.css": {
+    "file": "assets/styles-Cm7RRmP8.css",
+    "src": "resources/css/styles.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-ClllKYww.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_TextPlugin-CelLn1jq.js",
+      "_i18next-Bhc83OLH.js"
+    ]
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-HF7J1sVg.js",
+    "name": "login",
+    "src": "resources/js/login.js",
+    "isEntry": true,
+    "imports": [
+      "_TextPlugin-CelLn1jq.js"
+    ]
+  },
+  "resources/js/main.js": {
+    "file": "assets/main-BibShc6V.js",
+    "name": "main",
+    "src": "resources/js/main.js",
+    "isEntry": true,
+    "imports": [
+      "_TextPlugin-CelLn1jq.js",
+      "_i18next-Bhc83OLH.js"
+    ]
+  },
+  "resources/js/register.js": {
+    "file": "assets/register-DFtNFwfZ.js",
+    "name": "register",
+    "src": "resources/js/register.js",
+    "isEntry": true,
+    "imports": [
+      "_TextPlugin-CelLn1jq.js"
+    ]
+  }
+}
