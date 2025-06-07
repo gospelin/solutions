@@ -25,6 +25,8 @@
     <!-- Chart.js for Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         :root {
             --primary: #6366f1;
@@ -948,6 +950,9 @@
             }
         }
     </style>
+    
+     <!-- Add stack for custom styles -->
+    @stack('styles')
 </head>
 
 <body>
@@ -977,11 +982,10 @@
                     <li><a href="{{ route('community') }}"
                             class="{{ request()->routeIs('community') ? 'active' : '' }}"><i
                                 class="bi bi-people nav-icon"></i> Community</a></li>
-                    <li><a href="{{ route('support') }}" class="{{ request()->routeIs('support') ? 'active' : '' }}"><i
-                                class="bi bi-question-circle nav-icon"></i> Support</a></li>
+                    <li><a href="{{ route('support') }}" class="{{ request()->routeIs('support') ? 'active' : '' }}"><i class="bi bi-question-circle nav-icon"></i> Support</a></li>
                     <li>
-                        <a href="#" class="{{ request()->routeIs('market') ? 'active' : '' }}">
-                            <i class="bi bi-cart nav-icon"></i>Marketplace <span class="nav-badge">New</span>
+                        <a href="{{ route('market') }}" class="{{ request()->routeIs('market') ? 'active' : '' }}">
+                            <i class="bi bi-cart nav-icon"></i> Marketplace <span class="nav-badge">New</span>
                         </a>
                     </li>
                 </ul>

@@ -29,10 +29,10 @@
                 <i class="bi bi-chevron-down dropdown-icon"></i>
             </div>
             <div class="user-dropdown">
-                <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                <a href="{{ route('admin.admin-profile') }}" class="dropdown-item">
                     <i class="bi bi-person"></i> Profile
                 </a>
-                <a href="{{ route('admin.settings') }}" class="dropdown-item">
+                <a href="{{ route('admin.admin-settings') }}" class="dropdown-item">
                     <i class="bi bi-gear"></i> Settings
                 </a>
                 <div class="dropdown-divider"></div>
