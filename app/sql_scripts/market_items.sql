@@ -22,3 +22,12 @@ INSERT INTO market_items (name, description, price, category, purchases_count, c
 ('Network Security Course', 'Video course on network security fundamentals', 59.99, 'resources', 90, NOW(), NOW()),
 ('Malware Analysis Toolkit', 'Tools for analyzing and reverse-engineering malware', 79.99, 'tools', 60, NOW(), NOW()),
 ('Bot Framework', 'Customizable bot creation framework', 44.99, 'scripts', 110, NOW(), NOW());
+
+
+
+php artisan tinker
+DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+DB::table('market_item_user')->truncate();
+DB::table('market_items')->truncate();
+DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+exit

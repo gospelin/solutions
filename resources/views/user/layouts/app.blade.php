@@ -25,8 +25,6 @@
     <!-- Chart.js for Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <style>
         :root {
             --primary: #6366f1;
@@ -901,8 +899,18 @@
                 font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             }
 
-            .user-dropdown {
-                min-width: clamp(140px, 45vw, 180px);
+            .search-input {
+                padding: var(--space-xs) var(--space-sm) var(--space-xs) 2rem;
+                font-size: clamp(0.625rem, 2vw, 0.75rem);
+            }
+
+            .search-icon {
+                font-size: clamp(0.625rem, 2vw, 0.75rem);
+            }
+
+            .chat-box {
+                width: clamp(180px, 80vw, 260px);
+                height: clamp(260px, 40vh, 320px);
             }
         }
 
@@ -939,8 +947,7 @@
                 padding: var(--space-xs) var(--space-sm) var(--space-xs) 2rem;
                 font-size: clamp(0.625rem, 2vw, 0.75rem);
             }
-
-            .search-icon {
+           .search-icon {
                 font-size: clamp(0.625rem, 2vw, 0.75rem);
             }
 
@@ -951,7 +958,7 @@
         }
     </style>
     
-     <!-- Add stack for custom styles -->
+    <!-- Add stack for custom styles -->
     @stack('styles')
 </head>
 
@@ -972,7 +979,8 @@
                     <li><a href="{{ route('user.dashboard') }}"
                             class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i
                                 class="bi bi-grid nav-icon"></i> Home</a></li>
-                    <li><a href="{{ route('free-apps') }}"
+
+                                                   <li><a href="{{ route('free-apps') }}"
                             class="{{ request()->routeIs('free-apps') ? 'active' : '' }}"><i
                                 class="bi bi-code-slash nav-icon"></i> Free Apps</a></li>
                     <li><a href="{{ route('premium-features') }}"
@@ -982,12 +990,17 @@
                     <li><a href="{{ route('community') }}"
                             class="{{ request()->routeIs('community') ? 'active' : '' }}"><i
                                 class="bi bi-people nav-icon"></i> Community</a></li>
-                    <li><a href="{{ route('support') }}" class="{{ request()->routeIs('support') ? 'active' : '' }}"><i class="bi bi-question-circle nav-icon"></i> Support</a></li>
-                    <li>
-                        <a href="{{ route('market') }}" class="{{ request()->routeIs('market') ? 'active' : '' }}">
+                    <li><a href="{{ route('support') }}"
+                            class="{{ request()->routeIs('support') ? 'active' : '' }}"><i
+                                class="bi bi-question-circle nav-icon"></i> Support</a></li>
+                    <li><a href="{{ route('market') }}"
+                            class="{{ request()->routeIs('market') ? 'active' : '' }}">
                             <i class="bi bi-cart nav-icon"></i> Marketplace <span class="nav-badge">New</span>
                         </a>
                     </li>
+                    <li><a href="{{ route('contact') }}"
+                            class="{{ request()->routeIs('contact') ? 'active' : '' }}"><i
+                                class="bi bi-envelope nav-icon"></i> Contact</a></li>
                 </ul>
             </nav>
             <nav class="nav-section">
@@ -1016,8 +1029,12 @@
                         <i class="bi bi-list"></i>
                     </button>
                     <div class="search-container">
-                        <i class="bi bi-search search-icon"></i>
-                        <input type="text" class="search-input" placeholder="Search tools, tutorials, or community...">
+                        <form action="{{ route('search') }}" method="POST">
+                            @csrf
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" name="query" class="search-input" placeholder="Search tools..."
+                                   value="{{ request('query') }}">
+                        </form>
                     </div>
                 </div>
                 <div class="nav-right">
@@ -1199,7 +1216,7 @@
         });
     </script>
 
-    @yield('scripts')
+    @stack('scripts')
 </body>
 
 </html>

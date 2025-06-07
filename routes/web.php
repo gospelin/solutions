@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotifyReregisterController;
+use App\Http\Controllers\SelarWebhookController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,8 +40,18 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/support', [UserDashboardController::class, 'support'])->name('support');
     Route::get('/market', [UserDashboardController::class, 'market'])->name('market');
     Route::get('/market/item/{id}', [UserDashboardController::class, 'marketItem'])->name('market.item');
-    Route::post('/market/purchase/{id}', [UserDashboardController::class, 'marketPurchase'])->name('market.purchase');
+    //Route::post('/market/purchase/{id}', [UserDashboardController::class, 'marketPurchase'])->name('market.purchase');
     Route::get('/market/category/{category?}', [UserDashboardController::class, 'market'])->name('market.category');
+
+    //Route::get('/market', [UserDashboardController::class, 'market'])->name('market');
+    //Route::get('/market/{category}', [UserDashboardController::class, 'market'])->name('market.category');
+    //Route::get('/market/item/{id}', [UserDashboardController::class, 'marketItem'])->name('market.item');
+    //Route::post('/market/purchase/{id}', [UserDashboardController::class, 'marketPurchase'])->name('market.purchase');
+    
+    Route::get('/contact', [UserDashboardController::class, 'contact'])->name('contact');
+    Route::post('/contact/submit', [UserDashboardController::class, 'contactSubmit'])->name('contact.submit');
+    Route::post('/search', [SearchController::class, 'search'])->name('search');
+    
     Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
     Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('user.settings.update');
     Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
@@ -72,4 +84,6 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
 
 Route::get('/notify-reregister', [NotifyReregisterController::class, 'notify'])->name('notify.reregister');
 
+// Webhook route (no auth middleware)
+Route::post('/webhook/selar', [SelarWebhookController::class, 'handle'])->name('webhook.selar');
 require __DIR__ . '/auth.php';

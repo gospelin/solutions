@@ -24,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'verification_code',
         'verification_code_expires_at',
-        'balance',
     ];
 
     protected $hidden = [
@@ -72,9 +71,4 @@ class User extends Authenticatable implements MustVerifyEmail
                     ->withPivot('purchased_at');
     }
 
-    public function canPurchase(MarketItem $item): bool
-    {
-        // Check if user has enough balance and hasn't purchased the item
-        return $this->balance >= $item->price && !$this->purchasedItems()->where('market_item_id', $item->id)->exists();
-    }
 }

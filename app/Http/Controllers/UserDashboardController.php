@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Contact;
+use Illuminate\Support\Facades\DB;
+
 
 class UserDashboardController extends Controller
 {
@@ -58,27 +61,87 @@ class UserDashboardController extends Controller
      */
     public function market(Request $request, $category = null): View
     {
-        // Build query for market items
         $query = MarketItem::query();
 
-        // Apply category filter if provided
+        if ($search = $request->query('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
         if ($category) {
             $query->where('category', $category);
         }
 
-        // Paginate items (9 per page)
-        $items = $query->paginate(9)->appends(['category' => $category]);
+        $paginator = $query->paginate(10)->appends([
+            'category' => $category,
+            'search' => $search,
+        ]);
 
-        // Get popular items (top 5 by purchases_count)
         $popularItems = MarketItem::orderBy('purchases_count', 'desc')->take(5)->get();
-
-        // Get latest items (top 5 by creation date)
         $latestItems = MarketItem::latest()->take(5)->get();
+        $categories = MarketItem::distinct()->pluck('category')->toArray();
 
-        // Get all categories for filter
-        $categories = MarketItem::select('category')->distinct()->pluck('category');
+        return view('user.market', [
+            'paginator' => $paginator,
+            'popularItems' => $popularItems,
+            'latestItems' => $latestItems,
+            'categories' => $categories,
+            'category' => $category,
+        ]);
+    }
 
-        return view('user.market', compact('items', 'popularItems', 'latestItems', 'categories', 'category'));
+    //public function marketItem($id): View
+    //{
+    //    $item = MarketItem::findOrFail($id);
+    //    return view('user.market-item', compact('item'));
+    //}
+
+    //public function marketPurchase(Request $request, $id): RedirectResponse
+    //{
+    //    $item = MarketItem::findOrFail($id);
+    //    $user = auth()->user();
+
+    //    if ($item->status === 'pending') {
+    //        return redirect()->back()->with('error', 'This item is pending and cannot be purchased.');
+    //    }
+
+    //    if (!$user->canPurchase($item)) {
+    //        return redirect()->back()->with('error', 'Unable to purchase: insufficient balance or item already purchased.');
+    //    }
+
+    //    DB::transaction(function () use ($user, $item) {
+    //        $user->balance -= $item->price; // Uses USD
+    //        $user->save();
+    //        $item->purchases_count++;
+    //        $item->save();
+    //        $user->purchasedItems()->attach($item->id, ['purchased_at' => now()]);
+    //    });
+
+    //    return redirect()->route('market')->with('success', 'Purchase successful!');
+    //}
+
+    public function contact(): View
+    {
+        return view('user.contact');
+    }
+
+    public function contactSubmit(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'max:2000'],
+        ]);
+
+        Contact::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('contact')->with('success', 'Message sent successfully!');
     }
 
     /**
@@ -98,51 +161,51 @@ class UserDashboardController extends Controller
     /**
      * Process a purchase for a market item.
      */
-    public function marketPurchase(Request $request, $id): RedirectResponse
-    {
-        try {
-            // Validate ID
-            Validator::make(['id' => $id], ['id' => 'required|numeric'])->validate();
+    //public function marketPurchase(Request $request, $id): RedirectResponse
+    //{
+    //    try {
+    //        // Validate ID
+    //        Validator::make(['id' => $id], ['id' => 'required|numeric'])->validate();
 
-            // Fetch item
-            $item = MarketItem::findOrFail($id);
-            $user = Auth::user();
+    //        // Fetch item
+    //        $item = MarketItem::findOrFail($id);
+    //        $user = Auth::user();
 
-            // Check if user can purchase
-            if (!$user->canPurchase($item)) {
-                return redirect()->route('market')->with('error', 'Purchase failed: Insufficient balance or item already purchased.');
-            }
+    //        // Check if user can purchase
+    //        if (!$user->canPurchase($item)) {
+    //            return redirect()->route('market')->with('error', 'Purchase failed: Insufficient balance or item already purchased.');
+    //        }
 
-            // Placeholder for payment processing
-            $paymentSuccessful = $this->processPayment($user, $item->price);
+    //        // Placeholder for payment processing
+    //        $paymentSuccessful = $this->processPayment($user, $item->price);
 
-            if ($paymentSuccessful) {
-                // Record purchase in pivot table
-                $user->purchasedItems()->attach($item->id, ['purchased_at' => now()]);
+    //        if ($paymentSuccessful) {
+    //            // Record purchase in pivot table
+    //            $user->purchasedItems()->attach($item->id, ['purchased_at' => now()]);
 
-                // Increment purchases_count
-                $item->increment('purchases_count');
+    //            // Increment purchases_count
+    //            $item->increment('purchases_count');
 
-                // Deduct balance (for demo purposes)
-                $user->balance -= $item->price;
-                $user->save();
+    //            // Deduct balance (for demo purposes)
+    //            $user->balance -= $item->price;
+    //            $user->save();
 
-                return redirect()->route('market')->with('success', 'Item purchased successfully!');
-            }
+    //            return redirect()->route('market')->with('success', 'Item purchased successfully!');
+    //        }
 
-            return redirect()->route('market')->with('error', 'Payment processing failed.');
-        } catch (\Exception $e) {
-            return redirect()->route('market')->with('error', 'An error occurred: ' . $e->getMessage());
-        }
-    }
+    //        return redirect()->route('market')->with('error', 'Payment processing failed.');
+    //    } catch (\Exception $e) {
+    //        return redirect()->route('market')->with('error', 'An error occurred: ' . $e->getMessage());
+    //    }
+    //}
 
     /**
      * Placeholder for payment processing.
      */
-    private function processPayment($user, $amount): bool
-    {
-        // TODO: Implement actual payment processing (e.g., Stripe, PayPal)
-        // For now, assume payment is successful if user has enough balance
-        return $user->balance >= $amount;
-    }
+    //private function processPayment($user, $amount): bool
+    //{
+    //    // TODO: Implement actual payment processing (e.g., Stripe, PayPal)
+    //    // For now, assume payment is successful if user has enough balance
+    //    return $user->balance >= $amount;
+    //}
 }
