@@ -81,10 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
         userSearch.addEventListener('input', () => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
-                const searchTerm = userSearch.value.toLowerCase();
+                const searchTerm = userSearch.value.toLowerCase().trim();
                 Array.from(userTableBody.children).forEach(row => {
-                    const name = row.children[1].textContent.toLowerCase();
-                    const email = row.children[2].textContent.toLowerCase();
+                    const name = row.children[1]?.textContent.toLowerCase() || '';
+                    const email = row.children[2]?.textContent.toLowerCase() || '';
                     row.style.display = name.includes(searchTerm) || email.includes(searchTerm) ? '' : 'none';
                 });
             }, 300);
