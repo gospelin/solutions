@@ -10,6 +10,9 @@ class MarketItem extends Model
 {
     use HasFactory;
 
+    const STATUS_ACTIVE = 'active';
+    const STATUS_DEACTIVATED = 'deactivated';
+
     protected $table = 'market_items';
 
     protected $fillable = [
@@ -36,5 +39,17 @@ class MarketItem extends Model
     {
         return $this->image ? asset('storage/images/' . $this->image) : null;
     }
-    
+
+    // Scope for active items
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
+    }
+
+    // Check if item is active
+    public function isActive()
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
 }

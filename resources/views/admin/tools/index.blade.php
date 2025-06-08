@@ -59,18 +59,15 @@
                                     @method('DELETE')
                                     <button type="submit" class="action-btn error"><i class="fas fa-trash"></i> Delete</button>
                                 </form>
-                                @if ($marketItem->status === 'Approved')
-                                    <form action="{{ route('admin.tools.reject', $marketItem) }}" method="POST"
-                                        style="display: inline;">
+                                @if ($marketItem->isActive())
+                                    <form action="{{ route('admin.tools.deactivate', $marketItem) }}" method="POST" style="display: inline;">
                                         @csrf
-                                        <button type="submit" class="action-btn error"><i class="fas fa-times"></i> Reject</button>
+                                        <button type="submit" class="action-btn error"><i class="fas fa-times"></i> {{ __('Deactivate') }}</button>
                                     </form>
-                                @elseif ($marketItem->status === 'Rejected' || $marketItem->status === 'Pending')
-                                    <form action="{{ route('admin.tools.approve', $marketItem) }}" method="POST"
-                                        style="display: inline;">
+                                @else
+                                    <form action="{{ route('admin.tools.activate', $marketItem) }}" method="POST" style="display: inline;">
                                         @csrf
-                                        <button type="submit" class="action-btn success"><i class="fas fa-check"></i>
-                                            Approve</button>
+                                        <button type="submit" class="action-btn success"><i class="fas fa-check"></i> {{ __('Activate') }}</button>
                                     </form>
                                 @endif
                             </td>

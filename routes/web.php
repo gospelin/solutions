@@ -52,16 +52,25 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
     Route::get('/reports', [AdminUserController::class, 'reports'])->name('reports');
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin-settings');
     Route::post('/settings', [AdminUserController::class, 'updateSettings'])->name('admin-settings.update');
+    
     Route::get('/user-management', [AdminUserController::class, 'userManagement'])->name('user-management');
     Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('users.ban');
     Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
     Route::delete('/users/{id}', [AdminUserController::class, 'deleteUser'])->name('users.delete');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('store');
+    
     Route::get('/tool-moderation', [AdminUserController::class, 'toolModeration'])->name('tool-moderation');
     Route::post('/tools/{id}/approve', [AdminUserController::class, 'approveTool'])->name('tools.approve');
     Route::post('/tools/{id}/reject', [AdminUserController::class, 'rejectTool'])->name('tools.reject');
+    Route::post('/tools/{tool}/activate', [ToolController::class, 'activate'])->name('tools.activate');
+    Route::post('/tools/{tool}/deactivate', [ToolController::class, 'deactivate'])->name('tools.deactivate');
     Route::resource('tools', ToolController::class)->except(['show']);
+
+    Route::get('/tools/create', [ToolController::class, 'create'])->name('tools.create');
+    Route::post('/tools', [ToolController::class, 'store'])->name('tools.store');
+    Route::get('/tools/{tool}/edit', [ToolController::class, 'edit'])->name('tools.edit');
+    Route::put('/tools/{tool}', [ToolController::class, 'update'])->name('tools.update');
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
     Route::get('tools/search', [SearchController::class, 'search'])->name('tools.search');

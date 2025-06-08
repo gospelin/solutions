@@ -50,6 +50,7 @@ class ToolController extends Controller
             $validated['image'] = $filename;
         }
 
+        $validated['status'] = MarketItem::STATUS_ACTIVE; // Default to Active
         $marketItem = MarketItem::create($validated);
         Log::info('New Tool created', ['item_id' => $marketItem->id, 'admin_id' => auth()->id()]);
 
@@ -117,5 +118,21 @@ class ToolController extends Controller
             ]);
             return redirect()->route('admin.tools.index')->with('error', 'Failed to delete tool.');
         }
+    }
+
+    public function activate(MarketItem $tool)
+    {
+        $tool->update(['status' => MarketItem::STATUS_ACTIVE]);
+        Log::info('Tool activated', ['item_id' => $tool->id, 'admin_id' => auth()->id()]);
+
+        return redirect()->route('admin.tools.index')->with('success', 'Tool activated successfully.');
+    }
+
+    public function deactivate(MarketItem $tool)
+    {
+        $tool->update(['status' => MarketItem::STATUS_DEACTIVATED]);
+        Log::info('Tool deactivated', ['item_id' => $tool->id, 'admin_id' => auth()->id()]);
+
+        return redirect()->route('admin.tools.index')->with('success', 'Tool deactivated successfully.');
     }
 }
