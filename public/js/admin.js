@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 Array.from(userTableBody.children).forEach(row => {
                     const name = row.children[1]?.textContent.toLowerCase() || '';
                     const email = row.children[2]?.textContent.toLowerCase() || '';
-                    row.style.display = name.includes(searchTerm) || email.includes(searchTerm) ? '' : 'none';
+                    const status = row.children[3]?.textContent.toLowerCase() || '';
+                    row.style.display = name.includes(searchTerm) || email.includes(searchTerm) || status.includes(searchTerm) ? '' : 'none';
                 });
             }, 300);
         });
