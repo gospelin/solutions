@@ -19,7 +19,7 @@
     RewriteRule ^ %1 [L,R=301]
 
     # Allow static assets, robots.txt, and sitemap.xml
-    RewriteCond %{REQUEST_URI} ^/(css/|js/|images/|pdf/|storage/|robots\.txt|sitemap\.xml) [NC]
+    RewriteCond %{REQUEST_URI} ^/(css/|js/|images/|pdf/|storage/|storage/public/images|robots\.txt|sitemap\.xml) [NC]
     RewriteRule ^ - [L]
 
     # Send Requests To Front Controller...

@@ -44,13 +44,14 @@ class ToolController extends Controller
 
         if ($request->hasFile('image')) {
             $filename = time() . '_' . $request->file('image')->getClientOriginalName();
-            $validated['image'] = $request->file('image')->storeAs('images', $filename, 'public');
+            $request->file('image')->storeAs('images', $filename, 'public');
+            $validated['image'] = $filename;
         }
 
         $marketItem = MarketItem::create($validated);
-        Log::info('Market item created', ['item_id' => $marketItem->id, 'admin_id' => auth()->id()]);
+        Log::info('New Tool created', ['item_id' => $marketItem->id, 'admin_id' => auth()->id()]);
 
-        return redirect()->route('admin.tools.index')->with('success', 'Market item created successfully.');
+        return redirect()->route('admin.tools.index')->with('success', 'New Tool created successfully.');
 
     }
 
@@ -71,29 +72,46 @@ class ToolController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
 
-        if ($request->hasFile('image')) {
+         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($tool->image) {
-                Storage::disk('public')->delete($tool->image);
+                Storage::disk('public')->delete('images/' . $tool->image);
             }
             $filename = time() . '_' . $request->file('image')->getClientOriginalName();
-            $validated['image'] = $request->file('image')->storeAs('images', $filename, 'public');
+            // Save to storage/app/public/images, but store only filename
+            $request->file('image')->storeAs('images', $filename, 'public');
+            $validated['image'] = $filename;
         }
 
         $tool->update($validated);
-        Log::info('Market item updated', ['item_id' => $tool->id, 'admin_id' => auth()->id()]);
+        Log::info('Tool updated', ['item_id' => $tool->id, 'admin_id' => auth()->id()]);
 
-        return redirect()->route('admin.tools.index')->with('success', 'Market item updated successfully.');
+        return redirect()->route('admin.tools.index')->with('success', 'Tool updated successfully.');
     }
 
     public function destroy(MarketItem $tool)
     {
-        if ($tool->image) {
-            Storage::disk('public')->delete($tool->image);
-        }
-        $tool->delete();
-        Log::info('Market item deleted', ['item_id' => $tool->id, 'admin_id' => auth()->id()]);
+        try {
+            // Delete associated image
+            if ($tool->image) {
+                Storage::disk('public')->delete('images/' . $tool->image);
+            }
 
-        return redirect()->route('admin.tools.index')->with('success', 'Market item deleted successfully.');
+            // Delete the market item (cascades to related records via DB constraints)
+            $tool->delete();
+
+            Log::info('Tool and related records deleted', [
+                'item_id' => $tool->id,
+                'admin_id' => auth()->id(),
+            ]);
+
+            return redirect()->route('admin.tools.index')->with('success', 'Tool and related records deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Failed to delete tool', [
+                'item_id' => $tool->id,
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()->route('admin.tools.index')->with('error', 'Failed to delete tool.');
+        }
     }
 }
