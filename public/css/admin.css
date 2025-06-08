@@ -461,6 +461,11 @@ body {
 
 .content-header {
     margin-bottom: var(--space-xl);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
 }
 
 .page-title {
@@ -725,28 +730,46 @@ body {
 
 .table-container {
     overflow-x: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-lg);
 }
 
-.user-table, .tool-table {
+.user-table, .tool-table, .market-item-table {
     width: 100%;
     border-collapse: collapse;
 }
 
 .user-table th, .user-table td,
-.tool-table th, .tool-table td {
-    padding: var(--space-sm);
+.tool-table th, .tool-table td,
+.market-item-table th, .market-item-table td {
+    padding: var(--space-sm) var(--space-md);
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
     font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    color: var(--gray-300);
 }
 
-.user-table th, .tool-table th {
-    color: var(--gray-300);
+.user-table th, .tool-table th, .market-item-table th {
+    color: var(--white);
     font-weight: 600;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.user-table tr:hover, .tool-table tr:hover, .market-item-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .user-table td select,
-.tool-table td select {
+.tool-table td select,
+.market-item-table td select {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
@@ -805,6 +828,49 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.pagination a, .pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--gray-300);
+    text-decoration: none;
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+.pagination .current {
+    background: var(--gradient-primary);
+    border-color: var(--primary);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.pagination .disabled {
+    color: var(--gray-500);
+    border-color: var(--glass-border);
+    background: transparent;
+    cursor: not-allowed;
+}
+
 body.light {
     --dark-bg: #ffffff;
     --dark-surface: #f8fafc;
@@ -833,9 +899,14 @@ body.light .page-subtitle { color: var(--gray-400); }
 body.light .stat-card { background: var(--glass-bg); border-color: var(--glass-border); }
 body.light .stat-value { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 body.light .stat-label { color: var(--gray-400); }
-body.light .user-table th, body.light .tool-table th { color: var(--gray-300); }
-body.light .user-table td, body.light .tool-table td { color: var(--gray-300); }
+body.light .user-table th, body.light .tool-table th, body.light .market-item-table th { color: var(--gray-300); }
+body.light .user-table td, body.light .tool-table td, body.light .market-item-table td { color: var(--gray-300); }
 body.light .form-input, body.light .modal-form select { color: var(--gray-300); }
+body.light .table-container { background: var(--glass-bg); border-color: var(--glass-border); }
+body.light .market-item-table tr:hover { background: rgba(0, 0, 0, 0.05); }
+body.light .pagination a, body.light .pagination span { color: var(--gray-300); background: var(--glass-bg); }
+body.light .pagination a:hover { color: var(--white); }
+body.light .pagination .current { color: var(--white); }
 
 @media (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); }
@@ -849,9 +920,15 @@ body.light .form-input, body.light .modal-form select { color: var(--gray-300); 
     .nav-left, .nav-right { width: 100%; justify-content: space-between; }
     .stats-grid, .chart-section, .quick-actions { grid-template-columns: 1fr; }
     .search-container { max-width: 100%; }
+    .content-header { flex-direction: column; align-items: flex-start; }
+    .search-form { width: 100%; }
+    .form-input { width: 100%; }
+    .market-item-table th, .market-item-table td { padding: var(--space-xs) var(--space-sm); }
 }
 
 @media (max-width: 640px) {
     .sidebar { width: clamp(180px, 60vw, 240px); padding: var(--space-md); }
     .content { padding: var(--space-md); }
+    .action-btn { font-size: clamp(0.625rem, 2vw, 0.75rem); padding: var(--space-xs) var(--space-sm); }
+    .market-item-table th, .market-item-table td { font-size: clamp(0.625rem, 2vw, 0.75rem); }
 }

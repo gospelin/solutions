@@ -293,48 +293,6 @@
             </div>
         </div>
 
-        <!-- Popular Items -->
-        @if ($popularItems->isNotEmpty())
-            <div class="market-section">
-                <h2>Popular Tools</h2>
-                <div class="market-tools-grid">
-                    @foreach ($popularItems as $item)
-                        <div class="tool-card" data-name="{{ strtolower($item->name) }}">
-                            <img src="{{ asset('images/' . $item->image) }}" alt="{{ $item->name }}" class="tool-image">
-                            <h2 class="tool-name">{{ $item->name }}</h2>
-                            <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
-                            <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
-                                {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
-                                <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-        <!-- Latest Items -->
-        @if ($latestItems->isNotEmpty())
-            <div class="market-section">
-                <h2>Latest Tools</h2>
-                <div class="market-tools-grid">
-                    @foreach ($latestItems as $item)
-                        <div class="tool-card" data-name="{{ strtolower($item->name) }}">
-                            <img src="{{ asset('images/' . $item->image) }}" alt="{{ $item->name }}" class="tool-image">
-                            <h2 class="tool-name">{{ $item->name }}</h2>
-                            <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
-                            <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
-                                {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
-                                <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
         <!-- Tools Grid -->
         <div class="market-section">
             <h2>All Tools</h2>
