@@ -6,7 +6,7 @@ use App\Models\MarketItem;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class SearchController extends Controller
+class UserSearchController extends Controller
 {
     public function search(Request $request): View
     {

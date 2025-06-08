@@ -76,14 +76,14 @@ class UserDashboardController extends Controller
             'search' => $search,
         ]);
 
-        $popularItems = MarketItem::orderBy('purchases_count', 'desc')->take(5)->get();
-        $latestItems = MarketItem::latest()->take(5)->get();
+        //$popularItems = MarketItem::orderBy('purchases_count', 'desc')->take(5)->get();
+        //$latestItems = MarketItem::latest()->take(5)->get();
         $categories = MarketItem::distinct()->pluck('category')->toArray();
 
         return view('user.market', [
             'paginator' => $paginator,
-            'popularItems' => $popularItems,
-            'latestItems' => $latestItems,
+            //'popularItems' => $popularItems,
+            //'latestItems' => $latestItems,
             'categories' => $categories,
             'category' => $category,
         ]);

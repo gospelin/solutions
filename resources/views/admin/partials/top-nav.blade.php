@@ -9,7 +9,7 @@
             </h1>-->
             <form action="{{ route('admin.tools.search') }}" method="GET">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" name="query" class="search-input" placeholder="Search tools..."
+                <input type="text" name="search" class="search-input" value="{{ $searchQuery ?? '' }}" placeholder="Search Tools..."
                     value="{{ request('query') }}">
                 <button type="submit" style="display: none;">Search</button>
             </form>

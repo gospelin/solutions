@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminUserController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotifyReregisterController;
 use App\Http\Controllers\SelarWebhookController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ToolController;
@@ -35,7 +36,7 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/market/category/{category?}', [UserDashboardController::class, 'market'])->name('market.category');
     Route::get('/contact', [UserDashboardController::class, 'contact'])->name('contact');
     Route::post('/contact/submit', [UserDashboardController::class, 'contactSubmit'])->name('contact.submit');
-    Route::get('/search', [SearchController::class, 'search'])->name('search');
+    Route::get('/search', [UserSearchController::class, 'search'])->name('search');
     Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
     Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('user.settings.update');
     Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
