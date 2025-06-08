@@ -307,10 +307,11 @@
                         @endif
                         <h2 class="tool-name">{{ $item->name }}</h2>
                         <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
-                        <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                            {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
-                            {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
-                            <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
+                        <a href="{{ $item->external_link }}"
+                            class="buy-btn {{ in_array($item->status, ['pending', 'deactivated']) ? 'pending' : '' }}"
+                            {{ in_array($item->status, ['pending', 'deactivated']) ? 'onclick="return false;"' : '' }}>
+                            {{ $item->status === 'pending' ? 'pending...' : ($item->status === 'deactivated' ? 'Unavailable' : 'Buy Now') }}
+                            <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : ($item->status === 'deactivated' ? 'bi-lock-fill' : 'bi-bag-fill') }}"></i>
                         </a>
                     </div>
                 @endforeach
@@ -334,10 +335,13 @@
             // Loading spinner for external links
             document.querySelectorAll('.buy-btn:not(.pending)').forEach(link => {
                 link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent immediate navigation
+                    const href = link.getAttribute('href');
                     document.getElementById('loading-overlay').style.display = 'flex';
                     setTimeout(() => {
                         document.getElementById('loading-overlay').style.display = 'none';
-                    }, 2000);
+                        window.location.href = href; // Navigate in same tab
+                    }, 5000); // 5 seconds
                 });
             });
         </script>
