@@ -36,4 +36,5 @@ class MarketItem extends Model
     {
         return $this->image ? asset('storage/images/' . $this->image) : null;
     }
+    
 }

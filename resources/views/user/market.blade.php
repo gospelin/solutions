@@ -299,7 +299,12 @@
             <div class="market-tools-grid" id="tool-list">
                 @foreach ($paginator as $item)
                     <div class="tool-card" data-name="{{ strtolower($item->name) }}">
-                        <img src="{{ asset('images/' . $item->image) }}" alt="{{ $item->name }}" class="tool-image">
+                        @if ($marketItem->image_url)
+                            <img src="{{ $marketItem->image_url }}" alt="{{ $marketItem->name }}"
+                                style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: var(--radius-md);">
+                        @else
+                            <p>No image available.</p>
+                        @endif
                         <h2 class="tool-name">{{ $item->name }}</h2>
                         <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
                         <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"

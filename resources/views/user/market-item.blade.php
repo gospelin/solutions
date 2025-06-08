@@ -219,7 +219,7 @@
             <!-- Item Card -->
             <div class="market-item-card">
                 @if ($marketItem->image_url)
-                    <img src="{{ $marketItem->image_url }}" alt="{{ $marketItem->name }}"
+                    <img src="{{ 'storage/'. $marketItem->image_url }}" alt="{{ $marketItem->name }}"
                         style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: var(--radius-md);">
                 @else
                     <p>No image available.</p>
