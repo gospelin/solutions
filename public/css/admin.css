@@ -355,6 +355,53 @@ body {
     color: var(--error);
 }
 
+/* Update action-btn styles */
+.action-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gray-300);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+.action-btn.success {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.action-btn.success:hover {
+    background: var(--success);
+    color: var(--white);
+}
+
+.action-btn.error {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.action-btn.error:hover {
+    background: var(--error);
+    color: var(--white);
+}
+
+.action-btn i {
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+}
+
+
 .user-menu {
     position: relative;
 }
