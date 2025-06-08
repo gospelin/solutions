@@ -31,4 +31,9 @@ class MarketItem extends Model
         return $this->belongsToMany(User::class, 'market_item_user', 'market_item_id', 'user_id')
                     ->withPivot('purchased_at');
     }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? asset('storage/images/' . $this->image) : null;
+    }
 }

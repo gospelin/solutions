@@ -49,7 +49,7 @@
                 <input type="file" name="image" id="image" class="form-input">
                 @error('image') <span class="error">{{ $message }}</span> @enderror
             </div>
-            <button type="submit" class="form-submit">Create Market Item</button>
+            <button type="submit" class="form-submit"><i class="fas fa-plus"></i> Create Market Item</button>
         </form>
     </section>
 @endsection

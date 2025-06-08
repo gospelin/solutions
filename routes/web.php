@@ -63,7 +63,7 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
     Route::resource('tools', ToolController::class)->except(['show']);
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
-    Route::get('/search', [SearchController::class, 'search'])->name('search');
+    Route::get('tools/search', [SearchController::class, 'search'])->name('tools.search');
     Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
     Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');

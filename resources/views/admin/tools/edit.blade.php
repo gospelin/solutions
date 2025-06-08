@@ -51,13 +51,16 @@
             <div class="form-group">
                 <label for="image">Image</label>
                 <input type="file" name="image" id="image" class="form-input">
-                @if ($tool->image)
-                    <p>Current Image: <img src="{{ asset('storage/' . $tool->image) }}" alt="Current Image"
-                            style="max-width: 100px;"></p>
+                @if ($tool->image_url)
+                    <p>Current Image: <img src="{{ $tool->image_url }}" alt="{{ $tool->name }}"
+                            style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: var(--radius-md); margin-top: var(--space-sm);">
+                    </p>
+                @else
+                    <p>No image uploaded.</p>
                 @endif
                 @error('image') <span class="error">{{ $message }}</span> @enderror
             </div>
-            <button type="submit" class="form-submit">Update Market Item</button>
+            <button type="submit" class="form-submit"><i class="fas fa-save"></i> Update Market Item</button>
         </form>
     </section>
 @endsection

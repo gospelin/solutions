@@ -20,7 +20,7 @@ class ToolController extends Controller
                     ->orWhere('description', 'like', '%' . $search . '%');
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         return view('admin.tools.index', compact('marketItems', 'searchQuery'));
     }
@@ -39,17 +39,19 @@ class ToolController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'price_ngn' => ['required', 'numeric', 'min:0'],
             'external_link' => ['nullable', 'url', 'max:255'],
-            'image' => ['nullable', 'image', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('market-items', 'public');
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            $validated['image'] = $request->file('image')->storeAs('images', $filename, 'public');
         }
 
         $marketItem = MarketItem::create($validated);
         Log::info('Market item created', ['item_id' => $marketItem->id, 'admin_id' => auth()->id()]);
 
         return redirect()->route('admin.tools.index')->with('success', 'Market item created successfully.');
+
     }
 
     public function edit(MarketItem $tool)
@@ -66,14 +68,16 @@ class ToolController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'price_ngn' => ['required', 'numeric', 'min:0'],
             'external_link' => ['nullable', 'url', 'max:255'],
-            'image' => ['nullable', 'image', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
 
         if ($request->hasFile('image')) {
+            // Delete old image if exists
             if ($tool->image) {
                 Storage::disk('public')->delete($tool->image);
             }
-            $validated['image'] = $request->file('image')->store('market-items', 'public');
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            $validated['image'] = $request->file('image')->storeAs('images', $filename, 'public');
         }
 
         $tool->update($validated);
