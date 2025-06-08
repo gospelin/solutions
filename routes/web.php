@@ -1,25 +1,17 @@
 <?php
 
-use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Auth\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotifyReregisterController;
 use App\Http\Controllers\SelarWebhookController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ToolController;
+use App\Http\Controllers\Admin\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,23 +32,15 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/support', [UserDashboardController::class, 'support'])->name('support');
     Route::get('/market', [UserDashboardController::class, 'market'])->name('market');
     Route::get('/market/item/{id}', [UserDashboardController::class, 'marketItem'])->name('market.item');
-    //Route::post('/market/purchase/{id}', [UserDashboardController::class, 'marketPurchase'])->name('market.purchase');
     Route::get('/market/category/{category?}', [UserDashboardController::class, 'market'])->name('market.category');
-
-    //Route::get('/market', [UserDashboardController::class, 'market'])->name('market');
-    //Route::get('/market/{category}', [UserDashboardController::class, 'market'])->name('market.category');
-    //Route::get('/market/item/{id}', [UserDashboardController::class, 'marketItem'])->name('market.item');
-    //Route::post('/market/purchase/{id}', [UserDashboardController::class, 'marketPurchase'])->name('market.purchase');
-    
     Route::get('/contact', [UserDashboardController::class, 'contact'])->name('contact');
     Route::post('/contact/submit', [UserDashboardController::class, 'contactSubmit'])->name('contact.submit');
-    Route::post('/search', [SearchController::class, 'search'])->name('search');
-    
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
     Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
     Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('user.settings.update');
     Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
 
-    // Profile routes (from Breeze)
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -64,26 +48,30 @@ Route::middleware(['auth', 'check.status'])->group(function () {
 
 Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminUserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/users', [AdminUserController::class, 'userManagement'])->name('user-management');
-    Route::get('/tools', [AdminUserController::class, 'toolModeration'])->name('tool-moderation');
     Route::get('/reports', [AdminUserController::class, 'reports'])->name('reports');
-    Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');
-    Route::post('/system-settings', [AdminUserController::class, 'updateSystemSettings'])->name('system-settings.update');
-    Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin-settings');
     Route::post('/settings', [AdminUserController::class, 'updateSettings'])->name('admin-settings.update');
-    Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('user.ban');
-    Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('user.role');
-    Route::delete('/users/{id}/delete', [AdminUserController::class, 'deleteUser'])->name('user.delete');
-    Route::get('/users/create', [AdminUserController::class, 'create'])->name('create');
-    Route::post('/users/store', [AdminUserController::class, 'store'])->name('store');
-    Route::post('/tools/{id}/approve', [AdminUserController::class, 'approveTool'])->name('tool.approve');
-    Route::post('/tools/{id}/reject', [AdminUserController::class, 'rejectTool'])->name('tool.reject');
+    Route::get('/user-management', [AdminUserController::class, 'userManagement'])->name('user-management');
+    Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('users.ban');
+    Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
+    Route::delete('/users/{id}', [AdminUserController::class, 'deleteUser'])->name('users.delete');
+    Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
+    Route::post('/users', [AdminUserController::class, 'store'])->name('store');
+    Route::get('/tool-moderation', [AdminUserController::class, 'toolModeration'])->name('tool-moderation');
+    Route::post('/tools/{id}/approve', [AdminUserController::class, 'approveTool'])->name('tools.approve');
+    Route::post('/tools/{id}/reject', [AdminUserController::class, 'rejectTool'])->name('tools.reject');
+    Route::resource('tools', ToolController::class)->except(['show']);
+    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
+    Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
+    Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');
+    Route::post('/system-settings', [AdminUserController::class, 'updateSystemSettings'])->name('system-settings.update');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
 });
 
 Route::get('/notify-reregister', [NotifyReregisterController::class, 'notify'])->name('notify.reregister');
-
-// Webhook route (no auth middleware)
 Route::post('/webhook/selar', [SelarWebhookController::class, 'handle'])->name('webhook.selar');
+
 require __DIR__ . '/auth.php';

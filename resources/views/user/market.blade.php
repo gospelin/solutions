@@ -304,7 +304,7 @@
                             <h2 class="tool-name">{{ $item->name }}</h2>
                             <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
                             <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_blank"' }}>
+                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
                                 {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
                                 <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
                             </a>
@@ -325,7 +325,7 @@
                             <h2 class="tool-name">{{ $item->name }}</h2>
                             <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
                             <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_blank"' }}>
+                                {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
                                 {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
                                 <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
                             </a>
@@ -345,7 +345,7 @@
                         <h2 class="tool-name">{{ $item->name }}</h2>
                         <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
                         <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}"
-                            {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_blank"' }}>
+                            {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
                             {{ $item->status === 'pending' ? 'Pending...' : 'Buy Now' }}
                             <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-bag-fill' }}"></i>
                         </a>

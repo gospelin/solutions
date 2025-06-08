@@ -1,68 +1,36 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Admin Profile')
-
-@section('description', 'Edit your admin profile information.')
+@section('description', 'Manage your admin profile settings.')
 
 @section('content')
-    <section class="content">
-        <div class="content-header">
-            <h1 class="page-title">Admin Profile</h1>
-            <p class="page-subtitle">Update your personal information.</p>
+<section class="content">
+    <div class="content-header">
+        <h1 class="page-title">Admin Profile</h1>
+        <p class="page-subtitle">Update your profile information.</p>
+    </div>
+    <form action="{{ route('admin.profile.update') }}" method="POST" class="modal-form">
+        @csrf
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-input" value="{{ auth()->user()->name }}" required>
+            @error('name') <span class="color: var(--error);">{{ $message }}</span> @endif
         </div>
-
-        @if (session('success'))
-            <div class="chart-card" style="background: var(--success); color: var(--white); margin-bottom: var(--space-lg);">
-                <p>{{ session('success') }}</p>
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="chart-card" style="background: var(--error); color: var(--white); margin-bottom: var(--space-lg);">
-                <p>{{ session('error') }}</p>
-            </div>
-        @endif
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <h3 class="chart-title">Profile Information</h3>
-            </div>
-            <form class="modal-form" method="POST" action="{{ route('admin.profile.update') }}">
-                @csrf
-                @method('PATCH')
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" class="form-input"
-                        value="{{ old('name', Auth::user()->name) }}" required>
-                    @error('name')
-                        <span class="error-text"
-                            style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-input"
-                        value="{{ old('email', Auth::user()->email) }}" required>
-                    @error('email')
-                        <span class="error-text"
-                            style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="password">New Password</label>
-                    <input type="password" id="password" name="password" class="form-input"
-                        placeholder="Leave blank to keep current password">
-                    @error('password')
-                        <span class="error-text"
-                            style="color: var(--error); font-size: clamp(0.625rem, 2vw, 0.75rem);">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-input"
-                        placeholder="Confirm new password">
-                </div>
-                <button type="submit" class="form-submit">Update Profile</button>
-            </form>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-input" value="{{ auth()->user()->email }}" required>
+            @error('email') <span class="color: var(--error);">{{ $message }}</span> @endif
         </div>
-    </section>
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" name="password" id="password" class="form-input">
+            @error('password') <span class="color: var(--error);">{{ $message }}</span> @endif
+        </div>
+        <div class="form-group">
+            <label for="password_confirmation">Confirm Password</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input">
+        </div>
+        <button type="submit" class="form-submit">Update Profile</button>
+    </form>
+</section>
 @endsection

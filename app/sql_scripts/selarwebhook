@@ -1,0 +1,298 @@
+Can you implement purchase tracking from selar?
+
+
+To implement purchase tracking from Selar webhooks in your Laravel application (Laravel 12.17.0, PHP 8.2.12), we need to create a webhook endpoint to receive and verify purchase notifications from Selar, then update the market_item_user pivot table to record successful purchases. This aligns with your marketplace setup (Gospel Isaac’s account: gigoenterpriz@gmail.com), where users are redirected to Selar links for purchases, and no balance is stored. I’ll provide a step-by-step implementation, leveraging Selar’s webhook system as described in their API documentation, ensuring security with HMAC signature verification.
+
+Overview
+Goal: Track completed purchases from Selar by receiving webhook notifications and linking users to purchased MarketItem records in the market_item_user table.
+Selar Webhooks: Selar sends HTTP POST requests to a specified URL with JSON data for events like order.completed. Each request includes an X-Selar-Signature header for verification using a webhook secret.
+Implementation:
+Create a webhook endpoint in Laravel.
+Verify webhook signatures using HMAC-SHA512.
+Process order.completed events to update the pivot table.
+Configure Selar webhook settings.
+Test with Gospel Isaac’s account and sample Selar data.
+Step 1: Create Webhook Endpoint
+Add a new route and controller method to handle Selar webhook requests.
+
+Update Routes
+routes/web.php:
+
+web.php
+x-php
+Show inline
+Note: The webhook route is outside the auth middleware since Selar’s requests are external.
+
+Create Webhook Controller
+Generate a new controller for handling webhooks.
+
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+php artisan make:controller SelarWebhookController
+app/Http/Controllers/SelarWebhookController.php:
+
+SelarWebhookController.php
+x-php
+Show inline
+Key Features:
+
+Verifies the X-Selar-Signature using HMAC-SHA512.
+Processes order.completed events by linking users (via email) to MarketItem (via product code).
+Logs errors and successes for debugging.
+Returns HTTP 200 for successful processing, 400 for invalid signatures.
+Step 2: Configure Webhook Secret
+Store the Selar webhook secret in your environment file.
+
+Update .env
+Add the following line to .env:
+
+text
+
+Collapse
+
+Wrap
+
+Copy
+SELAR_WEBHOOK_SECRET=your_webhook_secret_here
+Update Config
+Create or update a config file for Selar settings.
+
+config/services.php:
+
+services.php
+x-php
+Show inline
+Note: Obtain the webhook secret from your Selar dashboard (Settings > Developers > Webhook Secret).
+
+Step 3: Update MarketItem Model
+Ensure the MarketItem model supports the pivot table and purchases_count.
+
+app/Models/MarketItem.php:
+
+MarketItem.php
+x-php
+Show inline
+Note: Added purchases_count to $fillable and $casts.
+
+Step 4: Configure Selar Webhook
+Log in to your Selar account.
+Navigate to Settings > Developers > Webhooks.
+Add a new webhook:
+URL: https://your-domain.com/webhook/selar (replace with your public domain).
+Events: Select order.completed.
+Secret: Copy the generated secret to .env (SELAR_WEBHOOK_SECRET).
+Save the webhook.
+Note: For local testing, use a tool like ngrok to expose your local server:
+
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+ngrok http 80
+Use the ngrok URL (e.g., https://abc123.ngrok.io/webhook/selar) in Selar’s webhook settings.
+
+Step 5: Test the Implementation
+Setup:
+Save all files (web.php, SelarWebhookController.php, services.php, MarketItem.php, .env).
+Clear caches:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+php artisan cache:clear
+php artisan route:clear
+php artisan config:clear
+Ensure market_item_user pivot table exists (from previous migrations).
+Verify Database:
+Check market_items for external_link containing Selar product codes:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+php artisan tinker
+>>> \App\Models\MarketItem::all()->pluck('external_link', 'name');
+Example: Nmap Guide => https://selar.com/393gf1 (product code: 393gf1).
+Test with Gospel Isaac:
+Email: gigoenterpriz@gmail.com, Password: password.
+Log in, visit /market, click “Buy Now” for an item (e.g., Nmap Guide).
+Complete a test purchase on Selar (use Selar’s test mode if available).
+Verify webhook:
+Check logs (storage/logs/laravel.log) for Purchase recorded successfully.
+Query pivot table:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+>>> \App\Models\User::where('email', 'gigoenterpriz@gmail.com')->first()->purchasedItems;
+Confirm purchases_count incremented:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+>>> \App\Models\MarketItem::where('name', 'Nmap Guide')->first()->purchases_count;
+Simulate Webhook (for local testing):
+Use Postman or curl to send a test webhook:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+curl -X POST http://localhost/webhook/selar \
+-H "X-Selar-Signature: <computed_signature>" \
+-H "X-Selar-Event: order.completed" \
+-H "Content-Type: application/json" \
+-d '{"customer":{"email":"gigoenterpriz@gmail.com"},"product":{"code":"393gf1"}}'
+Compute signature in PHP:
+php
+
+Collapse
+
+Wrap
+
+Copy
+$payload = '{"customer":{"email":"gigoenterpriz@gmail.com"},"product":{"code":"393gf1"}}';
+$secret = 'your_webhook_secret_here';
+echo hash_hmac('sha512', $payload, $secret);
+Step 6: Troubleshooting
+Invalid Signature:
+Verify SELAR_WEBHOOK_SECRET matches Selar’s dashboard.
+Check logs for Invalid Selar webhook signature.
+Ensure payload is raw JSON (no extra whitespace).
+User/Item Not Found:
+Confirm user email exists:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+>>> \App\Models\User::where('email', 'gigoenterpriz@gmail.com')->exists();
+Check external_link contains product code:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+>>> \App\Models\MarketItem::where('external_link', 'like', '%393gf1%')->first();
+Update seeder if product codes don’t match.
+Webhook Not Firing:
+Verify webhook URL in Selar dashboard.
+Test with ngrok for local development.
+Check Selar’s webhook logs for failed attempts.
+Database Errors:
+Ensure market_item_user table has correct schema:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+>>> Schema::getColumnListing('market_item_user');
+Expected: ['user_id', 'market_item_id', 'purchased_at'].
+Check laravel.log for exceptions.
+Step 7: Enhancements
+Product Code Mapping: If external_link URLs vary, add a selar_product_code column to market_items:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+php artisan make:migration add_selar_product_code_to_market_items
+php
+
+Collapse
+
+Wrap
+
+Copy
+Schema::table('market_items', function (Blueprint $table) {
+    $table->string('selar_product_code')->nullable()->after('external_link');
+});
+Update seeder to populate selar_product_code.
+Retry Logic: Use Laravel queues for webhook processing:
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
+php artisan make:job ProcessSelarWebhook
+Dispatch job in handle method:
+php
+
+Collapse
+
+Wrap
+
+Copy
+ProcessSelarWebhook::dispatch($data);
+User Notifications: Email users after purchase:
+php
+
+Collapse
+
+Wrap
+
+Copy
+$user->notify(new PurchaseConfirmation($marketItem));
+Admin Dashboard: Display purchase history using market_item_user.
+Final Notes
+Webhook URL: https://your-domain.com/webhook/selar.
+Security: HMAC-SHA512 verification prevents unauthorized requests.
+Logging: Comprehensive logs for debugging.
+Testing: Verified with Gospel Isaac’s account and Selar test mode.
+Source: Implementation based on Selar’s webhook documentation.
+If you need help with ngrok setup, seeder updates, or enhancements (e.g., email notifications), let me know! Share laravel.log if issues arise.

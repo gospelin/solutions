@@ -1028,12 +1028,13 @@
                     <button class="menu-toggle" id="menuToggle">
                         <i class="bi bi-list"></i>
                     </button>
+                    <!-- Replace the search-container div in the top-nav -->
                     <div class="search-container">
-                        <form action="{{ route('search') }}" method="POST">
-                            @csrf
+                        <form action="{{ route('search') }}" method="GET">
                             <i class="bi bi-search search-icon"></i>
                             <input type="text" name="query" class="search-input" placeholder="Search tools..."
-                                   value="{{ request('query') }}">
+                                value="{{ request('query') }}">
+                            <button type="submit" style="display: none;">Search</button>
                         </form>
                     </div>
                 </div>

@@ -225,7 +225,7 @@
             <p class="meta">Category: {{ ucfirst($item->category) }}</p>
             <p class="meta">Purchases: {{ $item->purchases_count }}</p>
             <p class="meta">Status: {{ ucfirst($item->status) }}</p>
-            <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}" {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_blank"' }}>
+            <a href="{{ $item->external_link }}" class="buy-btn {{ $item->status === 'pending' ? 'pending' : '' }}" {{ $item->status === 'pending' ? 'onclick="return false;"' : 'target="_self"' }}>
                 {{ $item->status === 'pending' ? 'Pending...' : 'Purchase Now' }}
                 <i class="bi {{ $item->status === 'pending' ? 'bi-clock' : 'bi-cart-check' }}"></i>
             </a>

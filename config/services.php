@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'selar' => [
+        'webhook_secret' => env('SELAR_WEBHOOK_SECRET'),
+    ],
+
 ];

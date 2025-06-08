@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+<!--@extends('admin.layouts.app')
 
 @section('title', 'System Settings')
 
@@ -35,5 +35,28 @@
             <button type="submit" class="form-submit">Save Settings</button>
         </form>
     </div>
+</section>
+@endsection-->
+
+@extends('admin.layouts.app')
+
+@section('title', 'System Settings')
+@section('description', 'Configure platform settings.')
+
+@section('content')
+<section class="content">
+    <div class="content-header">
+        <h1 class="page-title">System Settings</h1>
+        <p class="page-subtitle">Manage platform configurations.</p>
+    </div>
+    <form action="{{ route('admin.system-settings.update') }}" method="POST" class="modal-form">
+        @csrf
+        <div class="form-group">
+            <label for="site_name">Site Name</label>
+            <input type="text" name="site_name" id="form-input" value="{{ old('site_name', config('app.name')) }}" required>
+            @error('site_name') <span class="color: var(--error);">{{ $message }}</span> @endif
+        </div>
+        <button type="submit" class="form-submit">Update Settings</button>
+    </form>
 </section>
 @endsection

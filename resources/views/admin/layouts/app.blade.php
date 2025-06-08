@@ -24,6 +24,9 @@
 
     <!-- Admin CSS -->
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
+    <!-- Add stack for custom styles -->
+    @stack('styles')
 </head>
 
 <body>

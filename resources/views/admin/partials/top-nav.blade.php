@@ -4,8 +4,12 @@
             <i class="bi bi-list"></i>
         </button>
         <div class="search-container">
-            <i class="bi bi-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search users, tools, or reports...">
+            <form action="{{ route('admin.search') }}" method="GET">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" name="query" class="search-input" placeholder="Search tools..."
+                    value="{{ request('query') }}">
+                <button type="submit" style="display: none;">Search</button>
+            </form>
         </div>
     </div>
     <div class="nav-right">
@@ -21,9 +25,9 @@
         </div>
         <div class="user-menu" id="userMenu">
             <div class="user-trigger">
-                <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
                 <div class="user-info">
-                    <h4>{{ Auth::user()->name }}</h4>
+                    <h4>{{ auth()->user()->name }}</h4>
                     <p>Admin</p>
                 </div>
                 <i class="bi bi-chevron-down dropdown-icon"></i>
@@ -32,7 +36,7 @@
                 <a href="{{ route('admin.admin-profile') }}" class="dropdown-item">
                     <i class="bi bi-person"></i> Profile
                 </a>
-                <a href="{{ route('admin.admin-settings') }}" class="dropdown-item">
+                <a href="{{ route('admin.system-settings') }}" class="dropdown-item">
                     <i class="bi bi-gear"></i> Settings
                 </a>
                 <div class="dropdown-divider"></div>
