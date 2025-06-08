@@ -50,7 +50,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->status ?? 'Active' }}</td>
+                                <td style="text-transform: capitalize;">{{ $user->status ?? 'Active' }}</td>
                                 <td>
                                     <form action="{{ route('admin.users.ban', $user->id) }}" method="POST"
                                         style="display: inline;">
