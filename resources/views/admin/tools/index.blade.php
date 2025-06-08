@@ -7,9 +7,9 @@
     <section class="content">
         <div class="content-header">
             <h1 class="page-title">
-                {{ isset($searchQuery) && $searchQuery ? 'Search Results for "' . e($searchQuery) . '"' : 'Tools' }}
+                {{ isset($searchQuery) && $searchQuery ? 'Search Results for "' . e($searchQuery) . '"' : 'Tools Management' }}
             </h1>
-            <p class="page-subtitle">View, create, edit, or delete market items.</p>
+            <p class="page-subtitle">View, create, edit, or delete tools.</p>
             <div class="search-form">
                 <form action="{{ route('admin.tools.search') }}" method="GET">
                     <input type="text" name="search" value="{{ $searchQuery ?? '' }}" placeholder="Search Tools..."

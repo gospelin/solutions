@@ -977,5 +977,269 @@ body.light .pagination .current { color: var(--white); }
     .sidebar { width: clamp(180px, 60vw, 240px); padding: var(--space-md); }
     .content { padding: var(--space-md); }
     .action-btn { font-size: clamp(0.625rem, 2vw, 0.75rem); padding: var(--space-xs) var(--space-sm); }
-    .market-item-table th, .market-item-table td { font-size: clamp(0.625rem, 2vw, 0.75rem); }
+    .market-item-table th, .market-item
+    -table td { font-size: clamp(0.625rem, 2vw, 0.75rem); }
+}
+
+
+/* Form Input Fields */
+input[type="text"],
+input[type="number"],
+input[type="url"] {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--white);
+    font-family: var(--font-primary);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="url"]::placeholder {
+    color: var(--gray-400);
+    opacity: 0.8;
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="url"]:disabled {
+    background: var(--gray-500);
+    color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Number Input Specifics */
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Select Fields */
+select {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--white);
+    font-family: var(--font-primary);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right var(--space-sm) center;
+    background-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+select:disabled {
+    background: var(--gray-500);
+    color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+select option {
+    background: var(--dark-surface);
+    color: var(--white);
+}
+
+/* Textarea */
+textarea {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    color: var(--white);
+    font-family: var(--font-primary);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    resize: vertical;
+    min-height: 100px;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+textarea::placeholder {
+    color: var(--gray-400);
+    opacity: 0.8;
+}
+
+textarea:disabled {
+    background: var(--gray-500);
+    color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* File Input */
+input[type="file"] {
+    position: relative;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    color: var(--gray-300);
+    font-family: var(--font-primary);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+input[type="file"]::file-selector-button {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--white);
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: var(--space-sm);
+    transition: all 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.02);
+}
+
+input[type="file"]:hover {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+input[type="file"]:disabled {
+    background: var(--gray-500);
+    color: var(--gray-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+input[type="file"]:disabled::file-selector-button {
+    background: var(--gray-500);
+    cursor: not-allowed;
+}
+
+/* Error States */
+.form-group.error input[type="text"],
+.form-group.error input[type="number"],
+.form-group.error input[type="url"],
+.form-group.error select,
+.form-group.error textarea,
+.form-group.error input[type="file"] {
+    border-color: var(--error);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.form-group .error {
+    color: var(--error);
+    font-size: clamp(0.625rem, 2vw, 0.75rem);
+    margin-top: var(--space-xs);
+}
+
+/* Light Theme Adjustments */
+body.light input[type="text"],
+body.light input[type="number"],
+body.light input[type="url"],
+body.light select,
+body.light textarea,
+body.light input[type="file"] {
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    color: var(--gray-300);
+}
+
+body.light input[type="text"]:focus,
+body.light input[type="number"]:focus,
+body.light input[type="url"]:focus,
+body.light select:focus,
+body.light textarea:focus,
+body.light input[type="file"]:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: var(--primary);
+}
+
+body.light select option {
+    background: var(--dark-surface);
+    color: var(--gray-300);
+}
+
+body.light input[type="text"]::placeholder,
+body.light input[type="number"]::placeholder,
+body.light input[type="url"]::placeholder,
+body.light textarea::placeholder {
+    color: var(--gray-400);
+}
+
+body.light input[type="file"]::file-selector-button {
+    background: var(--gradient-primary);
+    color: var(--white);
+}
+
+body.light .form-group.error input[type="text"],
+body.light .form-group.error input[type="number"],
+body.light .form-group.error input[type="url"],
+body.light .form-group.error select,
+body.light .form-group.error textarea,
+body.light .form-group.error input[type="file"] {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: var(--error);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    select,
+    textarea,
+    input[type="file"] {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: clamp(0.625rem, 2vw, 0.75rem);
+    }
+
+    input[type="file"]::file-selector-button {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: clamp(0.625rem, 2vw, 0.75rem);
+    }
+}
+
+@media (max-width: 640px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    select,
+    textarea,
+    input[type="file"] {
+        width: 100%;
+    }
 }

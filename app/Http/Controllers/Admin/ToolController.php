@@ -27,14 +27,16 @@ class ToolController extends Controller
 
     public function create()
     {
-        return view('admin.tools.create');
+        // Fetch distinct categories
+        $categories = MarketItem::distinct()->pluck('category')->filter()->sort();
+        return view('admin.tools.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', MarketItem::distinct()->pluck('category')->toArray())],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'price_ngn' => ['required', 'numeric', 'min:0'],
@@ -57,14 +59,16 @@ class ToolController extends Controller
 
     public function edit(MarketItem $tool)
     {
-        return view('admin.tools.edit', compact('tool'));
+        // Fetch distinct categories for edit form
+        $categories = MarketItem::distinct()->pluck('category')->filter()->sort();
+        return view('admin.tools.edit', compact('tool', 'categories'));
     }
 
     public function update(Request $request, MarketItem $tool)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', MarketItem::distinct()->pluck('category')->toArray())],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'price_ngn' => ['required', 'numeric', 'min:0'],
@@ -72,7 +76,7 @@ class ToolController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
 
-         if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($tool->image) {
                 Storage::disk('public')->delete('images/' . $tool->image);
