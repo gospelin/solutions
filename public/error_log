@@ -1,0 +1,12 @@
+[08-Jun-2025 20:04:07 UTC] PHP Fatal error:  Uncaught ErrorException: Cannot modify header information - headers already sent by (output started at /home1/mrsoluti/public_html/solutions/vendor/symfony/http-foundation/Response.php:387) in /home1/mrsoluti/public_html/solutions/vendor/symfony/http-foundation/Response.php:322
+Stack trace:
+#0 /home1/mrsoluti/public_html/solutions/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(256): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError()
+#1 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#2 /home1/mrsoluti/public_html/solutions/vendor/symfony/http-foundation/Response.php(322): header()
+#3 /home1/mrsoluti/public_html/solutions/vendor/symfony/http-foundation/Response.php(401): Symfony\Component\HttpFoundation\Response->sendHeaders()
+#4 /home1/mrsoluti/public_html/solutions/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(219): Symfony\Component\HttpFoundation\Response->send()
+#5 /home1/mrsoluti/public_html/solutions/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(196): Illuminate\Foundation\Bootstrap\HandleExceptions->renderHttpResponse()
+#6 /home1/mrsoluti/public_html/solutions/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(256): Illuminate\Foundation\Bootstrap\HandleExceptions->handleException()
+#7 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}()
+#8 {main}
+  thrown in /home1/mrsoluti/public_html/solutions/vendor/symfony/http-foundation/Response.php on line 322

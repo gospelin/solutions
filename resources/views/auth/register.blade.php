@@ -24,7 +24,7 @@
             </div>
             <div class="login-section">
                 <div class="logo-section">
-                    <div class="logo">MS</div>
+                    <div class="logo">M</div>
                     <h1 class="welcome-text">Get Started</h1>
                     <p class="subtitle">Create a new account</p>
                 </div>
@@ -109,7 +109,7 @@
                         <i class="fab fa-facebook-f"></i>
                     </button>
                     <button class="social-btn twitter" id="twitterLogin" title="Sign up with X" aria-label="Sign up with X">
-                        <i class="fab fa-x-twitter"></i>
+                        <i class="fab fa-twitter"></i>
                     </button>
                 </div>
                 <div class="register-link">

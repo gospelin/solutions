@@ -1099,13 +1099,13 @@
             </button>
             <div class="chat-box" id="chatBox">
                 <div class="chat-header">
-                    <h4>Support Chat</h4>
+                    <h4>Live Support</h4>
                     <button class="chat-close" id="chatClose">
                         <i class="bi bi-x"></i>
                     </button>
                 </div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="message">Need help with a tool? Ask away!</div>
+                    <div class="message" How can we help you</div>
                 </div>
                 <div class="chat-input-container">
                     <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
@@ -1194,7 +1194,7 @@
                     setTimeout(() => {
                         const response = document.createElement('div');
                         response.className = 'message ai';
-                        response.textContent = 'Our team will help you unleash chaos soon!';
+                        response.textContent = 'Your message has been recieved, our team will respond as soon as possible!';
                         chatMessages.appendChild(response);
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }, 1000);

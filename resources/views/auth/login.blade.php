@@ -25,7 +25,7 @@
             </div>
             <div class="login-section">
                 <div class="logo-section">
-                    <div class="logo">MS</div>
+                    <div class="logo">M</div>
                     <h1 class="welcome-text">Welcome Back</h1>
                     <p class="subtitle">Sign in to your account</p>
                 </div>
