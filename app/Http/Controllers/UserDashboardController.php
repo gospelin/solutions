@@ -118,7 +118,7 @@ class UserDashboardController extends Controller
     /**
      * Display the main marketplace with paginated items and category filtering.
      */
-    public function market(Request $requestetry, $category = null): View
+    public function market(Request $request, $category = null): View
     {
         $query = MarketItem::query();
 
