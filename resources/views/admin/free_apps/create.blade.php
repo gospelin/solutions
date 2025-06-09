@@ -69,11 +69,29 @@
             font-weight: 500;
             color: var(--gray-300);
             margin-bottom: var(--space-xs);
+            display: block;
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
+            padding: var(--space-sm);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--glass-bg);
+            color: var(--white);
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23A0AEC0' viewBox='0 0 16 16'%3E%3Cpath d='M8 12l-6-6h12l-6 6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--space-sm) center;
+            background-size: 12px;
+            padding-right: var(--space-lg);
         }
 
         .form-group .error {
@@ -94,7 +112,7 @@
             display: inline-flex;
             align-items: center;
             gap: var(--space-xs);
-            transition: all 0.3ilers ease;
+            transition: all 0.3s ease;
         }
 
         .form-submit:hover {
@@ -122,13 +140,27 @@
             color: var(--gray-300);
         }
 
+        body.light .form-group input,
+        body.light .form-group textarea,
+        body.light .form-group select {
+            background: var(--glass-bg);
+            color: var(--gray-900);
+            border-color: var(--glass-border);
+        }
+
+        body.light .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234A5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 12l-6-6h12l-6 6z'/%3E%3C/svg%3E");
+        }
+
         /* Accessibility */
         .form-group input:focus,
         .form-group textarea:focus,
+        .form-group select:focus,
         .form-submit:focus,
         .action-btn:focus {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
+            border-color: var(--primary);
         }
 
         /* Responsive */
@@ -197,8 +229,14 @@
                 </div>
                 <div class="form-group @error('category') error @enderror">
                     <label for="category">Category</label>
-                    <input type="text" name="category" id="category" value="{{ old('category') }}" required
-                        aria-required="true" aria-label="App category">
+                    <select name="category" id="category" required aria-required="true" aria-label="App category">
+                        <option value="" disabled {{ old('category') ? '' : 'selected' }}>Select a category</option>
+                        @foreach (['Video Editing', 'VPN', 'Messaging', 'Media', 'Music', 'Location', 'Streaming'] as $category)
+                            <option value="{{ $category }}" {{ old('category') == $category ? 'selected' : '' }}>
+                                {{ $category }}
+                            </option>
+                        @endforeach
+                    </select>
                     @error('category')
                         <div class="error">{{ $message }}</div>
                     @enderror

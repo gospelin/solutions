@@ -7,6 +7,7 @@ use App\Models\FreeApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class FreeAppController extends Controller
 {
@@ -27,16 +28,17 @@ class FreeAppController extends Controller
 
     public function create()
     {
-        $categories = FreeApp::select('category')->distinct()->pluck('category');
+        $categories = FreeApp::select('category')->distinct()->pluck('category')->sort()->values();
         return view('admin.free_apps.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
+        $categories = FreeApp::select('category')->distinct()->pluck('category')->toArray();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', $categories)],
             'external_link' => ['nullable', 'url', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
@@ -47,6 +49,7 @@ class FreeAppController extends Controller
             $validated['image'] = $filename;
         }
 
+        $validated['slug'] = Str::slug($validated['category']);
         $validated['status'] = FreeApp::STATUS_ACTIVE;
         $freeApp = FreeApp::create($validated);
         Log::info('Free app created', ['app_id' => $freeApp->id, 'admin_id' => auth()->id()]);
@@ -56,16 +59,17 @@ class FreeAppController extends Controller
 
     public function edit(FreeApp $freeApp)
     {
-        $categories = FreeApp::select('category')->distinct()->pluck('category');
+        $categories = FreeApp::select('category')->distinct()->pluck('category')->sort()->values();
         return view('admin.free_apps.edit', compact('freeApp', 'categories'));
     }
 
     public function update(Request $request, FreeApp $freeApp)
     {
+        $categories = FreeApp::select('category')->distinct()->pluck('category')->toArray();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', $categories)],
             'external_link' => ['nullable', 'url', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
@@ -79,6 +83,7 @@ class FreeAppController extends Controller
             $validated['image'] = $filename;
         }
 
+        $validated['slug'] = Str::slug($validated['category']);
         $freeApp->update($validated);
         Log::info('Free app updated', ['app_id' => $freeApp->id, 'admin_id' => auth()->id()]);
 
