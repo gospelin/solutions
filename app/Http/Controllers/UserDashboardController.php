@@ -55,7 +55,7 @@ class UserDashboardController extends Controller
             'paginator_count' => $paginator->count(),
         ]);
 
-        return view('user.freeApps', [
+        return view('user.FreeApps', [
             'paginator' => $paginator,
             'categories' => $categories,
             'category' => $category,
