@@ -4,9 +4,6 @@
             <i class="bi bi-list"></i>
         </button>
         <div class="search-container">
-            <!--<h1 class="page-title">
-                {{ isset($searchQuery) && $searchQuery ? 'Search Results for "' . e($searchQuery) . '"' : 'Market Items' }}
-            </h1>-->
             <form action="{{ route('admin.tools.search') }}" method="GET">
                 <i class="bi bi-search search-icon"></i>
                 <input type="text" name="search" class="search-input" value="{{ $searchQuery ?? '' }}" placeholder="Search Tools..."

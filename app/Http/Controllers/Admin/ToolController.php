@@ -19,8 +19,8 @@ class ToolController extends Controller
                     ->orWhere('category', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%');
             })
-            ->latest()
-            ->paginate(5);
+            ->orderBy('id')
+            ->paginate(7);
 
         return view('admin.tools.index', compact('marketItems', 'searchQuery'));
     }
@@ -55,7 +55,6 @@ class ToolController extends Controller
         Log::info('New Tool created', ['item_id' => $marketItem->id, 'admin_id' => auth()->id()]);
 
         return redirect()->route('admin.tools.index')->with('success', 'New Tool created successfully.');
-
     }
 
     public function edit(MarketItem $tool)

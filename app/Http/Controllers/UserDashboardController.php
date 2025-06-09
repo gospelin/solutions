@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarketItem;
+use App\Models\FreeApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -10,19 +11,77 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Contact;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 
 class UserDashboardController extends Controller
 {
-    // Placeholder for other methods
     public function index(): View
     {
         return view('user.dashboard');
     }
 
-    public function freeApps(): View
+    /**
+     * Display the free apps marketplace with paginated items and category filtering.
+     */
+    public function freeApps(Request $request, $category = null): View
     {
-        return view('user.free-apps');
+        $query = FreeApp::query()->active();
+
+        if ($search = $request->query('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($category) {
+            $query->category($category);
+        }
+
+        $paginator = $query->orderBy('id')->paginate(7)->appends([
+            'category' => $category,
+            'search' => $search,
+        ]);
+
+        // Fetch distinct, non-null categories
+        $categories = FreeApp::whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->pluck('category')
+            ->sort()
+            ->values()
+            ->toArray();
+
+        \Log::info('FreeApps data', [
+            'category' => $category,
+            'categories' => $categories,
+            'paginator_count' => $paginator->count(),
+        ]);
+
+        return view('user.freeApps', [
+            'paginator' => $paginator,
+            'categories' => $categories,
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * Handle free apps category filtering.
+     */
+    public function freeAppsCategory($category): View
+    {
+        // Validate category against existing slugs
+        $slugs = FreeApp::whereNotNull('slug')
+            ->where('slug', '!=', '')
+            ->distinct()
+            ->pluck('slug')
+            ->map(fn($slug) => strtolower($slug))
+            ->unique()
+            ->toArray();
+
+        if ($category && !in_array(strtolower($category), $slugs)) {
+            \Log::warning('Invalid category selected', ['category' => $category]);
+            return redirect()->route('free-apps')->with('error', 'Invalid category selected.');
+        }
+
+        return $this->freeApps(request()->merge(['category' => $category]));
     }
 
     public function premiumFeatures(): View
@@ -59,7 +118,7 @@ class UserDashboardController extends Controller
     /**
      * Display the main marketplace with paginated items and category filtering.
      */
-    public function market(Request $request, $category = null): View
+    public function market(Request $requestetry, $category = null): View
     {
         $query = MarketItem::query();
 
@@ -68,15 +127,23 @@ class UserDashboardController extends Controller
         }
 
         if ($category) {
-            $query->where('category', $category);
+            // Convert slug back to database category format
+            $dbCategory = Str::title(str_replace('-', ' ', $category));
+            $query->where('category', $dbCategory);
         }
 
-        $paginator = $query->paginate(10)->appends([
+        $paginator = $query->orderBy('id')->paginate(10)->appends([
             'category' => $category,
             'search' => $search,
         ]);
 
-        $categories = MarketItem::distinct()->pluck('category')->toArray();
+        $categories = MarketItem::whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->pluck('category')
+            ->sort()
+            ->values()
+            ->toArray();
 
         return view('user.market', [
             'paginator' => $paginator,
@@ -123,5 +190,4 @@ class UserDashboardController extends Controller
 
         return view('user.market-item', compact('item'));
     }
-
 }

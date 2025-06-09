@@ -32,7 +32,7 @@ class SearchController extends Controller
                 ->orWhere('category', 'like', '%' . $searchQuery . '%')
                 ->orWhere('description', 'like', '%' . $searchQuery . '%')
                 ->latest()
-                ->paginate(10)
+                ->paginate(7)
                 ->appends(['search' => $searchQuery]); // Preserve search query in pagination links
 
             // Log the search action

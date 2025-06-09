@@ -1,8 +1,12 @@
+@php
+    use App\Models\FreeApp;
+@endphp
+
 @extends('user.layouts.app')
 
-@section('title', 'Marketplace - Mr Solution')
+@section('title', 'Free Apps - Mr Solution')
 
-@section('description', 'Explore premium tech solutions and tools in the Mr Solution marketplace.')
+@section('description', 'Download premium apps for free in the Mr Solution marketplace.')
 
 @push('styles')
     <style>
@@ -70,7 +74,7 @@
             text-decoration: none;
             padding: var(--space-sm) var(--space-md);
             border-radius: var(--radius-md);
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: var(--font-primary);
         }
 
@@ -143,8 +147,8 @@
             font-family: var(--font-primary);
         }
 
-        .buy-btn {
-            background: var(--gradient-primary);
+        .download-btn {
+            background: var(--primary);
             color: var(--white);
             padding: var(--space-sm) var(--space-md);
             border: none;
@@ -162,14 +166,14 @@
             font-family: var(--font-primary);
         }
 
-        .buy-btn:hover {
+        .download-btn:hover {
             background: var(--primary-dark);
             box-shadow: var(--shadow-sm);
             transform: translateY(-2px);
         }
 
-        .buy-btn.pending,
-        .buy-btn.deactivated {
+        .download-btn.pending,
+        .download-btn.deactivated {
             background: var(--gray-500);
             cursor: not-allowed;
             pointer-events: none;
@@ -256,13 +260,23 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         /* Light Theme */
@@ -303,14 +317,99 @@
             color: var(--gray-400);
         }
 
-        body.light .buy-btn {
+        body.light .download-btn {
+            color: var(--white);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        .search-bar form {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-lg) var(--space-sm) 2.5rem;
+            font-size: clamp(0.875rem, 2.5vw, 1rem);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            background: var(--glass-bg);
+            color: var(--white);
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-primary);
+            backdrop-filter: blur(20px);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-size: clamp(0.875rem, 2.5vw, 1rem);
+            border: none;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-family: var(--font-primary);
+        }
+
+        .search-bar button:hover {
+            background: var(--primary-dark);
+        }
+
+        .search-bar button:disabled {
+            background: var(--gray-500);
+            cursor: not-allowed;
+        }
+
+        .search-bar .search-icon {
+            position: absolute;
+            left: var(--space-sm);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+        }
+
+        body.light .search-bar input {
+            background: var(--glass-bg);
+            color: var(--gray-500);
+            border-color: var(--dark-border);
+        }
+
+        body.light .search-bar button {
+            background: var(--gradient-primary);
             color: var(--white);
         }
 
         /* Accessibility */
         .tool-card:focus-within,
-        .buy-btn:focus,
-        .category-list a:focus {
+        .download-btn:focus,
+        .category-list a:focus,
+        .search-bar input:focus,
+        .search-bar button:focus {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
         }
@@ -321,9 +420,8 @@
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             }
 
-            .category-list a {
-                padding: var(--space-xs) var(--space-sm);
-                font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+            .search-bar form {
+                max-width: 100%;
             }
         }
 
@@ -334,6 +432,19 @@
 
             .tool-card {
                 padding: var(--space-sm);
+            }
+
+            .category-list a {
+                padding: var(--space-xs) var(--space-sm);
+                font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+            }
+
+            .search-bar input {
+                padding: var(--space-xs) var(--space-sm) var(--space-xs) 2rem;
+            }
+
+            .search-bar button {
+                padding: var(--space-xs) var(--space-sm);
             }
         }
     </style>
@@ -350,27 +461,34 @@
         <nav class="market-breadcrumb" aria-label="Breadcrumb">
             <a href="{{ route('user.dashboard') }}">Home</a>
             <span aria-hidden="true">/</span>
-            <span class="active" aria-current="page">Marketplace</span>
+            <span class="active" aria-current="page">Free Apps</span>
         </nav>
+
+        <!-- Search Bar -->
+        <div class="market-section search-bar">
+            <form id="search-form" role="search" aria-label="Search free apps" action="{{ route('free-apps') }}"
+                method="GET">
+                <i class="bi bi-search search-icon"></i>
+                <input type="search" id="search-input" name="search" placeholder="Search free apps..." maxlength="50"
+                    aria-label="Search free apps" autocomplete="off" value="{{ request()->query('search') }}">
+                <input type="hidden" name="category" value="{{ $category }}">
+                <button type="submit" aria-label="Search">Search</button>
+            </form>
+        </div>
 
         <!-- Category Filter -->
         <div class="market-section category-list">
             <h2>Filter by Category</h2>
             <div class="flex flex-wrap gap-4" role="navigation" aria-label="Category filter">
-                <a 
-                    href="{{ route('market') }}" 
-                    class="{{ !$category ? 'active' : '' }}"
-                    aria-current="{{ !$category ? 'true' : 'false' }}"
-                >
+                <a href="{{ route('free-apps') }}" class="{{ !$category ? 'active' : '' }}"
+                    aria-current="{{ !$category ? 'true' : 'false' }}">
                     All
                 </a>
                 @foreach ($categories as $cat)
-                    <a 
-                        href="{{ route('market.category', $cat) }}" 
-                        class="{{ $category == $cat ? 'active' : '' }}"
-                        aria-current="{{ $category == $cat ? 'true' : 'false' }}"
-                    >
-                        {{ ucfirst($cat) }}
+                    <a href="{{ route('free-apps.category', FreeApp::where('category', $cat)->first()->slug ?? \Illuminate\Support\Str::slug($cat)) }}"
+                        class="{{ $category == (FreeApp::where('category', $cat)->first()->slug ?? \Illuminate\Support\Str::slug($cat)) ? 'active' : '' }}"
+                        aria-current="{{ $category == (FreeApp::where('category', $cat)->first()->slug ?? \Illuminate\Support\Str::slug($cat)) ? 'true' : 'false' }}">
+                        {{ $cat }}
                     </a>
                 @endforeach
             </div>
@@ -378,55 +496,41 @@
 
         <!-- Tools Grid -->
         <div class="market-section">
-            <h2>Premium Tools</h2>
-            <div class="market-tools-grid" id="tool-list" role="list" aria-label="Marketplace tools list">
+            <h2>Free Apps</h2>
+            <div class="market-tools-grid" id="tool-list" role="list" aria-label="Free apps list">
                 @foreach ($paginator as $item)
-                    <div 
-                        class="tool-card" 
-                        data-name="{{ strtolower($item->name) }}"
-                        role="listitem"
-                        aria-label="{{ $item->name }} tool"
-                        tabindex="0"
-                    >
+                    <div class="tool-card" data-name="{{ strtolower($item->name) }}" data-category="{{ $item->slug }}"
+                        role="listitem" aria-label="{{ $item->name }} app">
                         @if ($item->image_url)
-                            <img 
-                                src="{{ $item->image_url }}" 
-                                alt="{{ $item->name }} icon" 
-                                class="tool-image"
-                                width="200"
-                                height="140"
-                                loading="lazy"
-                            >
+                            <img src="{{ $item->image_url }}" alt="{{ $item->name }} icon" class="tool-image"
+                                width="200" height="140" loading="lazy">
                         @else
-                            <div 
-                                class="tool-image placeholder" 
+                            <div class="tool-image placeholder"
                                 style="background: var(--gray-500); display: flex; align-items: center; justify-content: center; height: 140px; border-radius: var(--radius-sm);"
-                                aria-hidden="true"
-                            >
+                                aria-hidden="true">
                                 No Image
                             </div>
                         @endif
                         <h3 class="tool-name">{{ $item->name }}</h3>
-                        <p class="price">${{ number_format($item->price, 2) }} (₦{{ number_format($item->price_ngn, 2) }})</p>
-                        <a 
-                            href="{{ $item->external_link }}"
-                            class="buy-btn {{ in_array(strtolower($item->status), ['pending', 'deactivated']) ? strtolower($item->status) : '' }}"
+                        <p class="price">FREE</p>
+                        <a href="{{ $item->external_link }}"
+                            class="download-btn {{ in_array(strtolower($item->status), ['pending', 'deactivated']) ? strtolower($item->status) : '' }}"
                             {{ in_array(strtolower($item->status), ['pending', 'deactivated']) ? 'aria-disabled="true"' : '' }}
-                            aria-label="{{ strtolower($item->status) === 'pending' ? 'Pending purchase for ' . $item->name : (strtolower($item->status) === 'deactivated' ? 'Unavailable purchase for ' . $item->name : 'Buy ' . $item->name) }}"
-                        >
-                            {{ strtolower($item->status) === 'pending' ? 'Pending...' : (strtolower($item->status) === 'deactivated' ? 'Unavailable' : 'Buy Now') }}
-                            <i class="bi {{ strtolower($item->status) === 'pending' ? 'bi-clock' : (strtolower($item->status) === 'deactivated' ? 'bi-lock-fill' : 'bi-bag-fill') }}"></i>
+                            aria-label="{{ strtolower($item->status) === 'pending' ? 'Pending download for ' . $item->name : (strtolower($item->status) === 'deactivated' ? 'Unavailable download for ' . $item->name : 'Download ' . $item->name) }}">
+                            {{ strtolower($item->status) === 'pending' ? 'Pending...' : (strtolower($item->status) === 'deactivated' ? 'Unavailable' : 'Download') }}
+                            <i
+                                class="bi {{ strtolower($item->status) === 'pending' ? 'bi-clock' : (strtolower($item->status) === 'deactivated' ? 'bi-lock' : 'bi-cloud-arrow-down-fill') }}"></i>
                         </a>
                     </div>
                 @endforeach
             </div>
             <p class="not-found" id="not-found" style="display: none;" role="alert">
-                Tool not found, kindly <a class="request" href="{{ route('contact') }}">request for the tool</a>
+                App not found, kindly <a class="request" href="{{ route('contact') }}">request for the app</a>
             </p>
             <!-- Pagination -->
             <div class="pagination-container" role="navigation" aria-label="Pagination">
                 @if ($paginator instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                    {{ $paginator->links('vendor.pagination.custom') }}
+                    {{ $paginator->appends(['search' => request()->query('search'), 'category' => $category])->links('vendor.pagination.custom') }}
                 @else
                     <p class="text-[var(--gray-400)] text-center">No pagination data available.</p>
                 @endif
@@ -445,8 +549,49 @@
                 };
             };
 
-            // Loading spinner for buy links
-            const handleBuy = (e) => {
+            // Filter tools by search input (client-side fallback)
+            const filterTools = debounce(() => {
+                const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+                const toolList = document.getElementById('tool-list');
+                const toolCards = toolList.querySelectorAll('.tool-card');
+                const notFound = document.getElementById('not-found');
+                let found = false;
+
+                toolList.style.opacity = '0.5';
+                toolCards.forEach(card => {
+                    const toolName = card.getAttribute('data-name');
+                    const toolCategory = card.getAttribute('data-category');
+                    const currentCategory = "{{ $category }}";
+                    if (toolName.includes(searchInput) && (!currentCategory || toolCategory === currentCategory)) {
+                        card.style.display = 'block';
+                        card.setAttribute('aria-hidden', 'false');
+                        found = true;
+                    } else {
+                        card.style.display = 'none';
+                        card.setAttribute('aria-hidden', 'true');
+                    }
+                });
+
+                notFound.style.display = found ? 'none' : 'block';
+                notFound.setAttribute('aria-hidden', found ? 'true' : 'false');
+                setTimeout(() => {
+                    toolList.style.opacity = '1';
+                }, 300);
+            }, 300);
+
+            // Search bar event listeners
+            const searchInput = document.getElementById('search-input');
+            const searchForm = document.getElementById('search-form');
+
+            searchInput.addEventListener('input', filterTools);
+            searchForm.addEventListener('submit', (e) => {
+                // Allow form submission to handle server-side search
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.classList.add('active');
+            });
+
+            // Loading spinner for download links
+            const handleDownload = (e) => {
                 e.preventDefault();
                 const link = e.currentTarget;
                 const href = link.getAttribute('href');
@@ -460,11 +605,11 @@
                 setTimeout(() => {
                     loadingOverlay.classList.remove('active');
                     window.location.href = href;
-                }, 1500); // Reduced from 5000ms to 1500ms for better UX
+                }, 1500);
             };
 
-            document.querySelectorAll('.buy-btn:not(.pending):not(.deactivated)').forEach(link => {
-                link.addEventListener('click', handleBuy);
+            document.querySelectorAll('.download-btn:not(.pending):not(.deactivated)').forEach(link => {
+                link.addEventListener('click', handleDownload);
             });
 
             // Category filter smooth navigation
@@ -482,14 +627,20 @@
 
             // Accessibility: Keyboard navigation for tool cards
             document.querySelectorAll('.tool-card').forEach(card => {
+                card.setAttribute('tabindex', '0');
                 card.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
-                        const buyBtn = card.querySelector('.buy-btn');
-                        if (buyBtn && !buyBtn.classList.contains('pending') && !buyBtn.classList.contains('deactivated')) {
-                            buyBtn.click();
+                        const downloadBtn = card.querySelector('.download-btn');
+                        if (downloadBtn && !downloadBtn.classList.contains('pending') && !downloadBtn.classList.contains('deactivated')) {
+                            downloadBtn.click();
                         }
                     }
                 });
+            });
+
+            // Initialize tool cards visibility
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.setAttribute('aria-hidden', 'false');
             });
 
             // Error handling for image loading
@@ -503,7 +654,7 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const sidebar = document.getElementById('sidebar');
                 const overlay = document.getElementById('overlay');
-                document.querySelectorAll('.category-list a, .buy-btn:not(.pending):not(.deactivated)').forEach(link => {
+                document.querySelectorAll('.category-list a, .download-btn:not(.pending):not(.deactivated)').forEach(link => {
                     link.addEventListener('click', () => {
                         if (window.innerWidth <= 1024 && sidebar.classList.contains('active')) {
                             sidebar.classList.remove('active');
