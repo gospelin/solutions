@@ -10,6 +10,7 @@ use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ToolController;
+use App\Http\Controllers\Admin\FreeAppController;
 use App\Http\Controllers\Admin\TransactionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,7 @@ Route::middleware(['auth', 'check.status'])->group(function () {
 
     // User routes
     Route::get('/free-apps', [UserDashboardController::class, 'freeApps'])->name('free-apps');
+    Route::get('/free-apps/{category}', [UserDashboardController::class, 'freeAppsCategory'])->name('free-apps.category');
     Route::get('/premium-features', [UserDashboardController::class, 'premiumFeatures'])->name('premium-features');
     Route::get('/community', [UserDashboardController::class, 'community'])->name('community');
     Route::get('/support', [UserDashboardController::class, 'support'])->name('support');
@@ -52,28 +54,33 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
     Route::get('/reports', [AdminUserController::class, 'reports'])->name('reports');
     Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin-settings');
     Route::post('/settings', [AdminUserController::class, 'updateSettings'])->name('admin-settings.update');
-    
+
     Route::get('/user-management', [AdminUserController::class, 'userManagement'])->name('user-management');
     Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('users.ban');
     Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
     Route::delete('/users/{id}', [AdminUserController::class, 'deleteUser'])->name('users.delete');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('store');
-    
+
     Route::get('/tool-moderation', [AdminUserController::class, 'toolModeration'])->name('tool-moderation');
     Route::post('/tools/{id}/approve', [AdminUserController::class, 'approveTool'])->name('tools.approve');
     Route::post('/tools/{id}/reject', [AdminUserController::class, 'rejectTool'])->name('tools.reject');
+
+    // Tool routes
     Route::post('/tools/{tool}/activate', [ToolController::class, 'activate'])->name('tools.activate');
     Route::post('/tools/{tool}/deactivate', [ToolController::class, 'deactivate'])->name('tools.deactivate');
     Route::resource('tools', ToolController::class)->except(['show']);
+    Route::get('/tools/search', [SearchController::class, 'search'])->name('tools.search');
 
-    Route::get('/tools/create', [ToolController::class, 'create'])->name('tools.create');
-    Route::post('/tools', [ToolController::class, 'store'])->name('tools.store');
-    Route::get('/tools/{tool}/edit', [ToolController::class, 'edit'])->name('tools.edit');
-    Route::put('/tools/{tool}', [ToolController::class, 'update'])->name('tools.update');
+    // Free App routes
+    Route::post('/free-apps/{freeApp}/activate', [FreeAppController::class, 'activate'])->name('free-apps.activate');
+    Route::post('/free-apps/{freeApp}/deactivate', [FreeAppController::class, 'deactivate'])->name('free-apps.deactivate');
+    Route::resource('free-apps', FreeAppController::class)->except(['show']);
+    Route::get('/free-apps/search', [FreeAppController::class, 'index'])->name('free-apps.search');
+
+    // Other admin routes
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
-    Route::get('tools/search', [SearchController::class, 'search'])->name('tools.search');
     Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
     Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');

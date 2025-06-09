@@ -25,6 +25,8 @@
     <!-- Chart.js for Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+    <!--<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">-->
+
     <style>
         :root {
             --primary: #6366f1;
@@ -76,6 +78,39 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --dark-bg: #0a0a0f;
+            --dark-surface: #1a1a2e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-accent: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --font-primary: "Inter", system-ui, sans-serif;
+            --font-display: "Space Grotesk", sans-serif;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
         }
 
         *,
@@ -956,6 +991,8 @@
                 height: clamp(260px, 40vh, 320px);
             }
         }
+
+        
     </style>
     
     <!-- Add stack for custom styles -->
@@ -980,7 +1017,7 @@
                             class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i
                                 class="bi bi-grid nav-icon"></i> Home</a></li>
 
-                                                   <li><a href="{{ route('free-apps') }}"
+                    <li><a href="{{ route('free-apps') }}"
                             class="{{ request()->routeIs('free-apps') ? 'active' : '' }}"><i
                                 class="bi bi-code-slash nav-icon"></i> Free Apps</a></li>
                     <li><a href="{{ route('premium-features') }}"

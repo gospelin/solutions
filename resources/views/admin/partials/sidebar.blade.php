@@ -23,13 +23,13 @@
         <div class="nav-item">
             <a href="{{ route('admin.tools.index') }}"
                 class="nav-link {{ request()->routeIs('admin.tools.*') ? 'active' : '' }}">
-                <i class="bi bi-cart nav-icon"></i> Tools
+                <i class="bi bi-cart nav-icon"></i> Tools Management
             </a>
         </div>
         <div class="nav-item">
-            <a href="{{ route('admin.tool-moderation') }}"
-                class="nav-link {{ request()->routeIs('admin.tool-moderation') ? 'active' : '' }}">
-                <i class="bi bi-tools nav-icon"></i> Tool Moderation
+            <a href="{{ route('admin.free-apps.index') }}"
+                class="nav-link {{ request()->routeIs('admin.free-apps.*') ? 'active' : '' }}">
+                <i class="bi bi-tools nav-icon"></i> Apps Management
             </a>
         </div>
         <div class="nav-item">

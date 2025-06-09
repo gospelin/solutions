@@ -1,12 +1,12 @@
 @extends('admin.layouts.app')
 
-@section('title', __('Create New Tool'))
+@section('title', 'Create Free App')
 
-@section('description', __('Add a new tool to the marketplace.'))
+@section('description', 'Add a new free app to the Mr Solution platform.')
 
 @push('styles')
     <style>
-        .create-tool-container {
+        .create-app-container {
             padding: var(--space-lg);
             background: var(--dark-bg);
             min-height: 100vh;
@@ -31,11 +31,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .page-subtitle {
-            color: var(--gray-400);
-            font-size: clamp(0.875rem, 3vw, 1rem);
-        }
-
         .card-tools .action-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -47,7 +42,6 @@
             align-items: center;
             gap: var(--space-xs);
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .card-tools .action-btn:hover {
@@ -75,42 +69,17 @@
             font-weight: 500;
             color: var(--gray-300);
             margin-bottom: var(--space-xs);
-            display: block;
         }
 
         .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: var(--space-sm) var(--space-md);
-            color: var(--white);
-            font-size: clamp(0.75rem, 2.5vw, 0.875rem);
-            font-family: var(--font-primary);
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-        }
-
         .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
+            width: 100%;
         }
 
         .form-group .error {
             color: var(--error);
             font-size: clamp(0.625rem, 2vw, 0.75rem);
             margin-top: var(--space-xs);
-            display: block;
         }
 
         .form-submit {
@@ -125,7 +94,7 @@
             display: inline-flex;
             align-items: center;
             gap: var(--space-xs);
-            transition: all 0.3s ease;
+            transition: all 0.3ilers ease;
         }
 
         .form-submit:hover {
@@ -135,17 +104,13 @@
         }
 
         /* Light Theme */
-        body.light .create-tool-container {
+        body.light .create-app-container {
             background: var(--gray-50);
         }
 
         body.light .page-title {
             background: none;
             -webkit-text-fill-color: var(--primary);
-        }
-
-        body.light .page-subtitle {
-            color: var(--gray-400);
         }
 
         body.light .form-container {
@@ -157,16 +122,9 @@
             color: var(--gray-300);
         }
 
-        body.light .form-group input,
-        body.light .form-group textarea,
-        body.light .form-group select {
-            color: var(--gray-300);
-        }
-
         /* Accessibility */
         .form-group input:focus,
         .form-group textarea:focus,
-        .form-group select:focus,
         .form-submit:focus,
         .action-btn:focus {
             outline: 2px solid var(--primary);
@@ -175,7 +133,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .create-tool-container {
+            .create-app-container {
                 padding: var(--space-md);
             }
 
@@ -194,12 +152,6 @@
                 font-size: clamp(0.625rem, 2vw, 0.75rem);
             }
 
-            .form-group input,
-            .form-group textarea,
-            .form-group select {
-                font-size: clamp(0.625rem, 2vw, 0.75rem);
-            }
-
             .form-submit,
             .card-tools .action-btn {
                 font-size: clamp(0.625rem, 2vw, 0.75rem);
@@ -210,86 +162,64 @@
 @endpush
 
 @section('content')
-    <section class="create-tool-container">
+    <section class="create-app-container">
         <div class="content-header">
             <div>
-                <h1 class="page-title">{{ __('Create New Tool') }}</h1>
-                <p class="page-subtitle">{{ __('Fill in the details to add a new tool.') }}</p>
+                <h1 class="page-title">Add New Free App</h1>
+                <p class="page-subtitle">Create a new free app for the platform.</p>
             </div>
             <div class="card-tools">
-                <a href="{{ route('admin.tools.index') }}" class="action-btn" aria-label="Back to tools list">
+                <a href="{{ route('admin.free-apps.index') }}" class="action-btn" aria-label="Back to free apps list">
                     <i class="fas fa-arrow-left"></i> Back to List
                 </a>
             </div>
         </div>
 
         <div class="form-container">
-            <form action="{{ route('admin.tools.store') }}" method="POST" enctype="multipart/form-data" class="modal-form"
-                role="form" aria-label="Create new tool form">
+            <form action="{{ route('admin.free-apps.store') }}" method="POST" enctype="multipart/form-data"
+                class="modal-form" role="form" aria-label="Create free app form">
                 @csrf
                 <div class="form-group @error('name') error @enderror">
-                    <label for="name">{{ __('Name') }}</label>
+                    <label for="name">Name</label>
                     <input type="text" name="name" id="name" value="{{ old('name') }}" required aria-required="true"
-                        aria-label="Tool name">
+                        aria-label="App name">
                     @error('name')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group @error('category') error @enderror">
-                    <label for="category">{{ __('Category') }}</label>
-                    <select name="category" id="category" required aria-required="true" aria-label="Tool category">
-                        <option value="" disabled {{ old('category') == '' ? 'selected' : '' }}>{{ __('Select a category') }}
-                        </option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category }}" {{ old('category') == $category ? 'selected' : '' }}>
-                                {{ ucfirst($category) }}</option>
-                        @endforeach
-                    </select>
-                    @error('category')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group @error('description') error @enderror">
-                    <label for="description">{{ __('Description') }}</label>
+                    <label for="description">Description</label>
                     <textarea name="description" id="description"
-                        aria-label="Tool description">{{ old('description') }}</textarea>
+                        aria-label="App description">{{ old('description') }}</textarea>
                     @error('description')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group @error('price') error @enderror">
-                    <label for="price">{{ __('Price ($)') }}</label>
-                    <input type="number" name="price" id="price" value="{{ old('price') }}" step="0.01" required
-                        aria-required="true" aria-label="Tool price in USD">
-                    @error('price')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group @error('price_ngn') error @enderror">
-                    <label for="price_ngn">{{ __('Price (NGN)') }}</label>
-                    <input type="number" name="price_ngn" id="price_ngn" value="{{ old('price_ngn') }}" step="0.01" required
-                        aria-required="true" aria-label="Tool price in NGN">
-                    @error('price_ngn')
-                        <span class="error">{{ $message }}</span>
+                <div class="form-group @error('category') error @enderror">
+                    <label for="category">Category</label>
+                    <input type="text" name="category" id="category" value="{{ old('category') }}" required
+                        aria-required="true" aria-label="App category">
+                    @error('category')
+                        <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group @error('external_link') error @enderror">
-                    <label for="external_link">{{ __('External Link') }}</label>
+                    <label for="external_link">External Link</label>
                     <input type="url" name="external_link" id="external_link" value="{{ old('external_link') }}"
-                        aria-label="Tool external link">
+                        aria-label="App external link">
                     @error('external_link')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group @error('image') error @enderror">
-                    <label for="image">{{ __('Image') }}</label>
-                    <input type="file" name="image" id="image" accept="image/*" aria-label="Tool image upload">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" id="image" accept="image/*" aria-label="App image upload">
                     @error('image')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="form-submit" aria-label="Create new tool">
-                    <i class="fas fa-plus"></i> {{ __('Create New Tool') }}
+                <button type="submit" class="form-submit" aria-label="Save new app">
+                    <i class="fas fa-save"></i> Save
                 </button>
             </form>
         </div>
