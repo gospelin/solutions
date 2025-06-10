@@ -9,6 +9,8 @@ use App\Http\Controllers\SelarWebhookController;
 use App\Http\Controllers\UserSearchController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\GuestContactController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\FreeAppController;
 use App\Http\Controllers\Admin\TransactionController;
@@ -90,5 +92,8 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
 
 Route::get('/notify-reregister', [NotifyReregisterController::class, 'notify'])->name('notify.reregister');
 Route::post('/webhook/selar', [SelarWebhookController::class, 'handle'])->name('webhook.selar');
+
+Route::post('contact', [GuestContactController::class, 'submit'])->name('contact.submit');
+Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 require __DIR__ . '/auth.php';

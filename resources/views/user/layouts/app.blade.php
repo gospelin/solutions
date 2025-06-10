@@ -27,6 +27,18 @@
 
     <!--<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">-->
 
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mrsolution.com.ng/dashboard">
+    <meta property="og:image" content="{{ asset('images/mrsolution.jpeg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@mrsolution">
+    <meta name="twitter:title" content="Mr Solution - Revolutionary Tech Solutions">
+    <meta name="twitter:description" content="Leading-edge technology solutions powered by AI and innovation.">
+    <meta name="twitter:image" content="{{ asset('images/mrsolution.jpeg') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('images/mrsolution.jpeg') }}" type="image/x-icon">
+
+
     <style>
         :root {
             --primary: #6366f1;
