@@ -146,7 +146,6 @@
             border-bottom: 1px solid var(--glass-border);
             font-size: clamp(0.75rem, 2.5vw, 0.875rem);
             color: var(--gray-300);
-            text-transform: capitalize;
         }
 
         .user-table th {
@@ -382,7 +381,8 @@
             <div class="chart-header">
                 <h3 class="chart-title">Users</h3>
                 <div class="chart-actions">
-                    <input type="text" class="search-input" id="userSearch" placeholder="Search by name or email..." aria-label="Search users">
+                    <input type="text" class="search-input" id="userSearch" placeholder="Search by name or email..."
+                        aria-label="Search users">
                     <a href="{{ route('admin.users.create') }}" class="action-btn" aria-label="Create new admin">
                         <i class="bi bi-plus-circle"></i> Create Admin
                     </a>
@@ -404,23 +404,31 @@
                             @if ($user->hasRole('user'))
                                 <tr role="row">
                                     <td>{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
+                                    <td style="text-transform: capitalize;">{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
-                                    <td>{{ ucfirst($user->status ?? 'active') }}</td>
+                                    <td style="text-transform: capitalize;">{{ ucfirst($user->status ?? 'Active') }}</td>
                                     <td>
                                         <div class="action-group" role="group" aria-label="Actions for {{ $user->name }}">
-                                            <form action="{{ route('admin.users.ban', $user->id) }}" method="POST" style="display: inline;">
+                                            <form action="{{ route('admin.users.ban', $user->id) }}" method="POST"
+                                                style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="action-btn {{ ($user->status ?? 'active') == 'banned' ? 'success' : 'error' }}" aria-label="{{ ($user->status ?? 'active') == 'banned' ? 'Unban' : 'Ban' }} {{ $user->name }}">
-                                                    <i class="bi {{ ($user->status ?? 'active') == 'banned' ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
-                                                    {{ ($user->status ?? 'active') == 'banned' ? 'Unban' : 'Ban' }}
-                                                    <span class="tooltip">{{ ($user->status ?? 'active') == 'banned' ? 'Unban User' : 'Ban User' }}</span>
+                                                <button type="submit"
+                                                    class="action-btn {{ ($user->status ?? 'Active') == 'Banned' ? 'success' : 'error' }}"
+                                                    aria-label="{{ ($user->status ?? 'Active') == 'Banned' ? 'Unban' : 'Ban' }} {{ $user->name }}">
+                                                    <i
+                                                        class="bi {{ ($user->status ?? 'Active') == 'Banned' ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
+                                                    {{ ($user->status ?? 'Active') == 'Banned' ? 'Unban' : 'Ban' }}
+                                                    <span
+                                                        class="tooltip">{{ ($user->status ?? 'Active') == 'Banned' ? 'Unban User' : 'Ban User' }}</span>
                                                 </button>
                                             </form>
-                                            <form action="{{ route('admin.users.delete', $user->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.');">
+                                            <form action="{{ route('admin.users.delete', $user->id) }}" method="POST"
+                                                style="display: inline;"
+                                                onsubmit="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="action-btn error" aria-label="Delete {{ $user->name }}">
+                                                <button type="submit" class="action-btn error"
+                                                    aria-label="Delete {{ $user->name }}">
                                                     <i class="bi bi-trash"></i> Delete
                                                     <span class="tooltip">Delete User</span>
                                                 </button>

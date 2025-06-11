@@ -53,6 +53,20 @@
                 <i class="bi bi-person nav-icon"></i> Profile
             </a>
         </div>
+
+        {{-- Uncomment if you have a settings page --}}
+        <div class="nav-item">
+            <a href="{{ route('admin.admin-management') }}"
+                class="nav-link {{ request()->routeIs('admin.admin-management') ? 'active' : '' }}">
+                <i class="bi bi-gear nav-icon"></i> Admins Management
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ route('admin.admin-settings') }}"
+                class="nav-link {{ request()->routeIs('admin.admin-settings') ? 'active' : '' }}">
+                <i class="bi bi-gear nav-icon"></i> Admin Settings
+            </a>
+        </div>
         <div class="nav-item">
             <a href="{{ route('admin.system-settings') }}"
                 class="nav-link {{ request()->routeIs('admin.system-settings') ? 'active' : '' }}">

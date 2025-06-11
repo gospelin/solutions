@@ -24,6 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'verification_code',
         'verification_code_expires_at',
+        'theme',
+        'notifications',
+        'language',
     ];
 
     protected $hidden = [
@@ -36,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'verification_code_expires_at' => 'datetime',
         'password' => 'hashed',
+        'notifications' => 'boolean',
     ];
 
     public function sendEmailVerificationNotification()
@@ -50,25 +54,24 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function markEmailAsVerified(): bool
     {
-        $this->forceFill([
+        return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
             'status' => 'active',
             'verification_code' => null,
             'verification_code_expires_at' => null,
         ])->save();
-
-        return true;
     }
 
     public function getEmailForVerification(): string
     {
         return $this->email;
     }
-    
+
     public function purchasedItems(): BelongsToMany
     {
         return $this->belongsToMany(MarketItem::class, 'market_item_user', 'user_id', 'market_item_id')
-                    ->withPivot('purchased_at');
+            ->withPivot('purchased_at');
     }
+    
 
 }

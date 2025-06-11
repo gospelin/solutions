@@ -3,12 +3,28 @@
     "file": "assets/TextPlugin-CelLn1jq.js",
     "name": "TextPlugin"
   },
+  "_echo-D9_njOM2.js": {
+    "file": "assets/echo-D9_njOM2.js",
+    "name": "echo",
+    "imports": [
+      "_pusher-LyJa47xg.js"
+    ]
+  },
   "_i18next-Bhc83OLH.js": {
     "file": "assets/i18next-Bhc83OLH.js",
     "name": "i18next"
   },
+  "_pusher-LyJa47xg.js": {
+    "file": "assets/pusher-LyJa47xg.js",
+    "name": "pusher"
+  },
+  "resources/css/admin.css": {
+    "file": "assets/admin-Da08Xitk.css",
+    "src": "resources/css/admin.css",
+    "isEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-BKrd-MHY.css",
+    "file": "assets/app-x4Zu_RVj.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -22,19 +38,51 @@
     "src": "resources/css/login.css",
     "isEntry": true
   },
+  "resources/css/register.css": {
+    "file": "assets/register-F90eyCoX.css",
+    "src": "resources/css/register.css",
+    "isEntry": true
+  },
   "resources/css/styles.css": {
     "file": "assets/styles-Cm7RRmP8.css",
     "src": "resources/css/styles.css",
     "isEntry": true
   },
+  "resources/js/admin.js": {
+    "file": "assets/admin-PyjjeMTY.js",
+    "name": "admin",
+    "src": "resources/js/admin.js",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-ClllKYww.js",
+    "file": "assets/app-BaCsRBqT.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
       "_TextPlugin-CelLn1jq.js",
-      "_i18next-Bhc83OLH.js"
+      "_i18next-Bhc83OLH.js",
+      "_echo-D9_njOM2.js",
+      "_pusher-LyJa47xg.js"
+    ]
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-CXtkKnIs.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true,
+    "imports": [
+      "_echo-D9_njOM2.js",
+      "_pusher-LyJa47xg.js"
+    ]
+  },
+  "resources/js/echo.js": {
+    "file": "assets/echo-Dwx_5BA8.js",
+    "name": "echo",
+    "src": "resources/js/echo.js",
+    "isEntry": true,
+    "imports": [
+      "_pusher-LyJa47xg.js"
     ]
   },
   "resources/js/login.js": {
@@ -54,6 +102,15 @@
     "imports": [
       "_TextPlugin-CelLn1jq.js",
       "_i18next-Bhc83OLH.js"
+    ]
+  },
+  "resources/js/realtime.js": {
+    "file": "assets/realtime-CfSSkvXr.js",
+    "name": "realtime",
+    "src": "resources/js/realtime.js",
+    "isEntry": true,
+    "imports": [
+      "_pusher-LyJa47xg.js"
     ]
   },
   "resources/js/register.js": {

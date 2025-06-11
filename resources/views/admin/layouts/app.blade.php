@@ -22,10 +22,13 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Admin CSS -->
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-
-    <!-- Add stack for custom styles -->
+           
+    <!-- ... other meta tags ... -->
+    <meta name="auth-id" content="{{ Auth::id() }}">
+    <!-- ... other scripts ... -->
+    
+    <!-- Vite Assets -->
+    @vite(['resources/css/admin.css', 'resources/js/bootstrap.js', 'resources/js/admin.js', 'resources/js/realtime.js'])
     @stack('styles')
 
     <meta property="og:type" content="website">
@@ -38,6 +41,81 @@
     <meta name="twitter:image" content="{{ asset('images/mrsolution.jpeg') }}">
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('images/mrsolution.jpeg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/mrsolution.jpeg') }}" type="image/x-icon">
+
+<style>
+    .notification-container {
+        position: relative;
+    }
+
+    .notification-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 300px;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notification-dropdown.active {
+        display: block;
+    }
+
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-header h4 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .notification-list {
+        padding: 10px;
+    }
+
+    .notification-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .notification-icon {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-content h5 {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .notification-content p {
+        margin: 5px 0 0;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .notification-time {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+</style>
 
 </head>
 
@@ -59,9 +137,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Admin JS -->
-    <script src="{{ asset('js/admin.js') }}"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\AdminUserController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LogController;
@@ -23,7 +24,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/dashboard', function () {
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasRole(['admin', 'superAdmin'])) {
             return redirect()->route('admin.dashboard');
         }
         return app(UserDashboardController::class)->index();
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
     Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('user.settings.update');
     Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
+    Route::get('/notifications', [UserDashboardController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/{id}/read', [UserDashboardController::class, 'markNotificationRead'])->name('notifications.read');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -51,22 +54,20 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin|superAdmin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminUserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/stats', [AdminUserController::class, 'getDashboardStats'])->name('dashboard.stats');
     Route::get('/reports', [AdminUserController::class, 'reports'])->name('reports');
-    Route::get('/settings', [AdminUserController::class, 'settings'])->name('admin-settings');
+    Route::get('/settings', [AdminUserController::class, 'adminSettings'])->name('admin-settings');
     Route::post('/settings', [AdminUserController::class, 'updateSettings'])->name('admin-settings.update');
 
     Route::get('/user-management', [AdminUserController::class, 'userManagement'])->name('user-management');
     Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('users.ban');
+    
     Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
     Route::delete('/users/{id}', [AdminUserController::class, 'deleteUser'])->name('users.delete');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdminUserController::class, 'store'])->name('store');
-
-    Route::get('/tool-moderation', [AdminUserController::class, 'toolModeration'])->name('tool-moderation');
-    Route::post('/tools/{id}/approve', [AdminUserController::class, 'approveTool'])->name('tools.approve');
-    Route::post('/tools/{id}/reject', [AdminUserController::class, 'rejectTool'])->name('tools.reject');
 
     // Tool routes
     Route::post('/tools/{tool}/activate', [ToolController::class, 'activate'])->name('tools.activate');
@@ -85,9 +86,16 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin'])->name
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
     Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
     Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/admin-management', [AdminUserController::class, 'adminUserManagement'])->name('admin-management');
     Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');
     Route::post('/system-settings', [AdminUserController::class, 'updateSystemSettings'])->name('system-settings.update');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
+
+    Route::post('/logs/clear', [LogController::class, 'clear'])->name('logs.clear');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+
 });
 
 Route::get('/notify-reregister', [NotifyReregisterController::class, 'notify'])->name('notify.reregister');

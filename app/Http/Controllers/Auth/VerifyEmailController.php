@@ -24,8 +24,8 @@ class VerifyEmailController extends Controller
             return redirect()->route('login')->with('error', 'Please log in to verify your email.');
         }
 
-        if ($user->hasRole('admin') || $user->hasVerifiedEmail()) {
-            return redirect()->intended(route($user->hasRole('admin') ? 'admin.dashboard' : 'user.dashboard', absolute: false))
+        if ($user->hasRole(['admin', 'superAdmin']) || $user->hasVerifiedEmail()) {
+            return redirect()->intended(route($user->hasRole(['admin', 'superAdmin']) ? 'admin.dashboard' : 'user.dashboard', absolute: false))
                 ->with('message', 'Email already verified.');
         }
 
@@ -51,9 +51,9 @@ class VerifyEmailController extends Controller
                     ->with('error', 'Invalid or expired verification link. Please use the OTP or request a new link.');
             }
 
-            $user = User::findOrFail($id);
+            $user = User::where('id', $id)->firstOrFail();
 
-            if ($user->hasRole('admin')) {
+            if ($user->hasRole(['admin', 'superAdmin'])) {
                 Auth::login($user);
                 return redirect()->intended(route('admin.dashboard', absolute: false))
                     ->with('message', 'Admin email verified.');
@@ -131,8 +131,8 @@ class VerifyEmailController extends Controller
                     ->with('error', 'Session expired. Please log in again.');
             }
 
-            if ($user->hasRole('admin') || $user->hasVerifiedEmail()) {
-                return redirect()->intended(route($user->hasRole('admin') ? 'admin.dashboard' : 'user.dashboard', absolute: false))
+            if ($user->hasRole(['admin', 'superAdmin']) || $user->hasVerifiedEmail()) {
+                return redirect()->intended(route($user->hasRole(['admin', 'superAdmin']) ? 'admin.dashboard' : 'user.dashboard', absolute: false))
                     ->with('message', 'Email already verified.');
             }
 
@@ -161,7 +161,7 @@ class VerifyEmailController extends Controller
                         'ip' => $request->ip(),
                     ]);
 
-                    return redirect()->intended(route('user.dashboard', absolute: false))
+                    return redirect()->intended(route($user->hasRole(['admin', 'superAdmin']) ? 'admin.dashboard' : 'user.dashboard', absolute: false))
                         ->with('message', 'Email verified successfully!');
                 }
 

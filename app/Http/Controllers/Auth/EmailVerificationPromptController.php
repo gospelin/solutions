@@ -13,8 +13,8 @@ class EmailVerificationPromptController extends Controller
     public function __invoke(Request $request): View
     {
         try {
-            if (Auth::check() && Auth::user()->hasRole('admin')) {
-                return view('admin.dashboard'); // Redirect admins to dashboard
+            if (Auth::check() && Auth::user()->hasRole(['admin', 'superAdmin'])) {
+                return view('admin.dashboard'); // Redirect admins and superAdmins to dashboard
             }
             return view('auth.verify-email');
         } catch (\Exception $e) {

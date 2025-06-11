@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\MarketItem;
 use App\Models\FreeApp;
+use App\Models\Notification;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log; // Ensure Log facade is imported
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use App\Models\Contact;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -49,7 +51,7 @@ class UserDashboardController extends Controller
             ->values()
             ->toArray();
 
-        \Log::info('FreeApps data', [
+        Log::info('FreeApps data', [
             'category' => $category,
             'categories' => $categories,
             'paginator_count' => $paginator->count(),
@@ -77,8 +79,24 @@ class UserDashboardController extends Controller
             ->toArray();
 
         if ($category && !in_array(strtolower($category), $slugs)) {
-            \Log::warning('Invalid category selected', ['category' => $category]);
-            return redirect()->route('free-apps')->with('error', 'Invalid category selected.');
+            Log::warning('Invalid category selected', ['category' => $category]);
+            $query = FreeApp::query()->active();
+            $paginator = $query->orderBy('id')->paginate(7);
+
+            $categories = FreeApp::whereNotNull('category')
+                ->where('category', '!=', '')
+                ->distinct()
+                ->pluck('category')
+                ->sort()
+                ->values()
+                ->toArray();
+
+            return view('user.FreeApps', [
+                'paginator' => $paginator,
+                'categories' => $categories,
+                'category' => null,
+                'error' => 'Invalid category selected.',
+            ]);
         }
 
         return $this->freeApps(request()->merge(['category' => $category]));
@@ -189,5 +207,24 @@ class UserDashboardController extends Controller
         $item = MarketItem::findOrFail($id);
 
         return view('user.market-item', compact('item'));
+    }
+
+    /**
+     * Display paginated notifications for the authenticated user.
+     */
+    public function notifications(): View
+    {
+        $notifications = Notification::where('user_id', Auth::id())->latest()->paginate(10);
+        return view('user.notifications', compact('notifications'));
+    }
+
+    /**
+     * Mark a specific notification as read for the authenticated user.
+     */
+    public function markNotificationRead(Request $request, $id): RedirectResponse
+    {
+        $notification = Notification::where('user_id', Auth::id())->findOrFail($id);
+        $notification->update(['read' => true]);
+        return redirect()->route('notifications')->with('success', 'Notification marked as read.');
     }
 }

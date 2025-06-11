@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mrsolution.com.ng">
+    <meta property="og:image" content="{{ asset('images/mrsolution.jpeg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@mrsolution">
+    <meta name="twitter:title" content="Mr Solution - Revolutionary Tech Solutions">
+    <meta name="twitter:description" content="Leading-edge technology solutions powered by AI and innovation.">
+    <meta name="twitter:image" content="{{ asset('images/mrsolution.jpeg') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('images/mrsolution.jpeg') }}" type="image/x-icon">
 </head>
 
 <body class="login-page">

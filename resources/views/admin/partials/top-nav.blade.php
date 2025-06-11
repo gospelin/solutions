@@ -6,18 +6,39 @@
         <div class="search-container">
             <form action="{{ route('admin.tools.search') }}" method="GET">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" name="search" class="search-input" value="{{ $searchQuery ?? '' }}" placeholder="Search Tools..."
-                    value="{{ request('query') }}">
+                <input type="text" name="search" class="search-input" value="{{ $searchQuery ?? '' }}"
+                    placeholder="Search Tools...">
                 <button type="submit" style="display: none;">Search</button>
             </form>
         </div>
     </div>
     <div class="nav-right">
         <div class="nav-actions">
-            <button class="action-btn" title="Notifications">
-                <i class="bi bi-bell"></i>
-                <span class="badge">4</span>
-            </button>
+            <div class="notification-container">
+                <button class="action-btn" id="notificationToggle" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge"
+                        id="notificationCount">{{ \App\Models\Notification::where('user_id', Auth::id())->where('read', false)->count() }}</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h4>Notifications</h4>
+                        <button id="markAllRead" class="chart-btn">Mark All as Read</button>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        @foreach (\App\Models\Notification::where('user_id', Auth::id())->where('read', false)->latest()->take(5)->get() as $notification)
+                            <div class="notification-item" data-id="{{ $notification->id }}">
+                                <div class="notification-icon"><i class="bi bi-bell"></i></div>
+                                <div class="notification-content">
+                                    <h5>{{ $notification->type }}</h5>
+                                    <p>{{ $notification->message }}</p>
+                                    <span class="notification-time">{{ $notification->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
             <button class="action-btn" title="Messages">
                 <i class="bi bi-chat-dots"></i>
                 <span class="badge">2</span>

@@ -14,19 +14,13 @@ class CheckUserStatus
         if (Auth::check()) {
             $user = Auth::user();
 
-            // Check if user is soft-deleted
-            if ($user->trashed()) {
-                Log::warning('Soft-deleted user attempted access', [
+            // Bypass all checks for admin or superAdmin
+            if ($user->hasRole(['admin', 'superAdmin'])) {
+                Log::info('Admin or superAdmin bypassed status checks', [
                     'email' => $user->email,
                     'user_id' => $user->id,
                     'ip' => $request->ip(),
                 ]);
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'Your account has been deleted. Contact support.');
-            }
-
-            // Bypass verification for users with admin role
-            if ($user->hasRole('admin')) {
                 return $next($request);
             }
 
