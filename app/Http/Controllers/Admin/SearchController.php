@@ -27,7 +27,7 @@ class SearchController extends Controller
             $searchQuery = $validated['search'];
 
             // Search market items
-            $marketItems = MarketItem::query()
+            $tools = MarketItem::query()
                 ->where('name', 'like', '%' . $searchQuery . '%')
                 ->orWhere('category', 'like', '%' . $searchQuery . '%')
                 ->orWhere('description', 'like', '%' . $searchQuery . '%')
@@ -39,10 +39,10 @@ class SearchController extends Controller
             Log::info('Admin performed search', [
                 'admin_id' => auth()->id(),
                 'query' => $searchQuery,
-                'results_count' => $marketItems->total(),
+                'results_count' => $tools->total(),
             ]);
 
-            return view('admin.tools.index', compact('marketItems', 'searchQuery'));
+            return view('admin.tools.index', compact('tools', 'searchQuery'));
         } catch (ValidationException $e) {
             return redirect()->route('admin.tools.index')->with('error', 'Please enter a valid search term.');
         } catch (\Exception $e) {

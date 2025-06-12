@@ -753,6 +753,7 @@ body {
     position: fixed;
     top: var(--space-lg);
     right: var(--space-lg);
+    z-index: 1000;
 }
 
 .theme-btn {

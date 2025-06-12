@@ -359,47 +359,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($marketItems as $marketItem)
+                    @forelse ($tools as $tool)
                         <tr role="row">
-                            <td>{{ $marketItem->id }}</td>
+                            <td>{{ $tool->id }}</td>
                             <td>
-                                @if ($marketItem->image_url)
-                                    <img src="{{ $marketItem->image_url }}" alt="{{ $marketItem->name }} icon" width="50" height="50" loading="lazy">
+                                @if ($tool->image_url)
+                                    <img src="{{ $tool->image_url }}" alt="{{ $tool->name }} icon" width="50" height="50" loading="lazy">
                                 @else
                                     <span>No Image</span>
                                 @endif
                             </td>
-                            <td>{{ $marketItem->name }}</td>
-                            <td>{{ $marketItem->category }}</td>
-                            <td>{{ number_format($marketItem->price, 2) }}</td>
+                            <td>{{ $tool->name }}</td>
+                            <td>{{ $tool->category }}</td>
+                            <td>{{ number_format($tool->price, 2) }}</td>
                             <td>
-                                <span class="badge badge-{{ strtolower($marketItem->status) === 'active' ? 'success' : (strtolower($marketItem->status) === 'pending' ? 'warning' : 'secondary') }}">
-                                    {{ ucfirst($marketItem->status) }}
+                                <span class="badge badge-{{ strtolower($tool->status) === 'active' ? 'success' : (strtolower($tool->status) === 'pending' ? 'warning' : 'secondary') }}">
+                                    {{ ucfirst($tool->status) }}
                                 </span>
                             </td>
                             <td>
-                                <div class="action-group" role="group" aria-label="Actions for {{ $marketItem->name }}">
-                                    <a href="{{ route('admin.tools.edit', $marketItem) }}" class="action-btn" aria-label="Edit {{ $marketItem->name }}">
+                                <div class="action-group" role="group" aria-label="Actions for {{ $tool->name }}">
+                                    <a href="{{ route('admin.tools.edit', $tool) }}" class="action-btn" aria-label="Edit {{ $tool->name }}">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <form action="{{ route('admin.tools.destroy', $marketItem) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to permanently delete this market item and all related records (e.g., orders, reviews)? This action cannot be undone.');">
+                                    <form action="{{ route('admin.tools.destroy', $tool) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to permanently delete this market item and all related records (e.g., orders, reviews)? This action cannot be undone.');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="action-btn error" aria-label="Delete {{ $marketItem->name }}">
+                                        <button type="submit" class="action-btn error" aria-label="Delete {{ $tool->name }}">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </form>
-                                    @if ($marketItem->isActive())
-                                        <form action="{{ route('admin.tools.deactivate', $marketItem) }}" method="POST" style="display: inline;">
+                                    @if ($tool->isActive())
+                                        <form action="{{ route('admin.tools.deactivate', $tool) }}" method="POST" style="display: inline;">
                                             @csrf
-                                            <button type="submit" class="action-btn deactivate" aria-label="Deactivate {{ $marketItem->name }}">
+                                            <button type="submit" class="action-btn deactivate" aria-label="Deactivate {{ $tool->name }}">
                                                 <i class="fas fa-ban"></i> Deactivate
                                             </button>
                                         </form>
                                     @else
-                                        <form action="{{ route('admin.tools.activate', $marketItem) }}" method="POST" style="display: inline;">
+                                        <form action="{{ route('admin.tools.activate', $tool) }}" method="POST" style="display: inline;">
                                             @csrf
-                                            <button type="submit" class="action-btn success" aria-label="Activate {{ $marketItem->name }}">
+                                            <button type="submit" class="action-btn success" aria-label="Activate {{ $tool->name }}">
                                                 <i class="fas fa-check"></i> Activate
                                             </button>
                                         </form>
@@ -415,7 +415,7 @@
                 </tbody>
             </table>
             <div class="pagination">
-                {{ $marketItems->links('vendor.pagination.custom') }}
+                {{ $tools->links('vendor.pagination.custom') }}
             </div>
         </div>
     </section>

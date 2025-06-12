@@ -8,6 +8,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Events\MarketItemCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use App\Events\UserNotification;
@@ -17,7 +18,7 @@ class ToolController extends Controller
     public function index(Request $request)
     {
         $searchQuery = $request->query('search');
-        $marketItems = MarketItem::query()
+        $tools = MarketItem::query()
             ->when($searchQuery, function ($query, $search) {
                 return $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('category', 'like', '%' . $search . '%')
@@ -26,12 +27,14 @@ class ToolController extends Controller
             ->orderBy('id')
             ->paginate(7);
 
-        return view('admin.tools.index', compact('marketItems', 'searchQuery'));
+        return view('admin.tools.index', compact('tools', 'searchQuery'));
     }
 
     public function create()
     {
-        return view('admin.tools.create');
+        // Fetch distinct categories
+        $categories = MarketItem::distinct()->pluck('category')->filter()->sort();
+        return view('admin.tools.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -40,11 +43,22 @@ class ToolController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', MarketItem::distinct()->pluck('category')->toArray())],
             'description' => ['nullable', 'string'],
-            'category' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'in:active,inactive'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'price_ngn' => ['required', 'numeric', 'min:0'],
+            'external_link' => ['nullable', 'url', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
 
+        if ($request->hasFile('image')) {
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('images', $filename, 'public');
+            $validated['image'] = $filename;
+        }
+
+        //$tool = MarketItem::create($validated);
+        $validated['status'] = MarketItem::STATUS_ACTIVE; // Default to Active
         $tool = MarketItem::create($validated);
 
         // Trigger MarketItemCreated event to notify all users
@@ -59,7 +73,9 @@ class ToolController extends Controller
     {
         $this->authorize('manage tools');
 
-        return view('admin.tools.edit', compact('tool'));
+        // Fetch distinct categories for edit form
+        $categories = MarketItem::distinct()->pluck('category')->filter()->sort();
+        return view('admin.tools.edit', compact('tool', 'categories'));
     }
 
     public function update(Request $request, MarketItem $tool)
@@ -68,10 +84,25 @@ class ToolController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:255', 'in:' . implode(',', MarketItem::distinct()->pluck('category')->toArray())],
             'description' => ['nullable', 'string'],
-            'category' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'in:active,inactive'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'price_ngn' => ['required', 'numeric', 'min:0'],
+            'external_link' => ['nullable', 'url', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($tool->image) {
+                Storage::disk('public')->delete('images/' . $tool->image);
+            }
+            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
+            
+            // Save to storage/app/public/images, but store only filename
+            $request->file('image')->storeAs('images', $filename, 'public');
+            $validated['image'] = $filename;
+        }
 
         $tool->update($validated);
 
@@ -85,6 +116,10 @@ class ToolController extends Controller
         $this->authorize('manage tools');
 
         try {
+            // Delete associated image
+            if ($tool->image) {
+                Storage::disk('public')->delete('images/' . $tool->image);
+            }
             $toolName = $tool->name;
             $tool->forceDelete();
 
