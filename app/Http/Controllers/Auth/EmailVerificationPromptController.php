@@ -16,13 +16,14 @@ class EmailVerificationPromptController extends Controller
             if (Auth::check() && Auth::user()->hasRole(['admin', 'superAdmin'])) {
                 return view('admin.dashboard'); // Redirect admins and superAdmins to dashboard
             }
-            return view('auth.verify-email');
+            //return view('auth.verify-email');
+            return view('user.dashboard')->with('message', 'Verification not required for your account.');
         } catch (\Exception $e) {
             Log::error('Failed to display email verification prompt', [
                 'error' => $e->getMessage(),
                 'ip' => $request->ip(),
             ]);
-            return view('auth.verify-email')->with('error', 'An error occurred. Please try again.');
+            return view('auth.login')->with('error', 'An error occurred. Please try again.');
         }
     }
 }
