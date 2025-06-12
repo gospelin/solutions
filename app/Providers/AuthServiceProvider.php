@@ -14,8 +14,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        VerifyEmailNotification::toMailUsing(function ($notifiable) {
-            return (new VerifyEmail)->toMail($notifiable);
-        });
+        //VerifyEmailNotification::toMailUsing(function ($notifiable) {
+        //    return (new VerifyEmail)->toMail($notifiable);
+        //});
     }
 }
