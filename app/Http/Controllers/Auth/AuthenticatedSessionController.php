@@ -32,18 +32,18 @@ class AuthenticatedSessionController extends Controller
 
             $user = Auth::user();
 
-            // Skip email verification for admins
-            if (!$user->hasRole(['admin', 'superAdmin']) && is_null($user->email_verified_at)) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                Log::warning('Login attempt by unverified user', [
-                    'email' => $request->email,
-                    'ip' => $request->ip(),
-                ]);
-                return redirect()->route('verification.otp')
-                    ->with('error', 'Please verify your email before logging in.');
-            }
+            // // Skip email verification for admins
+            // if (!$user->hasRole(['admin', 'superAdmin']) && is_null($user->email_verified_at)) {
+            //     Auth::logout();
+            //     $request->session()->invalidate();
+            //     $request->session()->regenerateToken();
+            //     Log::warning('Login attempt by unverified user', [
+            //         'email' => $request->email,
+            //         'ip' => $request->ip(),
+            //     ]);
+            //     return redirect()->route('verification.otp')
+            //         ->with('error', 'Please verify your email before logging in.');
+            // }
 
             if ($user->status === 'Banned') {
                 Auth::logout();
@@ -64,7 +64,7 @@ class AuthenticatedSessionController extends Controller
                 'ip' => $request->ip(),
             ]);
 
-            if ($user->hasRole('admin')) {
+            if ($user->hasRole(['admin', 'superAdmin'])) {
                 return redirect()->route('admin.dashboard');
             }
 

@@ -15,14 +15,9 @@ class CheckUserStatus
             $user = Auth::user();
 
             // Bypass all checks for admin or superAdmin
-            if ($user->hasRole(['admin', 'superAdmin'])) {
-                Log::info('Admin or superAdmin bypassed status checks', [
-                    'email' => $user->email,
-                    'user_id' => $user->id,
-                    'ip' => $request->ip(),
-                ]);
-                return $next($request);
-            }
+            //if ($user->hasRole(['admin', 'superAdmin'])) {
+            //    return $next($request);
+            //}
 
             // Check status and ban for other users
             if ($user->status === 'Banned') {
@@ -35,15 +30,15 @@ class CheckUserStatus
                 return redirect()->route('login')->with('error', 'Your account is suspended. Contact support.');
             }
 
-            // Check email verification for non-admin users
-            if (!$user->hasVerifiedEmail() && $user->status === 'pending') {
-                Log::warning('Unverified user redirected to OTP page', [
-                    'email' => $user->email,
-                    'user_id' => $user->id,
-                    'ip' => $request->ip(),
-                ]);
-                return redirect()->route('verification.otp')->with('error', 'Please verify your email with the OTP sent.');
-            }
+            // // Check email verification for non-admin users
+            // if (!$user->hasVerifiedEmail() && $user->status === 'pending') {
+            //     Log::warning('Unverified user redirected to OTP page', [
+            //         'email' => $user->email,
+            //         'user_id' => $user->id,
+            //         'ip' => $request->ip(),
+            //     ]);
+            //     return redirect()->route('verification.otp')->with('error', 'Please verify your email with the OTP sent.');
+            // }
         }
 
         return $next($request);

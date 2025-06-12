@@ -33,9 +33,9 @@ class RegisteredUserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'status' => 'pending',
-                'verification_code' => sprintf("%06d", mt_rand(100000, 999999)),
-                'verification_code_expires_at' => now()->addMinutes(10),
+                'status' => 'Active', // Updated to Active
+                // 'verification_code' => sprintf("%06d", mt_rand(100000, 999999)),
+                // 'verification_code_expires_at' => now()->addMinutes(10),
                 'theme' => 'dark',
                 'notifications' => true,
                 'language' => 'en',
@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
                     'type' => 'New User',
                     'message' => "New user '{$user->name}' registered with email '{$user->email}'.",
                 ]);
-                \Mail::to($admin->email)->send(new \App\Mail\NewUserNotification($user));
+                //\Mail::to($admin->email)->send(new \App\Mail\NewUserNotification($user));
             }
 
             event(new Registered($user));
@@ -64,8 +64,8 @@ class RegisteredUserController extends Controller
                 'ip' => $request->ip(),
             ]);
 
-            return redirect()->route('verification.otp')
-                ->with('status', 'Please enter the OTP sent to your email.');
+            return redirect()->route('user.dashboard')
+                ->with('status', 'Registration successful.');
         } catch (\Exception $e) {
             Log::error('Registration failed', [
                 'email' => $request->email,
