@@ -1,6 +1,8 @@
 import './register.js';
 import './login.js'
 import './main.js';
+import './admin.js';
+import './user-realtime.js';
 import './bootstrap.js';
 import Alpine from 'alpinejs';
 import $ from 'jquery';

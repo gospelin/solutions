@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Events\AdminNotification;
+use App\Events\UserNotification;
 
 class Notification extends Model
 {
@@ -21,7 +21,7 @@ class Notification extends Model
     protected static function booted()
     {
         static::created(function ($notification) {
-            event(new AdminNotification($notification));
+            event(new UserNotification($notification));
         });
     }
 

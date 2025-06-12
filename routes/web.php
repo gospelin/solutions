@@ -47,6 +47,9 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/subscription', [UserDashboardController::class, 'subscription'])->name('subscription');
     Route::get('/notifications', [UserDashboardController::class, 'notifications'])->name('notifications');
     Route::post('/notifications/{id}/read', [UserDashboardController::class, 'markNotificationRead'])->name('notifications.read');
+    Route::post('/notifications/mark-all-read', [UserDashboardController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::get('/user/dashboard/stats', [UserDashboardController::class, 'stats'])->name('user.dashboard.stats');
+    Route::get('/user/test-notification', [UserDashboardController::class, 'triggerTestNotification'])->name('user.test-notification');
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -57,17 +60,22 @@ Route::middleware(['auth', 'check.status'])->group(function () {
 Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin|superAdmin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminUserController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/stats', [AdminUserController::class, 'getDashboardStats'])->name('dashboard.stats');
-    Route::get('/reports', [AdminUserController::class, 'reports'])->name('reports');
     Route::get('/settings', [AdminUserController::class, 'adminSettings'])->name('admin-settings');
     Route::post('/settings', [AdminUserController::class, 'updateSettings'])->name('admin-settings.update');
+    Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');
 
+    // User management routes
     Route::get('/user-management', [AdminUserController::class, 'userManagement'])->name('user-management');
+    Route::get('/admin-management', [AdminUserController::class, 'adminUserManagement'])->name('admin-management');
     Route::post('/users/{id}/ban', [AdminUserController::class, 'banUser'])->name('users.ban');
-    
     Route::post('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
-    Route::delete('/users/{id}', [AdminUserController::class, 'deleteUser'])->name('users.delete');
+    Route::delete('/users/{id}/delete', [AdminUserController::class, 'deleteUser'])->name('users.delete');
     Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
-    Route::post('/users', [AdminUserController::class, 'store'])->name('store');
+    Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+
+    // Profile routes
+    Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
+    Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('admin-profile.update');
 
     // Tool routes
     Route::post('/tools/{tool}/activate', [ToolController::class, 'activate'])->name('tools.activate');
@@ -79,29 +87,21 @@ Route::prefix('admin')->middleware(['auth', 'check.status', 'role:admin|superAdm
     Route::post('/free-apps/{freeApp}/activate', [FreeAppController::class, 'activate'])->name('free-apps.activate');
     Route::post('/free-apps/{freeApp}/deactivate', [FreeAppController::class, 'deactivate'])->name('free-apps.deactivate');
     Route::resource('free-apps', FreeAppController::class)->except(['show']);
-    Route::get('/free-apps/search', [FreeAppController::class, 'index'])->name('free-apps.search');
+    Route::get('/free-apps/search', [SearchController::class, 'searchFreeApps'])->name('free-apps.search');
 
     // Other admin routes
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
     Route::resource('transactions', TransactionController::class)->only(['index', 'show']);
-    Route::get('/profile', [AdminUserController::class, 'profile'])->name('admin-profile');
-    Route::post('/profile', [AdminUserController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/admin-management', [AdminUserController::class, 'adminUserManagement'])->name('admin-management');
-    Route::get('/system-settings', [AdminUserController::class, 'systemSettings'])->name('system-settings');
-    Route::post('/system-settings', [AdminUserController::class, 'updateSystemSettings'])->name('system-settings.update');
     Route::get('/logs', [LogController::class, 'index'])->name('logs');
-
     Route::post('/logs/clear', [LogController::class, 'clear'])->name('logs.clear');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
     Route::get('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
-
 });
 
 Route::get('/notify-reregister', [NotifyReregisterController::class, 'notify'])->name('notify.reregister');
 Route::post('/webhook/selar', [SelarWebhookController::class, 'handle'])->name('webhook.selar');
-
-Route::post('contact', [GuestContactController::class, 'submit'])->name('contact.submit');
-Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::post('/contact', [GuestContactController::class, 'submit'])->name('guest-contact.submit');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 require __DIR__ . '/auth.php';

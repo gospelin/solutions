@@ -22,10 +22,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-           
     <!-- ... other meta tags ... -->
     <meta name="auth-id" content="{{ Auth::id() }}">
-    <!-- ... other scripts ... -->
+
     
     <!-- Vite Assets -->
     @vite(['resources/css/admin.css', 'resources/js/bootstrap.js', 'resources/js/admin.js', 'resources/js/realtime.js'])

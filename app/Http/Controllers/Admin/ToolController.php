@@ -6,17 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\MarketItem;
 use App\Models\Notification;
 use App\Models\User;
+use App\Events\MarketItemCreated;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use App\Events\UserNotification;
 
 class ToolController extends Controller
 {
-    //public function __construct()
-    //{
-    //    $this->middleware(['auth', 'role:admin']);
-    //}
-
     public function index(Request $request)
     {
         $searchQuery = $request->query('search');
@@ -49,6 +46,9 @@ class ToolController extends Controller
         ]);
 
         $tool = MarketItem::create($validated);
+
+        // Trigger MarketItemCreated event to notify all users
+        event(new MarketItemCreated($tool));
 
         Log::info('Tool created', ['tool_id' => $tool->id, 'admin_id' => auth()->id()]);
 
@@ -85,20 +85,19 @@ class ToolController extends Controller
         $this->authorize('manage tools');
 
         try {
-            // Store tool name for notification
             $toolName = $tool->name;
-
-            // Permanently delete the tool
             $tool->forceDelete();
 
             // Notify admins
             $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
             foreach ($admins as $admin) {
-                Notification::create([
+                $notification = Notification::create([
                     'user_id' => $admin->id,
                     'type' => 'Tool Deleted',
                     'message' => "Tool '{$toolName}' was permanently deleted by admin.",
+                    'read' => false,
                 ]);
+                event(new UserNotification($notification));
             }
 
             Log::info('Tool permanently deleted', ['tool_id' => $tool->id, 'admin_id' => auth()->id()]);
@@ -119,11 +118,13 @@ class ToolController extends Controller
         // Notify admins
         $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
         foreach ($admins as $admin) {
-            Notification::create([
+            $notification = Notification::create([
                 'user_id' => $admin->id,
                 'type' => 'Tool Activated',
                 'message' => "Tool '{$tool->name}' activated by admin.",
+                'read' => false,
             ]);
+            event(new UserNotification($notification));
         }
 
         Log::info('Tool activated', ['tool_id' => $tool->id, 'admin_id' => auth()->id()]);
@@ -140,11 +141,13 @@ class ToolController extends Controller
         // Notify admins
         $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
         foreach ($admins as $admin) {
-            Notification::create([
+            $notification = Notification::create([
                 'user_id' => $admin->id,
                 'type' => 'Tool Deactivated',
                 'message' => "Tool '{$tool->name}' deactivated by admin.",
+                'read' => false,
             ]);
+            event(new UserNotification($notification));
         }
 
         Log::info('Tool deactivated', ['tool_id' => $tool->id, 'admin_id' => auth()->id()]);

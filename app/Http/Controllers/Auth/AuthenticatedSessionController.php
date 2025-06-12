@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
 
             // Skip email verification for admins
-            if (!$user->hasRole('admin') && is_null($user->email_verified_at)) {
+            if (!$user->hasRole(['admin', 'superAdmin']) && is_null($user->email_verified_at)) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

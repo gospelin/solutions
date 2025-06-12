@@ -9,6 +9,7 @@ use App\Models\MarketItem;
 use App\Models\Transaction;
 use App\Models\Contact;
 use App\Models\Notification;
+use App\Events\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -29,12 +30,10 @@ class AdminUserController extends Controller
             return redirect()->route('login')->with('error', 'Your account is suspended. Contact support.');
         }
 
-        // Calculate total users (excluding admins and superAdmins)
         $totalUsers = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['admin', 'superAdmin']);
         })->count();
 
-        // Calculate user growth trend (e.g., compared to last month)
         $previousUsers = User::whereDoesntHave('roles', function ($query) {
             $query->whereIn('name', ['admin', 'superAdmin']);
         })->where('created_at', '<', now()->subMonth())->count();
@@ -42,7 +41,6 @@ class AdminUserController extends Controller
         $userTrendValue = $userTrend > 0 ? '+' . number_format($userTrend, 1) . '%' : number_format($userTrend, 1) . '%';
         $userTrendStatus = $userTrend > 0 ? 'up' : ($userTrend < 0 ? 'down' : 'neutral');
 
-        // User growth data for the chart (last 6 months)
         $userGrowthData = [];
         $labels = [];
         for ($i = 5; $i >= 0; $i--) {
@@ -55,28 +53,24 @@ class AdminUserController extends Controller
             $labels[] = now()->subMonths($i)->format('M');
         }
 
-        // Total tools
         $totalTools = MarketItem::count();
         $previousTools = MarketItem::where('created_at', '<', now()->subMonth())->count();
         $toolTrend = $previousTools > 0 ? (($totalTools - $previousTools) / $previousTools * 100) : 0;
         $toolTrendValue = $toolTrend > 0 ? '+' . number_format($toolTrend, 1) . '%' : number_format($toolTrend, 1) . '%';
-        $toolTrendStatus = $toolTrend > 0 ? 'up' : ($toolTrend < 0 ? 'down' : 'neutral');
+        $toolTrendStatus = $toolTrend > 0 ? 'up' : ($userTrend < 0 ? 'down' : 'neutral');
 
-        // Total revenue
         $totalRevenue = Transaction::where('status', 'Completed')->sum('amount');
         $previousRevenue = Transaction::where('status', 'Completed')->where('created_at', '<', now()->subMonth())->sum('amount');
         $revenueTrend = $previousRevenue > 0 ? (($totalRevenue - $previousRevenue) / $previousRevenue * 100) : 0;
         $revenueTrendValue = $revenueTrend > 0 ? '+' . number_format($revenueTrend, 1) . '%' : number_format($revenueTrend, 1) . '%';
         $revenueTrendStatus = $revenueTrend > 0 ? 'up' : ($revenueTrend < 0 ? 'down' : 'neutral');
 
-        // Contact submissions
         $contactCount = Contact::count();
         $previousContacts = Contact::where('created_at', '<', now()->subMonth())->count();
         $contactTrend = $previousContacts > 0 ? (($contactCount - $previousContacts) / $previousContacts * 100) : 0;
         $contactTrendValue = $contactTrend > 0 ? '+' . number_format($contactTrend, 1) . '%' : number_format($contactTrend, 1) . '%';
         $contactTrendStatus = $contactTrend > 0 ? 'up' : ($contactTrend < 0 ? 'down' : 'neutral');
 
-        // Recent activities
         $recentActivities = Notification::where('user_id', Auth::id())
             ->where('read', false)
             ->latest()
@@ -124,7 +118,6 @@ class AdminUserController extends Controller
         $userTrendValue = $userTrend > 0 ? '+' . number_format($userTrend, 1) . '%' : number_format($userTrend, 1) . '%';
         $userTrendStatus = $userTrend > 0 ? 'up' : ($userTrend < 0 ? 'down' : 'neutral');
 
-        // User growth data and labels for the chart (last 6 months)
         $userGrowthData = [];
         $labels = [];
         for ($i = 5; $i >= 0; $i--) {
@@ -141,7 +134,7 @@ class AdminUserController extends Controller
         $previousTools = MarketItem::where('created_at', '<', now()->subMonth())->count();
         $toolTrend = $previousTools > 0 ? (($totalTools - $previousTools) / $previousTools * 100) : 0;
         $toolTrendValue = $toolTrend > 0 ? '+' . number_format($toolTrend, 1) . '%' : number_format($toolTrend, 1) . '%';
-        $toolTrendStatus = $toolTrend > 0 ? 'up' : ($toolTrend < 0 ? 'down' : 'neutral');
+        $toolTrendStatus = $toolTrend > 0 ? 'up' : ($userTrend < 0 ? 'down' : 'neutral');
 
         $totalRevenue = Transaction::where('status', 'Completed')->sum('amount');
         $previousRevenue = Transaction::where('status', 'Completed')->where('created_at', '<', now()->subMonth())->sum('amount');
@@ -213,7 +206,6 @@ class AdminUserController extends Controller
         $this->authorize('manage users');
         $user = User::findOrFail($id);
         try {
-            // Prevent admin from banning superAdmin
             if ($user->hasRole('superAdmin') && !Auth::user()->hasRole('superAdmin')) {
                 Log::warning('Admin attempted to ban superAdmin', [
                     'target_user_id' => $user->id,
@@ -225,28 +217,39 @@ class AdminUserController extends Controller
                     ->with('error', 'You do not have permission to ban a superAdmin.');
             }
 
-            // Prevent banning self
             if ($user->id === Auth::id()) {
                 return redirect()->route('admin.user-management')
                     ->with('error', 'You cannot ban yourself.');
             }
 
-            $user->status = $user->status === 'Banned' ? 'Admin' : 'Banned';
+            $user->status = $user->status === 'Banned' ? 'Active' : 'Banned';
             $user->save();
+
+            // Notify the affected user
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'type' => $user->status === 'Banned' ? 'User Banned' : 'User Unbanned',
+                'message' => "Your account has been " . ($user->status === 'Banned' ? 'banned' : 'unbanned') . ".",
+                'read' => false,
+            ]);
+            event(new UserNotification($notification));
 
             // Notify admins
             $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
             foreach ($admins as $admin) {
-                Notification::create([
+                $adminNotification = Notification::create([
                     'user_id' => $admin->id,
                     'type' => $user->status === 'Banned' ? 'User Banned' : 'User Unbanned',
                     'message' => "User '{$user->name}' (email: {$user->email}) has been " . ($user->status === 'Banned' ? 'banned' : 'unbanned') . ".",
+                    'read' => false,
                 ]);
+                event(new UserNotification($adminNotification));
             }
 
-            Log::info('User banned', [
+            Log::info('User status changed', [
                 'user_id' => $user->id,
                 'email' => $user->email,
+                'status' => $user->status,
                 'admin_id' => Auth::id(),
                 'ip' => $request->ip(),
             ]);
@@ -254,14 +257,14 @@ class AdminUserController extends Controller
             return redirect()->back()
                 ->with('success', 'User Status: ' . $user->status);
         } catch (\Exception $e) {
-            Log::error('Failed to ban user', [
+            Log::error('Failed to change user status', [
                 'user_id' => $user->id,
                 'email' => $user->email,
                 'error' => $e->getMessage(),
                 'ip' => $request->ip(),
             ]);
             return redirect()->back()
-                ->with('error', 'Failed to ban user. Please try again.');
+                ->with('error', 'Failed to update user status. Please try again.');
         }
     }
 
@@ -271,7 +274,6 @@ class AdminUserController extends Controller
         $user = User::findOrFail($id);
 
         try {
-            // Prevent admin from deleting superAdmin
             if ($user->hasRole('superAdmin') && !Auth::user()->hasRole('superAdmin')) {
                 Log::warning('Admin attempted to delete superAdmin', [
                     'target_user_id' => $user->id,
@@ -283,36 +285,35 @@ class AdminUserController extends Controller
                     ->with('error', 'You do not have permission to delete a superAdmin.');
             }
 
-            // Prevent deleting self
             if ($user->id === Auth::id()) {
                 return redirect()->back()
                     ->with('error', 'You cannot delete yourself.');
             }
 
-            // Detach roles
-            $user->roles()->detach();
+            $userName = $user->name;
+            $userEmail = $user->email;
 
-            // Delete related data
+            $user->roles()->detach();
             if ($user->notifications) {
                 $user->notifications()->delete();
             }
-
-            // Permanent delete
             $user->forceDelete();
 
             // Notify admins
             $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
             foreach ($admins as $admin) {
-                Notification::create([
+                $adminNotification = Notification::create([
                     'user_id' => $admin->id,
                     'type' => 'User Deleted',
-                    'message' => "User '{$user->name}' (email: {$user->email}) has been permanently deleted.",
+                    'message' => "User '{$userName}' (email: {$userEmail}) has been permanently deleted.",
+                    'read' => false,
                 ]);
+                event(new UserNotification($adminNotification));
             }
 
             Log::info('User permanently deleted', [
-                'user_id' => $user->id,
-                'email' => $user->email,
+                'user_id' => $id,
+                'email' => $userEmail,
                 'admin_id' => Auth::id(),
                 'ip' => $request->ip(),
             ]);
@@ -321,8 +322,8 @@ class AdminUserController extends Controller
                 ->with('success', 'User permanently deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Failed to delete user', [
-                'user_id' => $user->id,
-                'email' => $user->email,
+                'user_id' => $id,
+                'email' => $userEmail,
                 'error' => $e->getMessage(),
                 'ip' => $request->ip(),
             ]);
@@ -359,22 +360,24 @@ class AdminUserController extends Controller
             }
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
-            }
-
-            if (!$user->save()) {
-                Log::error('Failed to save user profile', [
-                    'user_id' => Auth::id(),
-                    'data' => $request->only('name', 'email'),
-                    'ip' => $request->ip(),
+                $passwordNotification = Notification::create([
+                    'user_id' => $user->id,
+                    'type' => 'Password Updated',
+                    'message' => 'Your password has been updated.',
+                    'read' => false,
                 ]);
-                return redirect()->route('admin.admin-profile')->with('error', 'Failed to update profile. Please try again.');
+                event(new UserNotification($passwordNotification));
             }
 
-            Notification::create([
+            $user->save();
+
+            $notification = Notification::create([
                 'user_id' => $user->id,
                 'type' => 'Profile Updated',
                 'message' => 'Your profile has been updated.',
+                'read' => false,
             ]);
+            event(new UserNotification($notification));
 
             Log::info('Admin profile updated successfully', [
                 'user_id' => $user->id,
@@ -434,12 +437,13 @@ class AdminUserController extends Controller
             $user->language = $request->language;
             $user->save();
 
-            // Create a notification
-            Notification::create([
+            $notification = Notification::create([
                 'user_id' => $user->id,
                 'type' => 'Settings Updated',
                 'message' => 'Your personal settings have been updated.',
+                'read' => false,
             ]);
+            event(new UserNotification($notification));
 
             Log::info('Admin settings updated', [
                 'user_id' => $user->id,
@@ -483,11 +487,13 @@ class AdminUserController extends Controller
 
         $user->syncRoles($request->role);
 
-        Notification::create([
+        $notification = Notification::create([
             'user_id' => $user->id,
             'type' => 'Role Updated',
             'message' => 'Your role has been updated to ' . $request->role . '.',
+            'read' => false,
         ]);
+        event(new UserNotification($notification));
 
         Log::info('User role updated', [
             'user_id' => $id,
@@ -529,11 +535,13 @@ class AdminUserController extends Controller
 
             $user->assignRole('admin');
 
-            Notification::create([
+            $notification = Notification::create([
                 'user_id' => $user->id,
                 'type' => 'Account Created',
-                'message' => 'A new admin account has been created',
+                'message' => 'A new admin account has been created.',
+                'read' => false,
             ]);
+            event(new UserNotification($notification));
 
             Log::info('New admin created', [
                 'user_id' => $user->id,
@@ -542,7 +550,7 @@ class AdminUserController extends Controller
                 'ip' => $request->ip(),
             ]);
 
-            return redirect()->route('admin.user-management')->with('success', 'Admin created successfully!');
+            return redirect()->route('admin.admin-management')->with('success', 'Admin created successfully!');
         } catch (\Exception $e) {
             Log::error('Failed to create admin', ['error' => $e->getMessage(), 'ip' => $request->ip()]);
             return redirect()->route('admin.users.create')->with('error', 'Failed to create admin. Please try again.');

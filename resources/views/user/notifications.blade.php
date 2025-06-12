@@ -260,6 +260,11 @@
                 <h1 class="page-title">Notifications</h1>
                 <p class="page-subtitle">View and manage your notifications.</p>
             </div>
+            <div class="action-group">
+                <button id="markAllRead" class="action-btn success" aria-label="Mark all as read">
+                    <i class="bi bi-check-circle"></i> Mark All Read
+                </button>
+            </div>
         </div>
 
         @if (session('success'))
@@ -289,18 +294,20 @@
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="notificationTable">
                         @forelse ($notifications as $notification)
-                            <tr role="row" @if (!$notification->read) class="unread" @endif>
+                            <tr role="row" data-id="{{ $notification->id }}" @if (!$notification->read) class="unread" @endif>
                                 <td>{{ $notification->id }}</td>
                                 <td>{{ $notification->type }}</td>
                                 <td>{{ $notification->message }}</td>
                                 <td>{{ $notification->created_at->format('Y-m-d H:i') }}</td>
                                 <td>{{ $notification->read ? 'Read' : 'Unread' }}</td>
                                 <td>
-                                    <div class="action-group" role="group" aria-label="Actions for notification {{ $notification->id }}">
+                                    <div class="action-group" role="group"
+                                        aria-label="Actions for notification {{ $notification->id }}">
                                         @if (!$notification->read)
-                                            <form action="{{ route('notifications.read', $notification->id) }}" method="POST" style="display: inline;">
+                                            <form action="{{ route('notifications.read', $notification->id) }}" method="POST"
+                                                style="display: inline;">
                                                 @csrf
                                                 @method('POST')
                                                 <button type="submit" class="action-btn success" aria-label="Mark as read">
@@ -325,34 +332,34 @@
         </div>
     </section>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Accessibility: Keyboard navigation for action buttons
-                document.querySelectorAll('.action-group .action-btn').forEach(button => {
-                    button.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            button.click();
-                        }
-                    });
-                });
-
-                // Sync with sidebar toggle
-                document.querySelectorAll('.action-btn, .pagination a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth <= 1024) {
-                            const sidebar = document.getElementById('sidebar');
-                            const overlay = document.getElementById('overlay');
-                            if (sidebar && sidebar.classList.contains('active')) {
-                                sidebar.classList.remove('active');
-                                overlay.classList.remove('active');
-                                document.getElementById('menuToggle').classList.remove('active');
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Accessibility: Keyboard navigation for action buttons
+                    document.querySelectorAll('.action-group .action-btn').forEach(button => {
+                        button.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                button.click();
                             }
-                        }
+                        });
+                    });
+
+                    // Sync with sidebar toggle
+                    document.querySelectorAll('.action-btn, .pagination a').forEach(link => {
+                        link.addEventListener('click', () => {
+                            if (window.innerWidth <= 1024) {
+                                const sidebar = document.getElementById('sidebar');
+                                const overlay = document.getElementById('overlay');
+                                if (sidebar && sidebar.classList.contains('active')) {
+                                    sidebar.classList.remove('active');
+                                    overlay.classList.remove('active');
+                                    document.getElementById('menuToggle').classList.remove('active');
+                                }
+                            }
+                        });
                     });
                 });
-            });
-        </script>
-    @endpush
+            </script>
+        @endpush
 @endsection

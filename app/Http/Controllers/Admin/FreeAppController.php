@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FreeApp;
+use App\Events\FreeAppCreated;
+use App\Events\FreeAppUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -52,6 +54,10 @@ class FreeAppController extends Controller
         $validated['slug'] = Str::slug($validated['category']);
         $validated['status'] = FreeApp::STATUS_ACTIVE;
         $freeApp = FreeApp::create($validated);
+
+        // Trigger FreeAppCreated event to notify all users
+        event(new FreeAppCreated($freeApp));
+
         Log::info('Free app created', ['app_id' => $freeApp->id, 'admin_id' => auth()->id()]);
 
         return redirect()->route('admin.free-apps.index')->with('success', 'Free app created successfully.');
@@ -84,7 +90,14 @@ class FreeAppController extends Controller
         }
 
         $validated['slug'] = Str::slug($validated['category']);
+        $oldLink = $freeApp->external_link;
         $freeApp->update($validated);
+
+        // Trigger FreeAppUpdated event if external_link changed
+        if ($oldLink !== $validated['external_link']) {
+            event(new FreeAppUpdated($freeApp));
+        }
+
         Log::info('Free app updated', ['app_id' => $freeApp->id, 'admin_id' => auth()->id()]);
 
         return redirect()->route('admin.free-apps.index')->with('success', 'Free app updated successfully.');

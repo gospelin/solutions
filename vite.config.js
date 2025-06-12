@@ -19,7 +19,8 @@ export default defineConfig({
                 'resources/js/bootstrap.js',
                 'resources/js/admin.js',
                 'resources/js/echo.js',
-                'resources/js/realtime.js'
+                'resources/js/realtime.js',
+                'resources/js/user-realtime.js',
             ],
             refresh: true,
         }),

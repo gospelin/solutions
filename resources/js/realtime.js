@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authId) {
         // Subscribe to private admin notification channel
         window.Echo.private(`admin.${authId}`)
-            .listen('AdminNotification', (e) => {
+            .listen('UserNotification', (e) => {
                 const notificationList = document.getElementById('notificationList');
                 const notificationCount = document.getElementById('notificationCount');
                 const count = parseInt(notificationCount.textContent) || 0;

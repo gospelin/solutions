@@ -24,12 +24,12 @@
     "isEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-x4Zu_RVj.css",
+    "file": "assets/app-3MKxfhwW.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/dashboard.css": {
-    "file": "assets/dashboard-P0-ZfQ9g.css",
+    "file": "assets/dashboard-nRavM-w2.css",
     "src": "resources/css/dashboard.css",
     "isEntry": true
   },
@@ -55,15 +55,15 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-BaCsRBqT.js",
+    "file": "assets/app-Bz8CnKZg.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
       "_TextPlugin-CelLn1jq.js",
       "_i18next-Bhc83OLH.js",
-      "_echo-D9_njOM2.js",
-      "_pusher-LyJa47xg.js"
+      "_pusher-LyJa47xg.js",
+      "_echo-D9_njOM2.js"
     ]
   },
   "resources/js/bootstrap.js": {
@@ -105,7 +105,7 @@
     ]
   },
   "resources/js/realtime.js": {
-    "file": "assets/realtime-CfSSkvXr.js",
+    "file": "assets/realtime-ZCQzltSZ.js",
     "name": "realtime",
     "src": "resources/js/realtime.js",
     "isEntry": true,
@@ -120,6 +120,15 @@
     "isEntry": true,
     "imports": [
       "_TextPlugin-CelLn1jq.js"
+    ]
+  },
+  "resources/js/user-realtime.js": {
+    "file": "assets/user-realtime-C3iblxA6.js",
+    "name": "user-realtime",
+    "src": "resources/js/user-realtime.js",
+    "isEntry": true,
+    "imports": [
+      "_pusher-LyJa47xg.js"
     ]
   }
 }
