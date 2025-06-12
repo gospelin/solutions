@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes, Notifiable;
 
     protected $dates = ['deleted_at'];
 
@@ -42,36 +42,41 @@ class User extends Authenticatable implements MustVerifyEmail
         'notifications' => 'boolean',
     ];
 
-    public function sendEmailVerificationNotification()
+    public function notifications()
     {
-        $this->notify(new VerifyEmail);
+        return $this->hasMany(Notification::class, 'user_id');
     }
+    
+    //public function sendEmailVerificationNotification()
+    //{
+    //    $this->notify(new VerifyEmail);
+    //}
 
-    public function hasVerifiedEmail(): bool
-    {
-        return !is_null($this->email_verified_at);
-    }
+    //public function hasVerifiedEmail(): bool
+    //{
+    //    return !is_null($this->email_verified_at);
+    //}
 
-    public function markEmailAsVerified(): bool
-    {
-        return $this->forceFill([
-            'email_verified_at' => $this->freshTimestamp(),
-            'status' => 'active',
-            'verification_code' => null,
-            'verification_code_expires_at' => null,
-        ])->save();
-    }
+    //public function markEmailAsVerified(): bool
+    //{
+    //    return $this->forceFill([
+    //        'email_verified_at' => $this->freshTimestamp(),
+    //        'status' => 'active',
+    //        'verification_code' => null,
+    //        'verification_code_expires_at' => null,
+    //    ])->save();
+    //}
 
-    public function getEmailForVerification(): string
-    {
-        return $this->email;
-    }
+    //public function getEmailForVerification(): string
+    //{
+    //    return $this->email;
+    //}
 
-    public function purchasedItems(): BelongsToMany
-    {
-        return $this->belongsToMany(MarketItem::class, 'market_item_user', 'user_id', 'market_item_id')
-            ->withPivot('purchased_at');
-    }
+    //public function purchasedItems(): BelongsToMany
+    //{
+    //    return $this->belongsToMany(MarketItem::class, 'market_item_user', 'user_id', 'market_item_id')
+    //        ->withPivot('purchased_at');
+    //}
     
 
 }

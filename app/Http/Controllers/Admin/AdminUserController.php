@@ -294,9 +294,6 @@ class AdminUserController extends Controller
             $userEmail = $user->email;
 
             $user->roles()->detach();
-            if ($user->notifications) {
-                $user->notifications()->delete();
-            }
             $user->forceDelete();
 
             // Notify admins

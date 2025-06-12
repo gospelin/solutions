@@ -33,9 +33,10 @@ class RegisteredUserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'status' => 'Active', // Updated to Active
+                'status' => 'active', // Updated to Active
                 // 'verification_code' => sprintf("%06d", mt_rand(100000, 999999)),
                 // 'verification_code_expires_at' => now()->addMinutes(10),
+                'email_verified_at' => now(),
                 'theme' => 'dark',
                 'notifications' => true,
                 'language' => 'en',
@@ -44,17 +45,17 @@ class RegisteredUserController extends Controller
             $user->assignRole('user');
 
             // Notify admins
-            $admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
-            foreach ($admins as $admin) {
-                Notification::create([
-                    'user_id' => $admin->id,
-                    'type' => 'New User',
-                    'message' => "New user '{$user->name}' registered with email '{$user->email}'.",
-                ]);
-                //\Mail::to($admin->email)->send(new \App\Mail\NewUserNotification($user));
-            }
+            //$admins = User::role(['admin', 'superAdmin'])->where('notifications', true)->get();
+            //foreach ($admins as $admin) {
+            //    Notification::create([
+            //        'user_id' => $admin->id,
+            //        'type' => 'New User',
+            //        'message' => "New user '{$user->name}' registered with email '{$user->email}'.",
+            //    ]);
+            //    //\Mail::to($admin->email)->send(new \App\Mail\NewUserNotification($user));
+            //}
 
-            event(new Registered($user));
+            //event(new Registered($user));
 
             Auth::login($user);
 
